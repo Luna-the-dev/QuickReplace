@@ -4,9 +4,115 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextReplace"
+        xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
         mc:Ignorable="d"
-        Height="450" Width="800">
-    <Grid>
-        
-    </Grid>
+        Height="600" Width="920"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True">
+
+
+    <Window.DataContext>
+        <viewModel:MainViewModel/>
+    </Window.DataContext>
+    
+    <Border Background="#272537">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="75"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+
+            <!-- Top row with close buttons -->
+            <Border Grid.ColumnSpan="2"
+                    Background="#111019"
+                    MouseDown="Border_MouseDown">
+                <Grid HorizontalAlignment="Stretch">
+                    <Label Content="Replace Tool"
+                           Foreground="White"
+                           FontWeight="SemiBold"
+                           Margin="10 0 0 0"
+                           FontFamily="/Fonts/#Poppins-ExtraLight"/>
+
+                    <StackPanel HorizontalAlignment="Right"
+                                Orientation="Horizontal">
+                        <Button Width="25" Height="25"
+                                Content="🗕"
+                                Background="Transparent"
+                                Foreground="#CDC2F5"
+                                FontWeight="Bold"
+                                BorderThickness="0"
+                                Padding="0 0 0 2"
+                                Click="MinimizeBtn_Click"/>
+                        <Button Width="25" Height="25"
+                                Content="⬜"
+                                Background="Transparent"
+                                Foreground="#CDC2F5"
+                                FontWeight="Bold"
+                                BorderThickness="0"
+                                Click="WindowStateBtn_Click"/>
+                        <Button Width="25" Height="25"
+                                Content="✕"
+                                Background="Transparent"
+                                Foreground="#CDC2F5"
+                                FontWeight="Bold"
+                                BorderThickness="0"
+                                Click="CloseBtn_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <TextBlock Grid.Row="1"
+                       Text="Replace Tool"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Left"
+                       Foreground="White"
+                       FontSize="22"
+                       Margin="20 0 0 0"
+                       FontFamily="/Fonts/#Poppins"/>
+
+            <StackPanel Grid.Row="2">
+                <RadioButton Content="Home"
+                             Height="50"
+                             Foreground="White"
+                             FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}"
+                             IsChecked="True"
+                             Command="{Binding HomeViewCommand}"/>
+
+                <RadioButton Content="Single Replace"
+                             Height="50"
+                             Foreground="White"
+                             FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding SingleReplaceViewCommand}"/>
+
+            </StackPanel>
+
+            <TextBox Width="250"
+                     Height="40"
+                     VerticalAlignment="Center"
+                     HorizontalAlignment="Left"
+                     Margin="5"
+                     Grid.Row="1"
+                     Grid.Column="1"
+                     Style="{StaticResource SearchBar}"/>
+
+            <ContentControl Grid.Row="2"
+                            Grid.Column="1"
+                            Margin="10"
+                            Content="{Binding CurrentView}"/>
+
+        </Grid>
+
+    </Border >
+    
+    
 </Window>
