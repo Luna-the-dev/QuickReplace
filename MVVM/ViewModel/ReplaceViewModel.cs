@@ -20,8 +20,6 @@ namespace TextReplace.MVVM.ViewModel
                     Debug.WriteLine("Replace phrases could not be parsed.");
                 }
 
-                Debug.WriteLine("Starting...");
-
                 foreach(var pair in Model.ReplaceData.ReplacePhrases)
                 {
                     Debug.WriteLine($"{pair.Item1}\t{pair.Item2}");

@@ -37,7 +37,7 @@
                     <Label Content="Replace Tool"
                            Foreground="White"
                            FontWeight="SemiBold"
-                           Margin="10 0 0 0"
+                           Margin="10 2 0 0"
                            FontFamily="/Fonts/#Poppins-ExtraLight"/>
 
                     <StackPanel HorizontalAlignment="Right"
