@@ -12,7 +12,6 @@
         Background="Transparent"
         AllowsTransparency="True">
 
-
     <Window.DataContext>
         <viewModel:MainViewModel/>
     </Window.DataContext>
@@ -86,6 +85,13 @@
                              Style="{StaticResource MenuButtonTheme}"
                              IsChecked="True"
                              Command="{Binding HomeViewCommand}"/>
+
+                <RadioButton Content="Upload"
+                             Height="50"
+                             Foreground="White"
+                             FontSize="14"
+                             Style="{StaticResource MenuButtonTheme}"
+                             Command="{Binding UploadViewCommand}"/>
 
                 <RadioButton Content="Single Replace"
                              Height="50"

@@ -17,6 +17,10 @@
                 <view:HomeView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewModel:UploadViewModel}">
+                <view:UploadView/>
+            </DataTemplate>
+
             <DataTemplate DataType="{x:Type viewModel:SingleReplaceViewModel}">
                 <view:SingleReplaceView/>
             </DataTemplate>
