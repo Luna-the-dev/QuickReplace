@@ -93,12 +93,12 @@
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding UploadViewCommand}"/>
 
-                <RadioButton Content="Single Replace"
+                <RadioButton Content="Replace"
                              Height="50"
                              Foreground="White"
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding SingleReplaceViewCommand}"/>
+                             Command="{Binding ReplaceViewCommand}"/>
 
             </StackPanel>
 

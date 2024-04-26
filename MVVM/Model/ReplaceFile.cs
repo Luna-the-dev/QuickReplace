@@ -34,7 +34,7 @@ namespace TextReplace.MVVM.Model
             dialog.Title = "Open Text File";
             dialog.FileName = "Document"; // Default file name
             dialog.DefaultExt = ".txt"; // Default file extension
-            dialog.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
+            dialog.Filter = "All files (*.*)|*.*"; // Filter files by extension
 
             // show open file dialog box
             bool? result = dialog.ShowDialog();

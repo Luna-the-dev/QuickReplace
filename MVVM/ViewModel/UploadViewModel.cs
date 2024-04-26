@@ -26,7 +26,7 @@ namespace TextReplace.MVVM.ViewModel
 
             SourceFiles = new RelayCommand(o =>
             {
-                // open a file dialogue for the user and update the replace file
+                // open a file dialogue for the user and update the source files
                 bool result = Model.SourceFiles.SetNewSourceFilesFromUser();
 
                 if (result == false)

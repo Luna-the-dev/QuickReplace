@@ -21,8 +21,8 @@
                 <view:UploadView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:SingleReplaceViewModel}">
-                <view:SingleReplaceView/>
+            <DataTemplate DataType="{x:Type viewModel:ReplaceViewModel}">
+                <view:ReplaceView/>
             </DataTemplate>
 
         </ResourceDictionary>

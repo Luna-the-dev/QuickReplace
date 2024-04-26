@@ -8,11 +8,11 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand HomeViewCommand { get; set; }
         public RelayCommand UploadViewCommand { get; set; }
-        public RelayCommand SingleReplaceViewCommand { get; set; }
+        public RelayCommand ReplaceViewCommand { get; set; }
 
         public HomeViewModel HomeVm { get; set; }
         public UploadViewModel UploadVm { get; set; }
-        public SingleReplaceViewModel SingleReplaceVm { get; set; }
+        public ReplaceViewModel ReplaceVm { get; set; }
 
         private object _currentView;
 
@@ -32,7 +32,7 @@ namespace TextReplace.MVVM.ViewModel
             // declare view models
             HomeVm = new HomeViewModel();
             UploadVm = new UploadViewModel();
-            SingleReplaceVm = new SingleReplaceViewModel();
+            ReplaceVm = new ReplaceViewModel();
 
             // set the home view as default
             CurrentView = HomeVm;
@@ -49,9 +49,9 @@ namespace TextReplace.MVVM.ViewModel
                 CurrentView = UploadVm;
             });
 
-            SingleReplaceViewCommand = new RelayCommand(o =>
+            ReplaceViewCommand = new RelayCommand(o =>
             {
-                CurrentView = SingleReplaceVm;
+                CurrentView = ReplaceVm;
             });
         }
     }

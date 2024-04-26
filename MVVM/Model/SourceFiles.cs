@@ -10,7 +10,7 @@ namespace TextReplace.MVVM.Model
 {
     class SourceFiles
     {
-        private static List<string> _fileNames;
+        private static List<string> _fileNames = new List<string>();
 
         public static List<string> FileNames
         {

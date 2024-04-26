@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace TextReplace.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for SingleReplaceView.xaml
+    /// Interaction logic for ReplaceView.xaml
     /// </summary>
-    public partial class SingleReplaceView : UserControl
+    public partial class ReplaceView : UserControl
     {
-        public SingleReplaceView()
+        public ReplaceView()
         {
             InitializeComponent();
         }
