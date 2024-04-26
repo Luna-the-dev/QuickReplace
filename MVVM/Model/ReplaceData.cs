@@ -6,9 +6,9 @@ namespace TextReplace.MVVM.Model
 {
     class ReplaceData
     {
-        private static List<(string, string)> _replacePhrases = new List<(string, string)>();
+        private List<(string, string)> _replacePhrases = new List<(string, string)>();
 
-        public static List<(string, string)> ReplacePhrases
+        public List<(string, string)> ReplacePhrases
         {
             get => _replacePhrases;
             set
@@ -24,7 +24,7 @@ namespace TextReplace.MVVM.Model
             }
         }
 
-        public static bool SaveReplacePhrases()
+        public bool SaveReplacePhrases()
         {
             try
             {
@@ -47,7 +47,7 @@ namespace TextReplace.MVVM.Model
         /// A list of pairs of the values from the file. If one of the lines in the file has an
         /// incorrect number of values or if the operation fails for another reason, return an empty list.
         /// </returns>
-        public static List<(string, string)> ParseXSV(string fileName, string delimiter = ",")
+        public List<(string, string)> ParseXSV(string fileName, string delimiter = ",")
         {
             var phrases = new List<(string, string)>();
 

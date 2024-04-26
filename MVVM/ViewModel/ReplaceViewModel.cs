@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using TextReplace.Core;
+using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -12,15 +13,17 @@ namespace TextReplace.MVVM.ViewModel
         {
             Replace = new RelayCommand(o =>
             {
+                ReplaceData replaceData = new ReplaceData();
+
                 // open a file dialogue for the user and update the source files
-                bool result = Model.ReplaceData.SaveReplacePhrases();
+                bool result = replaceData.SaveReplacePhrases();
 
                 if (result == false)
                 {
                     Debug.WriteLine("Replace phrases could not be parsed.");
                 }
 
-                foreach(var pair in Model.ReplaceData.ReplacePhrases)
+                foreach(var pair in replaceData.ReplacePhrases)
                 {
                     Debug.WriteLine($"{pair.Item1}\t{pair.Item2}");
                 }
