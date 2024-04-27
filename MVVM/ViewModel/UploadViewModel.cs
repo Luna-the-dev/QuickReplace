@@ -14,14 +14,19 @@ namespace TextReplace.MVVM.ViewModel
             ReplaceFile = new RelayCommand(o =>
             {
                 // open a file dialogue for the user and update the replace file
-                bool result = Model.ReplaceFile.SetNewReplaceFileFromUser();
+                bool result = Model.ReplaceData.SetNewReplaceFileFromUser();
 
                 if (result == false)
                 {
-                    Debug.WriteLine("ReplaceFile could not be read.");
+                    Debug.WriteLine("ReplaceFile either could not be read or parsed.");
                 }
 
-                Debug.WriteLine(Model.ReplaceFile.FileName);
+                Debug.WriteLine(Model.ReplaceData.FileName);
+
+                foreach (var kvp in Model.ReplaceData.ReplacePhrases)
+                {
+                    Debug.WriteLine($"key: {kvp.Key}\tvalue: {kvp.Value}");
+                }
             });
 
             SourceFiles = new RelayCommand(o =>

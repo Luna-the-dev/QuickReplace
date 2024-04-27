@@ -9,9 +9,25 @@ namespace TextReplace.MVVM.Model
 {
     class ReplaceData
     {
+        private static string _fileName = string.Empty;
+        public static string FileName
+        {
+            get { return _fileName; }
+            set
+            {
+                if (FileValidation.IsInputFileReadable(value))
+                {
+                    _fileName = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Input file is not readable. ReplaceFile was not updated.");
+                }
+            }
+        }
         // key is the phrase to replace, value is what it is being replaced with
-        private Dictionary<string, string> _replacePhrases = new Dictionary<string, string>();
-        public Dictionary<string, string> ReplacePhrases
+        private static Dictionary<string, string> _replacePhrases = new Dictionary<string, string>();
+        public static Dictionary<string, string> ReplacePhrases
         {
             get { return _replacePhrases; }
             set
@@ -22,11 +38,10 @@ namespace TextReplace.MVVM.Model
                 }
                 else
                 {
-                    throw new Exception("Replace phrases are not valid.");
+                    throw new ArgumentException("Replace phrases are not valid.");
                 }
             }
         }
-
         // flag for whether the search should be case sensitive
         private bool _caseSensitive = false;
         public bool CaseSensitive
@@ -34,28 +49,83 @@ namespace TextReplace.MVVM.Model
             get { return _caseSensitive; }
             set { _caseSensitive = value; }
         }
-
         // delimiters which decides what seperates whole words
         private const string DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
 
+
+        /*
+         * Constructor
+         */
         public ReplaceData(bool caseSensitive)
         {
             CaseSensitive = caseSensitive;
         }
 
-        public bool ParseReplacePhrases()
+        /// <summary>
+        /// Opens a file dialogue and replaces the ReplaceFile with whatever the user selects (if valid)
+        /// </summary>
+        /// <returns>False if the user didn't select a file or if the file was invalid. True otherwise</returns>
+        public static bool SetNewReplaceFileFromUser()
         {
-            try
-            {
-                // if file is formatted as a delimiter seperated value
-                ReplacePhrases = ParseDSV(ReplaceFile.FileName);
-            }
-            catch
+            // configure open file dialog box
+            var dialog = new Microsoft.Win32.OpenFileDialog();
+            dialog.Title = "Open Text File";
+            dialog.FileName = "Document"; // Default file name
+            dialog.DefaultExt = ".txt"; // Default file extension
+            dialog.Filter = "All files (*.*)|*.*"; // Filter files by extension
+
+            // open file dialog box
+            if (dialog.ShowDialog() != true)
             {
                 return false;
             }
 
+            // set the ReplaceFile name
+            try
+            {
+                // check to see if file name is valid so that the phrases can be parsed
+                // before setting the file name
+                if (FileValidation.IsInputFileReadable(dialog.FileName) == false)
+                {
+                    throw new IOException("Input file is not readable in SetNewReplaceFileFromUser().");
+                }
+                // parse through phrases and attempt to save them. parser will return an
+                // empty dictionary if something was wrong, so setter will throw an error
+                ReplacePhrases = ParseReplacePhrases(dialog.FileName);
+                // set file name directly rather than with the setter because we just ran the
+                // same validation as the setter anyways
+                _fileName = dialog.FileName;
+            }
+            catch (IOException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
+            catch (ArgumentException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
+            catch
+            {
+                Debug.WriteLine("Somewthing unexpected happened in SetNewReplaceFileFromUser().");
+                return false;
+            }
+
             return true;
+        }
+
+        public static Dictionary<string, string> ParseReplacePhrases(string fileName)
+        {
+            try
+            {
+                // if file is formatted as a delimiter seperated value
+                return ParseDSV(fileName);
+            }
+            catch
+            {
+                return new Dictionary<string, string>(); ;
+            }
         }
 
         /// <summary>
@@ -66,7 +136,7 @@ namespace TextReplace.MVVM.Model
         /// A dictionary of pairs of the values from the file. If one of the lines in the file has an
         /// incorrect number of values or if the operation fails for another reason, return an empty list.
         /// </returns>
-        public Dictionary<string, string> ParseDSV(string fileName, string delimiter = ",")
+        public static Dictionary<string, string> ParseDSV(string fileName, string delimiter = ",")
         {
             var phrases = new Dictionary<string, string>();
 
@@ -74,7 +144,7 @@ namespace TextReplace.MVVM.Model
             using (var parser = new TextFieldParser(fileName))
             {
                 parser.TextFieldType = FieldType.Delimited;
-                parser.SetDelimiters(",");
+                parser.SetDelimiters(delimiter);
 
                 // parse the file line by line
                 // store the values from each line into an array

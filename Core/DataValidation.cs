@@ -4,6 +4,11 @@
     {
         public static bool AreReplacePhrasesValid(Dictionary<string, string> phrases)
         {
+            if (phrases.Count == 0)
+            {
+                return false;
+            }
+
             foreach (var phrase in phrases)
             {
                 // if the thing to replace is empty, its invalid

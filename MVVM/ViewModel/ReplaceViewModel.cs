@@ -59,20 +59,11 @@ namespace TextReplace.MVVM.ViewModel
             ReplaceData replaceData = new ReplaceData(CaseSensitive);
             string suffix = "replacify"; // TODO let the user change this with GUI later
 
-            // parse the replace phrases and save them in the object
-            bool result = replaceData.ParseReplacePhrases();
-
-            if (result == false)
-            {
-                Debug.WriteLine("Replace phrases could not be parsed.");
-                return false;
-            }
-
             // create a list of destination file names
             List<string> destFileNames = SourceFiles.GenerateDestFileNames(suffix);
 
             // perform the text replacements
-            result = replaceData.PerformReplacements(SourceFiles.FileNames, destFileNames, WholeWord);
+            bool result = replaceData.PerformReplacements(SourceFiles.FileNames, destFileNames, WholeWord);
 
             if (result == false)
             {
