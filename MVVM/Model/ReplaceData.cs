@@ -138,13 +138,18 @@ namespace TextReplace.MVVM.Model
                 {
                     foreach (string line in File.ReadLines(src))
                     {
+                        // search the current line for any text that should be replaced
                         var matches = matcher.Search(line);
+
+                        // save an offset to remember how much the position of each replacement
+                        // should be shifted if a replacement was already made on the same line
+                        int offset = 0;
                         string updatedLine = line;
-                        int i = 0;
                         foreach (var m in matches)
                         {
-                            updatedLine = updatedLine.Remove(m.Position, m.Text.Length)
-                                                     .Insert(m.Position, ReplacePhrases[m.Text]);
+                            updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
+                                                     .Insert(m.Position + offset, ReplacePhrases[m.Text]);
+                            offset += ReplacePhrases[m.Text].Length - m.Text.Length;
                         }
                         sw.WriteLine(updatedLine);
                     }
