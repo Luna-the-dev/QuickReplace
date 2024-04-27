@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using TextReplace.Core;
 
 namespace TextReplace.MVVM.Model
@@ -65,6 +60,27 @@ namespace TextReplace.MVVM.Model
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Generates a list of destination file names by adding a suffix onto the SrouceFile file names
+        /// </summary>
+        /// <param name="suffix"></param>
+        /// <returns>A list of destination file names</returns>
+        public static List<string> GenerateDestFileNames(string suffix)
+        {
+            List<string> destFileNames = new List<string>();
+            foreach (var name in FileNames)
+            {
+                destFileNames.Add(string.Format(@"{0}\{1}-{2}{3}",
+                                                Path.GetDirectoryName(name),
+                                                Path.GetFileNameWithoutExtension(name),
+                                                suffix,
+                                                Path.GetExtension(name)
+                                                ));
+            }
+
+            return destFileNames;
         }
 
     }
