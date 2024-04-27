@@ -10,6 +10,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="50"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
@@ -19,15 +20,35 @@
                 <RowDefinition Height="0.5*"/>
             </Grid.RowDefinitions>
 
+            <TextBlock Grid.Column="0" Grid.Row="1"
+                       Text="Case Sensitive:"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Foreground="#A971FE"
+                       FontSize="24"
+                       Margin="0 0 10 0"
+                       FontFamily="/Fonts/#Poppins"/>
+
+            <StackPanel Height="20"
+                Grid.Column="1" Grid.Row="1"
+                Name="StackPanel1"
+                Orientation="Horizontal">
+                <Viewbox Height="{Binding Path=ActualHeight, ElementName=StackPanel1}">
+                    <CheckBox Command="{Binding ToggleCaseSensitive}"
+                              CommandParameter="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"/>
+                </Viewbox>
+            </StackPanel>
+
             <Button
                 Width="100" Height="40"
-                Grid.Column="0" Grid.Row="1"
+                Grid.Column="2" Grid.Row="1"
+                HorizontalAlignment="Left"
                 Content="Replace"
                 Background="#A971FE"
                 Foreground="Lavender"
                 FontWeight="Bold"
                 BorderThickness="0"
-                Padding="0 0 0 0"
+                Margin="10 0 0 0"
                 Command="{Binding Replace}"/>
             
         </Grid>        

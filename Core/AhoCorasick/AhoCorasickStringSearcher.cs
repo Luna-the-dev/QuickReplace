@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace TextReplace.Core.AhoCorasick
+﻿namespace TextReplace.Core.AhoCorasick
 {
     class AhoCorasickStringSearcher
     {
         // GotoTransations:
         // For each state, we have a Dictionary<char, newState>
-        private Dictionary<int, Dictionary<char, int>> GotoTransitions =
-            new Dictionary<int, Dictionary<char, int>>();
+        private Dictionary<int, Dictionary<string, int>> GotoTransitions =
+            new Dictionary<int, Dictionary<string, int>>();
 
         // FailTransistions:
         // Dictionary<state, failState>
@@ -24,26 +21,40 @@ namespace TextReplace.Core.AhoCorasick
         // Total number of outputs added to nodes
         public long TotalOutputs { get; private set; }
 
+        public bool CaseSentitive { get; private set; }
+
         private readonly int StartState;
 
         private bool debugMode = false;
 
 
-        public AhoCorasickStringSearcher()
+        public AhoCorasickStringSearcher(bool caseSensitive)
         {
+            CaseSentitive = caseSensitive;
             StartState = CreateNewState();
         }
 
         private int CreateNewState()
         {
             int state = NumStates++;
-            GotoTransitions.Add(state, new Dictionary<char, int>());
+            if (CaseSentitive)
+            {
+                GotoTransitions.Add(state, new Dictionary<string, int>());
+            }
+            else
+            {
+                GotoTransitions.Add(state, new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
+            }
+            
             return state;
         }
 
-        private Dictionary<char, int> GetStateTransitions(int state)
+        private Dictionary<string, int> GetStateTransitions(int state)
         {
-            Dictionary<char, int> transitions;
+            Dictionary<string, int> transitions = (CaseSentitive) ?
+                new Dictionary<string, int>() :
+                new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
             if (!GotoTransitions.TryGetValue(state, out transitions))
             {
                 throw new ApplicationException(string.Format("State {0} is not defined.", state));
@@ -51,7 +62,7 @@ namespace TextReplace.Core.AhoCorasick
             return transitions;
         }
 
-        private int Goto(int state, char c)
+        private int Goto(int state, string c)
         {
             var transitions = GetStateTransitions(state);
             int newState;
@@ -62,7 +73,7 @@ namespace TextReplace.Core.AhoCorasick
             return newState;
         }
 
-        private void AddStateTransition(int state, char c, int newState)
+        private void AddStateTransition(int state, string c, int newState)
         {
             var transitions = GetStateTransitions(state);
             transitions.Add(c, newState);
@@ -117,11 +128,11 @@ namespace TextReplace.Core.AhoCorasick
             int state = StartState;
             foreach (var c in item)
             {
-                int newState = Goto(state, c);
+                int newState = Goto(state, c.ToString());
                 if (newState == -1)
                 {
                     newState = CreateNewState();
-                    AddStateTransition(state, c, newState);
+                    AddStateTransition(state, c.ToString(), newState);
                 }
                 state = newState;
             }
@@ -130,7 +141,7 @@ namespace TextReplace.Core.AhoCorasick
             AddOutput(state, item);
         }
 
-        private int SearchGoto(int state, char c)
+        private int SearchGoto(int state, string c)
         {
             int newState = Goto(state, c);
             if (newState == -1 && state == StartState)
@@ -195,16 +206,22 @@ namespace TextReplace.Core.AhoCorasick
 
         }
 
-        //public IEnumerable<int> Search(IEnumerable<int> wordIds)
+        /// <summary>
+        /// Searches a text for matches of some specific words using the Aho-Corsasick algorithm
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns>
+        /// An enumerable containing StringMatch objects.
+        /// These contain the text found and the position it was found at.
+        /// </returns>
         public IEnumerable<StringMatch> Search(string text)
         {
-            //var foundItems = new HashSet<string>();
             var foundItems = new List<StringMatch>();
             int state = StartState;
             //foreach (var c in text)
             for (int pos = 0; pos < text.Length; ++pos)
             {
-                char c = text[pos];
+                string c = text[pos].ToString();
                 while (Goto(state, c) == -1)
                 {
                     if (state == StartState)

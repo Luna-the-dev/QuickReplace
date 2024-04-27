@@ -9,7 +9,7 @@ namespace TextReplace.MVVM.Model
 
         public static string FileName
         {
-            get => _fileName;
+            get { return _fileName; }
             set
             {
                 if (FileValidation.IsInputFileReadable(value))

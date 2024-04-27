@@ -18,7 +18,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public object CurrentView
         {
-            get => _currentView;
+            get { return _currentView; }
             set
             {
                 _currentView = value;

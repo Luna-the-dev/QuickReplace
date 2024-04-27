@@ -10,10 +10,9 @@ namespace TextReplace.MVVM.Model
     {
         // key is the phrase to replace, value is what it is being replaced with
         private Dictionary<string, string> _replacePhrases = new Dictionary<string, string>();
-
         public Dictionary<string, string> ReplacePhrases
         {
-            get => _replacePhrases;
+            get { return _replacePhrases; }
             set
             {
                 if (DataValidation.AreReplacePhrasesValid(value))
@@ -25,6 +24,18 @@ namespace TextReplace.MVVM.Model
                     throw new Exception("Replace phrases are not valid.");
                 }
             }
+        }
+
+        private bool _caseSensitive = false;
+        public bool CaseSensitive
+        {
+            get { return _caseSensitive; }
+            set { _caseSensitive = value; }
+        }
+
+        public ReplaceData(bool caseSensitive)
+        {
+            CaseSensitive = caseSensitive;
         }
 
         public bool SaveReplacePhrases()
@@ -99,7 +110,7 @@ namespace TextReplace.MVVM.Model
         {
             // construct the automaton and fill it with the phrases to search for
             // also create a list of the replacement phrases to go alongside the 
-            AhoCorasickStringSearcher matcher = new AhoCorasickStringSearcher();
+            AhoCorasickStringSearcher matcher = new AhoCorasickStringSearcher(CaseSensitive);
             foreach (var searchWord in ReplacePhrases)
             {
                 matcher.AddItem(searchWord.Key);

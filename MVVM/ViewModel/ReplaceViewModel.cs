@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using TextReplace.Core;
 using TextReplace.MVVM.Model;
 
@@ -7,8 +6,16 @@ namespace TextReplace.MVVM.ViewModel
 {
     class ReplaceViewModel
     {
+        private bool _caseSensitive = false;
+        public bool CaseSensitive
+        {
+            get { return _caseSensitive; }
+            private set { _caseSensitive = value; }
+        }
+
         // commands
-        public RelayCommand Replace {  get; set; }
+        public RelayCommand Replace { get; set; }
+        public RelayCommand ToggleCaseSensitive { get; set; }
 
         public ReplaceViewModel()
         {
@@ -19,6 +26,12 @@ namespace TextReplace.MVVM.ViewModel
                     Debug.WriteLine("Something went wrong in the replace command.");
                 }
             });
+
+            ToggleCaseSensitive = new RelayCommand(o =>
+            {
+                Debug.WriteLine($"case sensitive = {o}");
+                CaseSensitive = Convert.ToBoolean(o);
+            });
         }
 
         /// <summary>
@@ -27,7 +40,7 @@ namespace TextReplace.MVVM.ViewModel
         /// <returns>Returns false if something went wrong.</returns>
         private bool ReplaceData()
         {
-            ReplaceData replaceData = new ReplaceData();
+            ReplaceData replaceData = new ReplaceData(CaseSensitive);
             string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // open a file dialogue for the user and update the source files
