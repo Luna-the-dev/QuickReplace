@@ -12,18 +12,44 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="200"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="0.25*"/>
+                <RowDefinition Height="0.125*"/>
+                <RowDefinition Height="0.125*"/>
                 <RowDefinition Height="0.25*"/>
                 <RowDefinition Height="0.5*"/>
             </Grid.RowDefinitions>
 
+            <Grid.Resources >
+                <viewModel:UploadViewModel x:Key="Delimiter"/>
+            </Grid.Resources>
+
+            
+
+            <TextBlock Grid.Column="0" Grid.Row="1"
+                       Text="Delimiter"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Foreground="#A971FE"
+                       FontSize="24"
+                       Margin="0 0 10 0"
+                       FontFamily="/Fonts/#Poppins"/>
+
+            <!--<TextBox Grid.Column="1" Grid.Row="1"-->
+            <!--         Text="{Binding Source={StaticResource Delimiter},-->
+            <!--                        Path=SetDelimiter,-->
+            <!--                        Mode=TwoWay,-->
+            <!--                        UpdateSourceTrigger=LostFocus}"/>-->
+
             <Button
                 Width="100" Height="40"
-                Grid.Column="0" Grid.Row="0"
+                Grid.Column="2" Grid.Row="1"
+                Grid.RowSpan="2"
                 Content="Upload replace"
                 Background="#A971FE"
                 Foreground="Lavender"
@@ -31,10 +57,10 @@
                 BorderThickness="0"
                 Padding="0 0 0 0"
                 Command="{Binding ReplaceFile}"/>
-
+            
             <Button
                 Width="100" Height="40"
-                Grid.Column="0" Grid.Row="1"
+                Grid.Column="2" Grid.Row="3"
                 Content="Upload sources"
                 Background="#A971FE"
                 Foreground="Lavender"

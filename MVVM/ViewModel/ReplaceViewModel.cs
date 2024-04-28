@@ -14,47 +14,18 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         private bool _wholeWord;
-
         public bool WholeWord
         {
             get { return _wholeWord; }
             private set { _wholeWord = value; }
         }
 
-
         // commands
-        public RelayCommand Replace { get; set; }
-        public RelayCommand ToggleCaseSensitive { get; set; }
-        public RelayCommand ToggleWholeWord { get; set; }
+        public RelayCommand Replace => new RelayCommand(o => ReplaceCmd());
+        public RelayCommand ToggleCaseSensitive => new RelayCommand(o => ToggleCaseSensitiveCmd(o));
+        public RelayCommand ToggleWholeWord => new RelayCommand(o => ToggleWholeWordCmd(o));
 
-        public ReplaceViewModel()
-        {
-            Replace = new RelayCommand(o =>
-            {
-                if (DoReplace() == false)
-                {
-                    Debug.WriteLine("Something went wrong in the replace command.");
-                }
-            });
-
-            ToggleCaseSensitive = new RelayCommand(o =>
-            {
-                Debug.WriteLine($"case sensitive = {o}");
-                CaseSensitive = Convert.ToBoolean(o);
-            });
-
-            ToggleWholeWord = new RelayCommand(o =>
-            {
-                Debug.WriteLine($"whole word = {o}");
-                WholeWord = Convert.ToBoolean(o);
-            });
-        }
-
-        /// <summary>
-        /// Utility function used by the Replace command. This performs the actual replace function.
-        /// </summary>
-        /// <returns>Returns false if something went wrong.</returns>
-        private bool DoReplace()
+        private void ReplaceCmd()
         {
             ReplaceData replaceData = new ReplaceData(CaseSensitive);
             string suffix = "replacify"; // TODO let the user change this with GUI later
@@ -68,10 +39,19 @@ namespace TextReplace.MVVM.ViewModel
             if (result == false)
             {
                 Debug.WriteLine("A replacement could not be made.");
-                return false;
             }
+        }
 
-            return true;
+        private void ToggleCaseSensitiveCmd(object o)
+        {
+            Debug.WriteLine($"case sensitive = {o}");
+            CaseSensitive = Convert.ToBoolean(o);
+        }
+
+        private void ToggleWholeWordCmd(object o)
+        {
+            Debug.WriteLine($"whole word = {o}");
+            WholeWord = Convert.ToBoolean(o);
         }
     }
 }

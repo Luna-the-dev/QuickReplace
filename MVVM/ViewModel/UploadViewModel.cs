@@ -1,46 +1,61 @@
-﻿using System.Diagnostics;
+﻿using System.CodeDom.Compiler;
+using System.Diagnostics;
 using TextReplace.Core;
 
 namespace TextReplace.MVVM.ViewModel
 {
     class UploadViewModel
     {
-        // Commands
-        public RelayCommand ReplaceFile { get; set; }
-        public RelayCommand SourceFiles { get; set; }
-
-        public UploadViewModel()
+        private static string _delimiter = "hi";
+        public static string Delimiter
         {
-            ReplaceFile = new RelayCommand(o =>
+            get { return _delimiter; }
+            private set { _delimiter = value; }
+        }
+
+        // Commands
+        public RelayCommand ReplaceFile => new RelayCommand(o => ReplaceFileCmd());
+        public RelayCommand SourceFiles => new RelayCommand(o => SourceFilesCmd());
+        public RelayCommand SetDelimiter => new RelayCommand(o => SetDelimiterCmd());
+
+        private void ReplaceFileCmd()
+        {
+            // open a file dialogue for the user and update the replace file
+            bool result = Model.ReplaceData.SetNewReplaceFileFromUser();
+
+            if (result == false)
             {
-                // open a file dialogue for the user and update the replace file
-                bool result = Model.ReplaceData.SetNewReplaceFileFromUser();
+                Debug.WriteLine("ReplaceFile either could not be read or parsed.");
+            }
 
-                if (result == false)
-                {
-                    Debug.WriteLine("ReplaceFile either could not be read or parsed.");
-                }
+            Debug.Write("Replace file name: ");
+            Debug.WriteLine(Model.ReplaceData.FileName);
 
-                /*Debug.WriteLine(Model.ReplaceData.FileName);
-
-                foreach (var kvp in Model.ReplaceData.ReplacePhrases)
-                {
-                    Debug.WriteLine($"key: {kvp.Key}\tvalue: {kvp.Value}");
-                }*/
-            });
-
-            SourceFiles = new RelayCommand(o =>
+            /*foreach (var kvp in Model.ReplaceData.ReplacePhrases)
             {
-                // open a file dialogue for the user and update the source files
-                bool result = Model.SourceFiles.SetNewSourceFilesFromUser();
+                Debug.WriteLine($"key: {kvp.Key}\tvalue: {kvp.Value}");
+            }*/
+        }
 
-                if (result == false)
-                {
-                    Debug.WriteLine("SourceFile could not be read.");
-                }
+        private void SourceFilesCmd()
+        {
+            // open a file dialogue for the user and update the source files
+            bool result = Model.SourceFiles.SetNewSourceFilesFromUser();
 
-                /*Model.SourceFiles.FileNames.ForEach(i => Debug.WriteLine(i));*/
-            });
+            if (result == false)
+            {
+                Debug.WriteLine("SourceFile could not be read.");
+            }
+
+            Debug.Write("Source file name(s): ");
+            Model.SourceFiles.FileNames.ForEach(i => Debug.WriteLine(i));
+        }
+
+        private void SetDelimiterCmd()
+        {
+            Debug.WriteLine("hey!");
+            //Delimiter = o.ToString() ?? "";
+            //Debug.WriteLine(Delimiter);
         }
 
     }

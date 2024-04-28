@@ -5,17 +5,7 @@ namespace TextReplace.MVVM.ViewModel
 {
     class MainViewModel : ObservableObject
     {
-
-        public RelayCommand HomeViewCommand { get; set; }
-        public RelayCommand UploadViewCommand { get; set; }
-        public RelayCommand ReplaceViewCommand { get; set; }
-
-        public HomeViewModel HomeVm { get; set; }
-        public UploadViewModel UploadVm { get; set; }
-        public ReplaceViewModel ReplaceVm { get; set; }
-
         private object _currentView;
-
         public object CurrentView
         {
             get { return _currentView; }
@@ -26,33 +16,18 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
+        public RelayCommand HomeViewCommand => new RelayCommand(o => { CurrentView = HomeVm; });
+        public RelayCommand UploadViewCommand => new RelayCommand(o => { CurrentView = UploadVm; });
+        public RelayCommand ReplaceViewCommand => new RelayCommand(o => { CurrentView = ReplaceVm; });
 
+        public HomeViewModel HomeVm = new HomeViewModel();
+        public UploadViewModel UploadVm = new UploadViewModel();
+        public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
+        
         public MainViewModel()
         {
-            // declare view models
-            HomeVm = new HomeViewModel();
-            UploadVm = new UploadViewModel();
-            ReplaceVm = new ReplaceViewModel();
-
             // set the home view as default
-            CurrentView = HomeVm;
-
-
-            // change the current view when buttons are clicked
-            HomeViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = HomeVm;
-            });
-
-            UploadViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = UploadVm;
-            });
-
-            ReplaceViewCommand = new RelayCommand(o =>
-            {
-                CurrentView = ReplaceVm;
-            });
+            _currentView = HomeVm;
         }
     }
 }
