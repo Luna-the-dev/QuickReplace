@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 
-namespace TextReplace.Core
+namespace TextReplace.Core.Validation
 {
     class FileValidation
     {

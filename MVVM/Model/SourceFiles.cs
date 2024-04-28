@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using TextReplace.Core;
+using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.Model
 {

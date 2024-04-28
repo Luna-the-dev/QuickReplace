@@ -1,9 +1,7 @@
-﻿using TextReplace.Core;
-using Microsoft.VisualBasic.FileIO;
-using TextReplace.Core.AhoCorasick;
+﻿using TextReplace.Core.AhoCorasick;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Shapes;
+using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.Model
 {
@@ -120,57 +118,13 @@ namespace TextReplace.MVVM.Model
             try
             {
                 // if file is formatted as a delimiter seperated value
-                return ParseDSV(fileName);
+                return DataValidation.ParseDSV(fileName);
             }
             catch
             {
+                Debug.WriteLine("Something went wrong in ParseReplacePhrases()");
                 return new Dictionary<string, string>(); ;
             }
-        }
-
-        /// <summary>
-        /// Parses "delimiter seperated value" files such as .csv or .tsv. Defaults to .csv files.
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns>
-        /// A dictionary of pairs of the values from the file. If one of the lines in the file has an
-        /// incorrect number of values or if the operation fails for another reason, return an empty list.
-        /// </returns>
-        public static Dictionary<string, string> ParseDSV(string fileName, string delimiter = ",")
-        {
-            var phrases = new Dictionary<string, string>();
-
-            // open the file with the parser
-            using (var parser = new TextFieldParser(fileName))
-            {
-                parser.TextFieldType = FieldType.Delimited;
-                parser.SetDelimiters(delimiter);
-
-                // parse the file line by line
-                // store the values from each line into an array
-                // if the line doesnt have two values, return an empty list
-                string[]? line;
-                while (!parser.EndOfData)
-                {
-                    try
-                    {
-                        line = parser.ReadFields();
-                        if (line == null || line.Length != 2)
-                        {
-                            Debug.WriteLine("DSV replace file could not be parsed" +
-                                "due to having an invalid number of values in a row");
-                            return new Dictionary<string, string>();
-                        }
-                        phrases[line[0]] = line[1];
-                    }
-                    catch (MalformedLineException e)
-                    {
-                        Debug.WriteLine($"DSV replace file could not be parsed due to {e}");
-                        return new Dictionary<string, string>();
-                    }
-                }
-            }
-            return phrases;
         }
 
         /// <summary>
@@ -223,18 +177,17 @@ namespace TextReplace.MVVM.Model
         {
             try
             {
-                using (var sw = new StreamWriter(dest))
+                using var sw = new StreamWriter(dest);
+
+                // making these two seperate functions in order to cut down on if/else checks
+                // inside the foreach loops (which could potentially loop millions of times each)
+                if (isWholeWord)
                 {
-                    // making these two seperate functions in order to cut down on if/else checks
-                    // inside the foreach loops (which could potentially loop millions of times each)
-                    if (isWholeWord)
-                    {
-                        MatchAndWriteWholeWord(src, sw, matcher);
-                    }
-                    else
-                    {
-                        MatchAndWrite(src, sw, matcher);
-                    }
+                    MatchAndWriteWholeWord(src, sw, matcher);
+                }
+                else
+                {
+                    MatchAndWrite(src, sw, matcher);
                 }
             }
             catch (Exception e)

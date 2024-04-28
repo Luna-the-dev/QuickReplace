@@ -21,12 +21,12 @@ namespace TextReplace.MVVM.ViewModel
                     Debug.WriteLine("ReplaceFile either could not be read or parsed.");
                 }
 
-                Debug.WriteLine(Model.ReplaceData.FileName);
+                /*Debug.WriteLine(Model.ReplaceData.FileName);
 
                 foreach (var kvp in Model.ReplaceData.ReplacePhrases)
                 {
                     Debug.WriteLine($"key: {kvp.Key}\tvalue: {kvp.Value}");
-                }
+                }*/
             });
 
             SourceFiles = new RelayCommand(o =>
@@ -39,7 +39,7 @@ namespace TextReplace.MVVM.ViewModel
                     Debug.WriteLine("SourceFile could not be read.");
                 }
 
-                Model.SourceFiles.FileNames.ForEach(i => Debug.WriteLine(i));
+                /*Model.SourceFiles.FileNames.ForEach(i => Debug.WriteLine(i));*/
             });
         }
 
