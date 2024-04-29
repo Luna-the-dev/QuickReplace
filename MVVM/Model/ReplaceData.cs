@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Validation;
+using System.Xml.Linq;
 
 namespace TextReplace.MVVM.Model
 {
@@ -47,8 +48,22 @@ namespace TextReplace.MVVM.Model
             get { return _caseSensitive; }
             set { _caseSensitive = value; }
         }
+        // the delimiter used for parsing the replace file
+        private static string _delimiter = string.Empty;
+        public static string Delimiter
+        {
+            get { return _delimiter = string.Empty; }
+            set { _delimiter = value; }
+        }
+        // a flag used by the replace file parser to determine if there is a header line or not
+        private static bool _hasHeader = false;
+        public static bool HasHeader
+        {
+            get { return _hasHeader = false; }
+            set { _hasHeader = value; }
+        }
         // delimiters which decides what seperates whole words
-        private const string DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
+        private const string WORD_DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
 
 
         /*
@@ -117,13 +132,32 @@ namespace TextReplace.MVVM.Model
         {
             try
             {
-                // if file is formatted as a delimiter seperated value
-                return DataValidation.ParseDSV(fileName);
+                string extension = Path.GetExtension(fileName).ToLower();
+                switch (extension)
+                {
+                    case ".csv":
+                        return DataValidation.ParseDSV(fileName, ",", HasHeader);
+                    case ".tsv":
+                        return DataValidation.ParseDSV(fileName, "\t", HasHeader);
+                    case ".xls":
+                    case ".xlsx":
+                        // TODO: add excel file support
+                    case ".txt":
+                        if (IsDelimiterValid())
+                        {
+                            return DataValidation.ParseDSV(fileName, Delimiter, HasHeader);
+                        }
+                        Debug.WriteLine($"{Delimiter} is an invalid delimiter.");
+                        return new Dictionary<string, string>();
+                    default:
+                        Debug.WriteLine($"{extension} is not a supported file type.");
+                        return new Dictionary<string, string>();
+                }
             }
             catch
             {
                 Debug.WriteLine("Something went wrong in ParseReplacePhrases()");
-                return new Dictionary<string, string>(); ;
+                return new Dictionary<string, string>();
             }
         }
 
@@ -274,20 +308,20 @@ namespace TextReplace.MVVM.Model
             /*
              * yes, i know this is ugly. this can be boiled down to the following.
              * match is not a whole word if:
-             *   there is a char before the match AND it is not in the list of delimiters
+             *   there is a char before the match AND it is not in the list of word delimiters
              *   OR
-             *   there is a char after the match AND it is not found in the list of delimiters
+             *   there is a char after the match AND it is not found in the list of word delimiters
              */
             int indexBefore = pos - 1;
             int indexAfter = pos + text.Length;
             if ( ( indexBefore >= 0
                    &&
-                   DELIMITERS.Contains(line[indexBefore]) == false
+                   WORD_DELIMITERS.Contains(line[indexBefore]) == false
                  )
                  ||
                  (indexAfter < line.Length
                  &&
-                   DELIMITERS.Contains(line[indexAfter]) == false
+                   WORD_DELIMITERS.Contains(line[indexAfter]) == false
                  )
                )
             {
@@ -296,6 +330,13 @@ namespace TextReplace.MVVM.Model
             return true;
         }
 
-
+        private static bool IsDelimiterValid()
+        {
+            if (Delimiter == string.Empty || Delimiter.Contains("\n"))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

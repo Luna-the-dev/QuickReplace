@@ -1,11 +1,12 @@
 ﻿using System.Diagnostics;
 using TextReplace.Core;
+using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
     class UploadViewModel : ObservableObject
     {
-        private string _delimiter = "";
+        private string _delimiter = string.Empty;
         public string Delimiter
         {
             get { return _delimiter; }
@@ -14,6 +15,7 @@ namespace TextReplace.MVVM.ViewModel
                 if (IsDelimiterValid(value))
                 {
                     _delimiter = value;
+                    ReplaceData.Delimiter = value;
                     OnPropertyChanged();
                 }
             }
@@ -26,6 +28,7 @@ namespace TextReplace.MVVM.ViewModel
             set
             {
                 _hasHeader = value;
+                ReplaceData.HasHeader = value;
                 OnPropertyChanged();
             }
         }

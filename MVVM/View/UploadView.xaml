@@ -59,7 +59,7 @@
                         Name="StackPanel1"
                         Orientation="Horizontal">
                 <Viewbox Height="{Binding Path=ActualHeight, ElementName=StackPanel1}">
-                    <CheckBox IsChecked="{Binding hasHeader}"
+                    <CheckBox IsChecked="{Binding HasHeader}"
                               Command="{Binding HasHeader}"
                               CommandParameter="{Binding Path=IsChecked,
                                                          Mode=TwoWay,
