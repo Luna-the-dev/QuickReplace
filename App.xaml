@@ -4,7 +4,7 @@
              xmlns:local="clr-namespace:TextReplace"
              xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
              xmlns:view="clr-namespace:TextReplace.MVVM.View"
-             StartupUri="MainWindow.xaml">
+             StartupUri="MVVM/View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             

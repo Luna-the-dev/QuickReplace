@@ -1,29 +1,36 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using TextReplace.Core;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    class ReplaceViewModel
+    class ReplaceViewModel : ObservableObject
     {
         private bool _caseSensitive = false;
         public bool CaseSensitive
         {
             get { return _caseSensitive; }
-            private set { _caseSensitive = value; }
+            set
+            {
+                _caseSensitive = value;
+                OnPropertyChanged();
+            }
         }
 
-        private bool _wholeWord;
+        private bool _wholeWord = false;
         public bool WholeWord
         {
             get { return _wholeWord; }
-            private set { _wholeWord = value; }
+            set
+            {
+                _wholeWord = value;
+                OnPropertyChanged();
+            }
         }
 
         // commands
         public RelayCommand Replace => new RelayCommand(o => ReplaceCmd());
-        public RelayCommand ToggleCaseSensitive => new RelayCommand(o => ToggleCaseSensitiveCmd(o));
-        public RelayCommand ToggleWholeWord => new RelayCommand(o => ToggleWholeWordCmd(o));
 
         private void ReplaceCmd()
         {
@@ -40,18 +47,6 @@ namespace TextReplace.MVVM.ViewModel
             {
                 Debug.WriteLine("A replacement could not be made.");
             }
-        }
-
-        private void ToggleCaseSensitiveCmd(object o)
-        {
-            Debug.WriteLine($"case sensitive = {o}");
-            CaseSensitive = Convert.ToBoolean(o);
-        }
-
-        private void ToggleWholeWordCmd(object o)
-        {
-            Debug.WriteLine($"whole word = {o}");
-            WholeWord = Convert.ToBoolean(o);
         }
     }
 }

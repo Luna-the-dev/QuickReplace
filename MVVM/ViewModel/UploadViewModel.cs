@@ -1,22 +1,40 @@
-﻿using System.CodeDom.Compiler;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using TextReplace.Core;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    class UploadViewModel
+    class UploadViewModel : ObservableObject
     {
-        private static string _delimiter = "hi";
-        public static string Delimiter
+        private string _delimiter = "";
+        public string Delimiter
         {
             get { return _delimiter; }
-            private set { _delimiter = value; }
+            set
+            {
+                if (IsDelimiterValid(value))
+                {
+                    _delimiter = value;
+                    OnPropertyChanged();
+                }
+            }
         }
+
+        private bool _hasHeader = false;
+        public bool HasHeader
+        {
+            get { return _hasHeader; }
+            set
+            {
+                _hasHeader = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private const string INVALID_DELIMITER_CHARS = "\n";
 
         // Commands
         public RelayCommand ReplaceFile => new RelayCommand(o => ReplaceFileCmd());
         public RelayCommand SourceFiles => new RelayCommand(o => SourceFilesCmd());
-        public RelayCommand SetDelimiter => new RelayCommand(o => SetDelimiterCmd());
 
         private void ReplaceFileCmd()
         {
@@ -51,12 +69,13 @@ namespace TextReplace.MVVM.ViewModel
             Model.SourceFiles.FileNames.ForEach(i => Debug.WriteLine(i));
         }
 
-        private void SetDelimiterCmd()
+        private bool IsDelimiterValid(string delimiter)
         {
-            Debug.WriteLine("hey!");
-            //Delimiter = o.ToString() ?? "";
-            //Debug.WriteLine(Delimiter);
+            if (INVALID_DELIMITER_CHARS.Contains(delimiter))
+            {
+                return false;
+            }
+            return true;
         }
-
     }
 }

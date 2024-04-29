@@ -8,9 +8,9 @@
         mc:Ignorable="d"
         Height="600" Width="920"
         WindowStyle="None"
-        ResizeMode="NoResize"
         Background="Transparent"
-        AllowsTransparency="True">
+        AllowsTransparency="True"
+        ResizeMode="CanResizeWithGrip">
 
     <Window.DataContext>
         <viewModel:MainViewModel/>

@@ -35,8 +35,12 @@
                 Name="StackPanel1"
                 Orientation="Horizontal">
                 <Viewbox Height="{Binding Path=ActualHeight, ElementName=StackPanel1}">
-                    <CheckBox Command="{Binding ToggleCaseSensitive}"
-                              CommandParameter="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"/>
+                    <CheckBox IsChecked="{Binding CaseSensitive}"
+                              Command="{Binding CaseSensitive}"
+                              CommandParameter="{Binding Path=IsChecked,
+                                                         Mode=TwoWay,
+                                                         UpdateSourceTrigger=PropertyChanged,
+                                                         RelativeSource={RelativeSource Self}}"/>
                 </Viewbox>
             </StackPanel>
 
@@ -66,8 +70,12 @@
                         Name="StackPanel2"
                         Orientation="Horizontal">
                 <Viewbox Height="{Binding Path=ActualHeight, ElementName=StackPanel2}">
-                    <CheckBox Command="{Binding ToggleWholeWord}"
-                              CommandParameter="{Binding Path=IsChecked, RelativeSource={RelativeSource Self}}"/>
+                    <CheckBox IsChecked="{Binding WholeWord}"
+                              Command="{Binding WholeWord}"
+                              CommandParameter="{Binding Path=IsChecked,
+                                                         Mode=TwoWay,
+                                                         UpdateSourceTrigger=PropertyChanged,
+                                                         RelativeSource={RelativeSource Self}}"/>
                 </Viewbox>
             </StackPanel>
 
