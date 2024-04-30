@@ -1,0 +1,25 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="BtnLight">
+        <SolidColorBrush.Color>
+            <!--#5A3B61-->
+            <Color A="255" R="90" G="59" B="97"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="BtnDark">
+        <SolidColorBrush.Color>
+            <!--#48365A-->
+            <Color A="255" R="72" G="54" B="90"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="BackgroundColor">
+        <SolidColorBrush.Color>
+            <!--#272537-->
+            <Color A="255" R="39" G="37" B="55"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+</ResourceDictionary>

@@ -67,9 +67,6 @@
                                                          RelativeSource={RelativeSource Self}}"/>
                 </Viewbox>
             </StackPanel>
-
-            
-            
             
             <Button
                 Width="100" Height="40"
@@ -82,7 +79,7 @@
                 BorderThickness="0"
                 Padding="0 0 0 0"
                 Command="{Binding ReplaceFile}"/>
-            
+
             <Button
                 Width="100" Height="40"
                 Grid.Column="2" Grid.Row="3"
@@ -93,6 +90,7 @@
                 BorderThickness="0"
                 Padding="0 0 0 0"
                 Command="{Binding SourceFiles}"/>
+
         </Grid>
     </Border>
 </UserControl>

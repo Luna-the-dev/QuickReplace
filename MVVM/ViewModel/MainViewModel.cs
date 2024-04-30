@@ -1,5 +1,4 @@
-﻿using System;
-using TextReplace.Core;
+﻿using TextReplace.Core;
 
 namespace TextReplace.MVVM.ViewModel
 {
