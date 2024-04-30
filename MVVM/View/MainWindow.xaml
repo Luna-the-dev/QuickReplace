@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextReplace"
         xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
-        xmlns:dropdownmenu="clr-namespace:DropdownMenuControl;assembly=DropdownMenuControl"
+        xmlns:view="clr-namespace:TextReplace.MVVM.View"
         mc:Ignorable="d"
         Height="600" Width="920"
         WindowStyle="None"
@@ -78,6 +78,7 @@
                        Margin="20 0 0 0"
                        FontFamily="/Fonts/#Poppins"/>
 
+
             <StackPanel Grid.Row="2">
                 <RadioButton Content="Home"
                              Height="50"
@@ -100,131 +101,10 @@
                              FontSize="14"
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding ReplaceViewCommand}"/>
-
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal"
-                        Grid.Column="1" Grid.Row="1">
-                <Button Width="140" Height="40"
-                        Content="Upload Replace"
-                        Style="{StaticResource UploadButtonTheme}"
-                        FontSize="14"
-                        FontWeight="Medium"/>
+            <view:TopBarView Grid.Column="1" Grid.Row="1"/>
 
-                <dropdownmenu:DropdownMenu Width="25" Height="25" Margin="0 0 20 0">
-                    <dropdownmenu:DropdownMenu.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="{StaticResource BtnDark}"/>
-                            <Setter Property="Padding" Value="20 10"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Padding="{TemplateBinding Padding}"
-                                                Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}">
-                                            <ContentPresenter Content="{TemplateBinding Content}"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver"
-                                         Value="True">
-                                    <Trigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation Duration="0:0:0.05"
-                                                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                                From="#48365A"
-                                                                To="#5A3B61" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.EnterActions>
-                                    <Trigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation Duration="0:0:0.1"
-                                                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                                From="#5A3B61"
-                                                                To="#48365A" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.ExitActions>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </dropdownmenu:DropdownMenu.Resources>
-                    <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
-                        <StackPanel>
-                            <Button Content="temp 1"/>
-                            <Button Content="temp 2"/>
-                        </StackPanel>
-                    </Border>
-                </dropdownmenu:DropdownMenu>
-
-
-                <Button Width="140" Height="40"
-                        Content="Upload Source"
-                        Style="{StaticResource UploadButtonTheme}"
-                        FontSize="14"
-                        FontWeight="Medium"/>
-
-                <dropdownmenu:DropdownMenu Width="25" Height="25" Margin="0 0 20 0">
-                    <dropdownmenu:DropdownMenu.Resources>
-                        <Style TargetType="Button">
-                            <Setter Property="Background" Value="{StaticResource BtnDark}"/>
-                            <Setter Property="Padding" Value="20 10"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="Button">
-                                        <Border Padding="{TemplateBinding Padding}"
-                                                Background="{TemplateBinding Background}"
-                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                BorderThickness="{TemplateBinding BorderThickness}">
-                                            <ContentPresenter Content="{TemplateBinding Content}"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver"
-                                         Value="True">
-                                    <Trigger.EnterActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation Duration="0:0:0.05"
-                                                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                                From="#48365A"
-                                                                To="#5A3B61" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.EnterActions>
-                                    <Trigger.ExitActions>
-                                        <BeginStoryboard>
-                                            <Storyboard>
-                                                <ColorAnimation Duration="0:0:0.1"
-                                                                Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                                From="#5A3B61"
-                                                                To="#48365A" />
-                                            </Storyboard>
-                                        </BeginStoryboard>
-                                    </Trigger.ExitActions>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </dropdownmenu:DropdownMenu.Resources>
-                    <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
-                        <StackPanel>
-                            <Button Content="temp 1"/>
-                            <Button Content="temp 2"/>
-                        </StackPanel>
-                    </Border>
-                </dropdownmenu:DropdownMenu>
-
-            </StackPanel>
 
             <ContentControl Grid.Row="2"
                             Grid.Column="1"

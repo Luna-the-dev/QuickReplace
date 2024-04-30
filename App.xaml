@@ -28,6 +28,10 @@
                 <view:ReplaceView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type viewModel:TopBarViewModel}">
+                <view:TopBarView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>
