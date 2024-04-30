@@ -4,23 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TextReplace.MVVM.View"
+             
              xmlns:dropdownmenu="clr-namespace:DropdownMenuControl;assembly=DropdownMenuControl"
              mc:Ignorable="d" 
              d:DesignHeight="75" d:DesignWidth="745">
     
-    <StackPanel Orientation="Horizontal"
-            Grid.Column="1" Grid.Row="1">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="30"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Grid.Resources>
+            <Style TargetType="Border">
+                <Setter Property="Padding" Value="0 0 0 0"/>
+            </Style>
+        </Grid.Resources>
+        
         <Button Width="140" Height="40"
-            Content="Upload Replace"
-            Style="{StaticResource UploadButtonTheme}"
-            FontSize="14"
-            FontWeight="Medium"/>
-        <dropdownmenu:DropdownMenu Width="25" Height="15" Margin="0 0 20 0">
+                Grid.Column="0"
+                HorizontalAlignment="Left"
+                Content="Upload Replace"
+                Style="{StaticResource UploadButtonTheme}"
+                FontSize="14"
+                FontWeight="Medium"/>
+        <dropdownmenu:DropdownMenu Width="25" Height="15" Grid.Column="1" HorizontalAlignment="Left">
             <dropdownmenu:DropdownMenu.Resources>
                 <Style TargetType="Button">
+                    <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
+                    <Setter Property="FontSize" Value="12"/>
+                    <Setter Property="FontWeight" Value="Medium"/>
+                    <Setter Property="Foreground" Value="#FAFAFF"/>
                     <Setter Property="Background" Value="{StaticResource BtnDark}"/>
                     <Setter Property="Padding" Value="20 10"/>
                     <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="Button">
@@ -68,16 +92,22 @@
             </Border>
         </dropdownmenu:DropdownMenu>
 
+        <Viewbox Width="25" Height="25" Grid.Column="2" HorizontalAlignment="Left" Margin="0 0 0 3">
+            <Path Fill="#4EFF91" Data="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM9.29,16.29L5.7,12.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L10,14.17l6.88,-6.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-7.59,7.59c-0.38,0.39 -1.02,0.39 -1.41,0z"/>
+        </Viewbox>
 
         <Button Width="140" Height="40"
+                Grid.Column="4"
+                HorizontalAlignment="Left"
                 Content="Upload Source"
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
                 FontWeight="Medium"/>
 
-        <dropdownmenu:DropdownMenu Width="25" Height="15" Margin="0 0 20 0">
+        <dropdownmenu:DropdownMenu Width="25" Height="15" Grid.Column="5" HorizontalAlignment="Left">
             <dropdownmenu:DropdownMenu.Resources>
                 <Style TargetType="Button">
+                    <Setter Property="Foreground" Value="#FAFAFF"/>
                     <Setter Property="Background" Value="{StaticResource BtnDark}"/>
                     <Setter Property="Padding" Value="20 10"/>
                     <Setter Property="BorderThickness" Value="0"/>
@@ -127,5 +157,9 @@
                 </StackPanel>
             </Border>
         </dropdownmenu:DropdownMenu>
-    </StackPanel>
+
+        <Viewbox Width="25" Height="25" Grid.Column="6" HorizontalAlignment="Left" Margin="0 0 0 3">
+            <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
+        </Viewbox>
+    </Grid>
 </UserControl>

@@ -9,12 +9,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CsvHelper" Version="32.0.1" />
-    <PackageReference Include="DropdownMenu.WPF" Version="1.0.0" />
+    <None Remove="Fonts\Poppins-ExtraLight.ttf" />
+    <None Remove="Fonts\Poppins-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Images\" />
+    <PackageReference Include="CsvHelper" Version="32.0.1" />
+    <PackageReference Include="DropdownMenu.WPF" Version="1.0.0" />
+    <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Images\Icons\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Fonts\Poppins-ExtraLight.ttf" />
+    <Resource Include="Fonts\Poppins-Regular.ttf" />
   </ItemGroup>
 
 </Project>
