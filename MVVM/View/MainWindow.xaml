@@ -103,8 +103,7 @@
                              Command="{Binding ReplaceViewCommand}"/>
             </StackPanel>
 
-            <view:TopBarView Grid.Column="1" Grid.Row="1"/>
-
+            <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding TopBarView}"/>
 
             <ContentControl Grid.Row="2"
                             Grid.Column="1"

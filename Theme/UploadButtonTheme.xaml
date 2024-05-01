@@ -5,7 +5,7 @@
            x:Name="buttonStyle"
            x:Key="UploadButtonTheme">
         <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
-        <Setter Property="Foreground" Value="#FAFAFF"/>
+        <Setter Property="Foreground" Value="{DynamicResource BtnText}"/>
         <Setter Property="Background" Value="{DynamicResource BtnLight}"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Margin" Value="10 0 10 0"/>
