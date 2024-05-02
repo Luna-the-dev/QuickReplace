@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace TextReplace.MVVM.View
 {
@@ -10,6 +11,17 @@ namespace TextReplace.MVVM.View
         public TopBarView()
         {
             InitializeComponent();
+        }
+
+        private void OpenDelimiterInputWindow(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = (sender as Button)?.Content.ToString() ?? string.Empty;
+            string body = "Enter the delimiter used to seperate the original and replacement words.\n" +
+                "Note: This defaults to a comma for .csv files and a tab character for .tsv files.";
+            string defaultInputTest = "Ex. :, -, or ;";
+            var dialog = new InputWindow(window, title, body, defaultInputTest);
+            dialog.Show();
         }
     }
 }

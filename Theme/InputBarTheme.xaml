@@ -1,28 +1,25 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="{x:Type TextBox}"
-           x:Key="SearchBar">
+           x:Key="InputBar">
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type TextBox}">
                     <Border CornerRadius="10"
-                            Background="#353340"
-                            Width="200"
-                            Height="40">
-
+                            Background="#353340">
                         <Grid>
                             <Rectangle StrokeThickness="1"/>
                             <TextBox Margin="1"
-                                     Text="{TemplateBinding Text}"
                                      BorderThickness="0"
                                      Background="Transparent"
                                      VerticalContentAlignment="Center"
                                      Padding="5"
-                                     Foreground="#CFCFCF"
+                                     Foreground="{DynamicResource TextLight}"
+                                     CaretBrush="{DynamicResource TextLight}"
                                      x:Name="SearchBarBox"/>
 
                             <TextBlock IsHitTestVisible="False"
-                                       Text="Search"
+                                       Text="{TemplateBinding Text}"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
                                        Margin="10 0 0 0"
@@ -41,11 +38,9 @@
                                 </TextBlock.Style>
                             </TextBlock>
                         </Grid>
-                        
                     </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        
     </Style>
 </ResourceDictionary>

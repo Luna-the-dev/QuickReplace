@@ -3,7 +3,7 @@
     <Style BasedOn="{StaticResource {x:Type Button}}"
            TargetType="Button"
            x:Name="buttonStyle"
-           x:Key="UploadButtonTheme">
+           x:Key="ConfirmButtonTheme">
         <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
         <Setter Property="Foreground" Value="{DynamicResource TextLight}"/>
         <Setter Property="Background" Value="{DynamicResource BtnLight}"/>
@@ -12,9 +12,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="border" CornerRadius="16"
-                            BorderBrush="{DynamicResource BtnDark}" BorderThickness="0 0 3 3"
-                            Background="{TemplateBinding Background}">
+                    <Border x:Name="border" CornerRadius="6"
+                        BorderBrush="{DynamicResource BtnDark}" BorderThickness="0 0 2 2"
+                        Background="{TemplateBinding Background}">
                         <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Border>
                     <ControlTemplate.Triggers>

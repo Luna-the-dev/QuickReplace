@@ -15,10 +15,17 @@
         </SolidColorBrush.Color>
     </SolidColorBrush>
 
-    <SolidColorBrush x:Key="BtnText">
+    <SolidColorBrush x:Key="TextLight">
         <SolidColorBrush.Color>
             <!--#5A3B61-->
             <Color A="255" R="250" G="250" B="255"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="TextMedium">
+        <SolidColorBrush.Color>
+            <!--#CDC2F5-->
+            <Color A="255" R="205" G="194" B="245"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
 
@@ -26,6 +33,34 @@
         <SolidColorBrush.Color>
             <!--#272537-->
             <Color A="255" R="39" G="37" B="55"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="BackgroundColorDark">
+        <SolidColorBrush.Color>
+            <!--#111019-->
+            <Color A="255" R="17" G="16" B="25"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="CancelBtn">
+        <SolidColorBrush.Color>
+            <!--#FF6464-->
+            <Color A="255" R="250" G="100" B="100"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+    
+    <SolidColorBrush x:Key="CancelBtnDark">
+        <SolidColorBrush.Color>
+            <!--#993D3D-->
+            <Color A="255" R="153" G="61" B="61"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="CancelBtnText">
+        <SolidColorBrush.Color>
+            <!--#F2F2F2-->
+            <Color A="255" R="242" G="242" B="242"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
 

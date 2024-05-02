@@ -31,43 +31,7 @@
             </Grid.RowDefinitions>
 
             <!-- Top row with close buttons -->
-            <Border Grid.ColumnSpan="2"
-                    Background="#111019"
-                    MouseDown="Border_MouseDown">
-                <Grid HorizontalAlignment="Stretch">
-                    <Label Content="Replace Tool"
-                           Foreground="White"
-                           FontWeight="SemiBold"
-                           Margin="10 2 0 0"
-                           FontFamily="/Fonts/#Poppins-ExtraLight"/>
-
-                    <StackPanel HorizontalAlignment="Right"
-                                Orientation="Horizontal">
-                        <Button Width="25" Height="25"
-                                Content="🗕"
-                                Background="Transparent"
-                                Foreground="#CDC2F5"
-                                FontWeight="Bold"
-                                BorderThickness="0"
-                                Padding="0 0 0 2"
-                                Click="MinimizeBtn_Click"/>
-                        <Button Width="25" Height="25"
-                                Content="⬜"
-                                Background="Transparent"
-                                Foreground="#CDC2F5"
-                                FontWeight="Bold"
-                                BorderThickness="0"
-                                Click="WindowStateBtn_Click"/>
-                        <Button Width="25" Height="25"
-                                Content="✕"
-                                Background="Transparent"
-                                Foreground="#CDC2F5"
-                                FontWeight="Bold"
-                                BorderThickness="0"
-                                Click="CloseBtn_Click"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            <view:TopBorderView Grid.ColumnSpan="2" WindowName="Replacify"/>
 
             <TextBlock Grid.Row="1"
                        Text="Replacify"
