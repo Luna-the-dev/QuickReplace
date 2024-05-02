@@ -15,7 +15,6 @@
             <ColumnDefinition Width="30"/>
             <ColumnDefinition />
             <ColumnDefinition Width="160"/>
-            <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="30"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -33,56 +32,8 @@
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
                 FontWeight="Medium"/>
+
         <dropdownmenu:DropdownMenu Width="25" Height="15" Grid.Column="1" HorizontalAlignment="Left">
-            <dropdownmenu:DropdownMenu.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
-                    <Setter Property="FontSize" Value="12"/>
-                    <Setter Property="FontWeight" Value="Medium"/>
-                    <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
-                    <Setter Property="Background" Value="{StaticResource BtnDark}"/>
-                    <Setter Property="Padding" Value="20 10"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="HorizontalContentAlignment" Value="Left"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border Padding="{TemplateBinding Padding}"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}">
-                                    <ContentPresenter Content="{TemplateBinding Content}"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver"
-                             Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Duration="0:0:0.05"
-                                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                        From="#48365A"
-                                                        To="#5A3B61" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Duration="0:0:0.1"
-                                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                        From="#5A3B61"
-                                                        To="#48365A" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </dropdownmenu:DropdownMenu.Resources>
             <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
                     <Button Grid.Row="0" Command="{Binding ToggleWholeWord}">
@@ -123,61 +74,7 @@
                 FontSize="14"
                 FontWeight="Medium"/>
 
-        <dropdownmenu:DropdownMenu Width="25" Height="15" Grid.Column="5" HorizontalAlignment="Left">
-            <dropdownmenu:DropdownMenu.Resources>
-                <Style TargetType="Button">
-                    <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
-                    <Setter Property="Background" Value="{StaticResource BtnDark}"/>
-                    <Setter Property="Padding" Value="20 10"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Template">
-                        <Setter.Value>
-                            <ControlTemplate TargetType="Button">
-                                <Border Padding="{TemplateBinding Padding}"
-                                        Background="{TemplateBinding Background}"
-                                        BorderBrush="{TemplateBinding BorderBrush}"
-                                        BorderThickness="{TemplateBinding BorderThickness}">
-                                    <ContentPresenter Content="{TemplateBinding Content}"/>
-                                </Border>
-                            </ControlTemplate>
-                        </Setter.Value>
-                    </Setter>
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver"
-                             Value="True">
-                            <Trigger.EnterActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Duration="0:0:0.05"
-                                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                        From="#48365A"
-                                                        To="#5A3B61" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.EnterActions>
-                            <Trigger.ExitActions>
-                                <BeginStoryboard>
-                                    <Storyboard>
-                                        <ColorAnimation Duration="0:0:0.1"
-                                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
-                                                        From="#5A3B61"
-                                                        To="#48365A" />
-                                    </Storyboard>
-                                </BeginStoryboard>
-                            </Trigger.ExitActions>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </dropdownmenu:DropdownMenu.Resources>
-            <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
-                <StackPanel>
-                    <Button Content="temp 1"/>
-                    <Button Content="temp 2"/>
-                </StackPanel>
-            </Border>
-        </dropdownmenu:DropdownMenu>
-
-        <Viewbox Width="25" Height="25" Grid.Column="6" HorizontalAlignment="Left" Margin="0 0 0 3">
+        <Viewbox Width="25" Height="25" Grid.Column="5" HorizontalAlignment="Left" Margin="0 0 0 3">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
         </Viewbox>
     </Grid>

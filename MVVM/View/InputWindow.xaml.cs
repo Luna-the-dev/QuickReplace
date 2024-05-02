@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Documents;
 
 namespace TextReplace.MVVM.View
 {
@@ -15,7 +17,20 @@ namespace TextReplace.MVVM.View
         public string BodyText
         {
             get { return BodyTextBox.Text; }
-            set { BodyTextBox.Text = value; }
+            set
+            {
+                var parts = value.Split(new[] { "<u>", "</u>" }, StringSplitOptions.None);
+                bool isUnderline = false; // Start in normal mode
+                foreach (var part in parts)
+                {
+                    if (isUnderline)
+                        BodyTextBox.Inlines.Add(new Underline(new Run(part)));
+                    else
+                        BodyTextBox.Inlines.Add(new Run(part));
+
+                    isUnderline = !isUnderline; // toggle between bold and not bold
+                }
+            }
         }
         public string InputText
         {

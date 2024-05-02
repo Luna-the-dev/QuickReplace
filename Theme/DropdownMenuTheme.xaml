@@ -7,6 +7,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="local:DropdownMenu">
                     <Grid>
+                        <!--The popup window icon-->
                         <ToggleButton x:Name="tripleDots">
                             <ToggleButton.Template>
                                 <ControlTemplate>
@@ -46,6 +47,7 @@
                             </ToggleButton.Template>
                         </ToggleButton>
 
+                        <!--The popup window-->
                         <Popup Placement="Bottom"
                                VerticalOffset="15"
                                PlacementTarget="{Binding ElementName=tripleDots}"
@@ -57,5 +59,55 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <!--Style for the Buttons in the popup window-->
+        <Style.Resources>
+            <Style BasedOn="{StaticResource {x:Type Button}}"
+                   TargetType="Button">
+                <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Foreground" Value="#FAFAFF"/>
+                <Setter Property="Background" Value="#48365A"/>
+                <Setter Property="Padding" Value="20 10"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Padding="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter Content="{TemplateBinding Content}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Duration="0:0:0.05"
+                                                    Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                    From="#48365A"
+                                                    To="#5A3B61" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Duration="0:0:0.1"
+                                                    Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                    From="#5A3B61"
+                                                    To="#48365A" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Style.Resources>
     </Style>
 </ResourceDictionary>
