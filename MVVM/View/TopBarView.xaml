@@ -73,8 +73,9 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Custom delimiter" Padding="0 0 15 0"
-                                           FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
+                                <TextBlock x:Name="delimiterMenuOption" Text="Custom delimiter"
+                                           Padding="0 0 15 0" FontFamily="/Fonts/#Poppins"
+                                           Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -201,8 +202,9 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Output file suffix" Padding="0 0 15 0"
-                                           FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
+                                <TextBlock x:Name="suffixMenuOption" Text="Output file suffix" 
+                                           Padding="0 0 15 0" FontFamily="/Fonts/#Poppins"
+                                           Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
                     </Button>

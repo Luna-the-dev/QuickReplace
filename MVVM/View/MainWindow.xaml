@@ -62,14 +62,10 @@
 
             <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding TopBarView}"/>
 
-            <ContentControl Grid.Row="2"
-                            Grid.Column="1"
-                            Margin="10"
-                            Content="{Binding CurrentView}"/>
-
+            <Border Grid.Row="2" Grid.Column="1"
+                    Background="{StaticResource BackgroundColorMedium}">
+                <ContentControl Content="{Binding CurrentView}"/>
+            </Border>
         </Grid>
-
     </Border >
-    
-    
 </Window>

@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Globalization;
+using System.Windows;
 using System.Windows.Controls;
 using TextReplace.MVVM.ViewModel;
 
@@ -23,9 +25,10 @@ namespace TextReplace.MVVM.View
         private void OpenDelimiterInputWindow(object sender, RoutedEventArgs e)
         {
             var viewModel = ((TopBarViewModel)(this.DataContext));
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = (sender as Button)?.Content.ToString() ?? string.Empty;
+            string title = textInfo.ToTitleCase(delimiterMenuOption.Text);
             string body;
             if (viewModel.Delimiter != string.Empty)
             {
@@ -51,9 +54,10 @@ namespace TextReplace.MVVM.View
         private void OpenFileSuffixInputWindow(object sender, RoutedEventArgs e)
         {
             var viewModel = ((TopBarViewModel)(this.DataContext));
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = (sender as Button)?.Content.ToString() ?? string.Empty;
+            string title = textInfo.ToTitleCase(suffixMenuOption.Text);
             string body;
             if (viewModel.Suffix != string.Empty)
             {
