@@ -176,6 +176,12 @@ namespace TextReplace.MVVM.Model
         /// <returns>False if writing to one of the files failed.</returns>
         public bool PerformReplacements(List<string> srcFiles, List<string> destFiles, bool isWholeWord)
         {
+            if (srcFiles.Count == 0 || destFiles.Count == 0)
+            {
+                Debug.WriteLine("srcFiles or destFiles is empty");
+                return false;
+            }
+
             // construct the automaton and fill it with the phrases to search for
             // also create a list of the replacement phrases to go alongside the 
             AhoCorasickStringSearcher matcher = new AhoCorasickStringSearcher(CaseSensitive);

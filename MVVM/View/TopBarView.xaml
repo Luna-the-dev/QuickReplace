@@ -4,9 +4,14 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TextReplace.MVVM.View"
+             xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
              xmlns:dropdownmenu="clr-namespace:DropdownMenuControl;assembly=DropdownMenuControl"
              mc:Ignorable="d" 
              d:DesignHeight="75" d:DesignWidth="745">
+
+    <UserControl.DataContext>
+        <viewModel:TopBarViewModel/>
+    </UserControl.DataContext>
     
     <Grid>
         <Grid.ColumnDefinitions>
@@ -15,6 +20,9 @@
             <ColumnDefinition />
             <ColumnDefinition Width="160"/>
             <ColumnDefinition />
+            <ColumnDefinition Width="160"/>
+            <ColumnDefinition Width="35"/>
+            <ColumnDefinition Width="30"/>
         </Grid.ColumnDefinitions>
 
         <Grid.Resources>
@@ -23,10 +31,11 @@
             </Style>
         </Grid.Resources>
         
+        <!--Upload replacements button-->
         <Button Width="140" Height="40"
                 Grid.Column="0"
                 HorizontalAlignment="Left"
-                Content="Upload Replace"
+                Content="Replacements"
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
                 FontWeight="Medium"
@@ -75,10 +84,11 @@
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
         </Viewbox>
 
+        <!--Upload sources button-->
         <Button Width="140" Height="40"
                 Grid.Column="3"
                 HorizontalAlignment="Left"
-                Content="Upload Source"
+                Content="Sources"
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
                 FontWeight="Medium"
@@ -95,5 +105,30 @@
                  Visibility="{Binding SourceFileReadFail}">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
         </Viewbox>
+        
+        <!--Replacify button-->
+        <Button Width="140" Height="40"
+                Grid.Column="5"
+                HorizontalAlignment="Left"
+                Content="Replacify"
+                Style="{StaticResource UploadButtonTheme}"
+                FontSize="14"
+                FontWeight="Medium"
+                Visibility="{Binding ReplaceisClickable}"
+                Command="{Binding Replace}"/>
+        <Button Width="140" Height="40"
+                Grid.Column="5"
+                HorizontalAlignment="Left"
+                Content="Replacify"
+                Style="{StaticResource UnclickableUploadButtonTheme}"
+                FontSize="14"
+                FontWeight="Medium"
+                Visibility="{Binding ReplaceisUnclickable}"
+                Command="{Binding Replace}"/>
+
+        <dropdownmenu:DropdownMenu Width="25" Height="15" Grid.Column="6" HorizontalAlignment="Left">
+            
+        </dropdownmenu:DropdownMenu>
+
     </Grid>
 </UserControl>

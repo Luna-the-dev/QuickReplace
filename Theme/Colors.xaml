@@ -14,6 +14,13 @@
             <Color A="255" R="72" G="54" B="90"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
+    
+    <SolidColorBrush x:Key="BtnUnclickable">
+        <SolidColorBrush.Color>
+            <!--#504759-->
+            <Color A="255" R="80" G="71" B="89"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
 
     <SolidColorBrush x:Key="TextLight">
         <SolidColorBrush.Color>
@@ -26,6 +33,13 @@
         <SolidColorBrush.Color>
             <!--#CDC2F5-->
             <Color A="255" R="205" G="194" B="245"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="TextUnclickable">
+        <SolidColorBrush.Color>
+            <!--#7E7E7F-->
+            <Color A="255" R="126" G="126" B="127"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
 

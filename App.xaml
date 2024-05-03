@@ -11,6 +11,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Theme/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="Theme/UploadButtonTheme.xaml"/>
+                <ResourceDictionary Source="Theme/UnclickableUploadButtonTheme.xaml"/>
                 <ResourceDictionary Source="Theme/DropdownMenuTheme.xaml"/>
                 <ResourceDictionary Source="Theme/InputBarTheme.xaml"/>
                 <ResourceDictionary Source="Theme/ButtonConfirmTheme.xaml"/>
