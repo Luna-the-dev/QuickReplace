@@ -2,11 +2,10 @@
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Validation;
-using System.Xml.Linq;
 
 namespace TextReplace.MVVM.Model
 {
-    class ReplaceData
+    class ReplaceFileData
     {
         private static string _fileName = string.Empty;
         public static string FileName
@@ -69,7 +68,7 @@ namespace TextReplace.MVVM.Model
         /*
          * Constructor
          */
-        public ReplaceData(bool caseSensitive)
+        public ReplaceFileData(bool caseSensitive)
         {
             CaseSensitive = caseSensitive;
         }
@@ -77,8 +76,10 @@ namespace TextReplace.MVVM.Model
         /// <summary>
         /// Opens a file dialogue and replaces the ReplaceFile with whatever the user selects (if valid)
         /// </summary>
-        /// <returns>False if the user didn't select a file or if the file was invalid. True otherwise</returns>
-        public static bool SetNewReplaceFileFromUser()
+        /// <returns>
+        /// False if one of the files was invalid, null user closed the window without selecting a file.
+        /// </returns>
+        public static bool? SetNewReplaceFileFromUser()
         {
             // configure open file dialog box
             var dialog = new Microsoft.Win32.OpenFileDialog();
@@ -90,7 +91,8 @@ namespace TextReplace.MVVM.Model
             // open file dialog box
             if (dialog.ShowDialog() != true)
             {
-                return false;
+                Debug.WriteLine("Replace file upload window was closed.");
+                return null;
             }
 
             // set the ReplaceFile name

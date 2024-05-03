@@ -1,12 +1,12 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.Model
 {
-    class SourceFiles
+    class SourceFilesData
     {
         private static List<string> _fileNames = new List<string>();
-
         public static List<string> FileNames
         {
             get { return _fileNames; }
@@ -18,20 +18,19 @@ namespace TextReplace.MVVM.Model
                 }
                 else
                 {
-                    throw new Exception("An input file is not readable. SourceFiles was not updated.");
+                    throw new Exception("An input file is not readable. SourceFilesData was not updated.");
                 }
             }
         }
 
         /// <summary>
-        /// Opens a file dialogue and replaces the SourceFiles list with whatever the user selects (if valid)
+        /// Opens a file dialogue and replaces the SourceFilesData list with whatever the user selects (if valid)
         /// </summary>
-        /// <returns> False if the user didn't select a file or if one of the files was invalid. True otherwise
+        /// <returns>
+        /// False if one of the files was invalid, null user closed the window without selecting a file.
         /// </returns>
-        public static bool SetNewSourceFilesFromUser()
+        public static bool? SetNewSourceFilesFromUser()
         {
-            List<string> filenames = new List<string>();
-
             // configure open file dialog box
             var dialog = new Microsoft.Win32.OpenFileDialog();
             dialog.Title = "Open Text Files";
@@ -40,16 +39,14 @@ namespace TextReplace.MVVM.Model
             dialog.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
             dialog.Multiselect = true;
 
-            // show open file dialog box
-            bool? result = dialog.ShowDialog();
-
-            // process open file dialog box results
-            if (result != true)
+            // open file dialog box
+            if (dialog.ShowDialog() != true)
             {
-                return false;
+                Debug.WriteLine("Replace file upload window was closed.");
+                return null;
             }
 
-            // set the SourceFiles names
+            // set the SourceFilesData names
             try
             {
                 FileNames = dialog.FileNames.ToList();

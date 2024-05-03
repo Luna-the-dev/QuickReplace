@@ -11,11 +11,9 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="160"/>
-            <ColumnDefinition Width="50"/>
-            <ColumnDefinition Width="30"/>
+            <ColumnDefinition Width="35"/>
             <ColumnDefinition />
             <ColumnDefinition Width="160"/>
-            <ColumnDefinition Width="30"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
@@ -65,12 +63,20 @@
             </Border>
         </dropdownmenu:DropdownMenu>
 
-        <Viewbox Width="25" Height="25" Grid.Column="2" HorizontalAlignment="Left" Margin="0 0 0 3">
+        <Viewbox Width="25" Height="25" Grid.Column="2"
+                 HorizontalAlignment="Left" Margin="0 0 0 3"
+                 Visibility="{Binding ReplaceFileReadSuccess}">
             <Path Fill="#4EFF91" Data="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM9.29,16.29L5.7,12.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L10,14.17l6.88,-6.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-7.59,7.59c-0.38,0.39 -1.02,0.39 -1.41,0z"/>
         </Viewbox>
 
+        <Viewbox Width="25" Height="25" Grid.Column="2"
+                 HorizontalAlignment="Left" Margin="0 0 0 3"
+                 Visibility="{Binding ReplaceFileReadFail}">
+            <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
+        </Viewbox>
+
         <Button Width="140" Height="40"
-                Grid.Column="4"
+                Grid.Column="3"
                 HorizontalAlignment="Left"
                 Content="Upload Source"
                 Style="{StaticResource UploadButtonTheme}"
@@ -78,7 +84,15 @@
                 FontWeight="Medium"
                 Command="{Binding SourceFiles}"/>
 
-        <Viewbox Width="25" Height="25" Grid.Column="5" HorizontalAlignment="Left" Margin="0 0 0 3">
+        <Viewbox Width="25" Height="25" Grid.Column="4"
+                 HorizontalAlignment="Left" Margin="0 0 0 3"
+                 Visibility="{Binding SourceFileReadSuccess}">
+            <Path Fill="#4EFF91" Data="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM9.29,16.29L5.7,12.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L10,14.17l6.88,-6.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-7.59,7.59c-0.38,0.39 -1.02,0.39 -1.41,0z"/>
+        </Viewbox>
+
+        <Viewbox Width="25" Height="25" Grid.Column="4"
+                 HorizontalAlignment="Left" Margin="0 0 0 3"
+                 Visibility="{Binding SourceFileReadFail}">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
         </Viewbox>
     </Grid>

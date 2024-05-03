@@ -34,14 +34,14 @@ namespace TextReplace.MVVM.ViewModel
 
         private void ReplaceCmd()
         {
-            ReplaceData replaceData = new ReplaceData(CaseSensitive);
+            ReplaceFileData replaceData = new ReplaceFileData(CaseSensitive);
             string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // create a list of destination file names
-            List<string> destFileNames = SourceFiles.GenerateDestFileNames(suffix);
+            List<string> destFileNames = SourceFilesData.GenerateDestFileNames(suffix);
 
             // perform the text replacements
-            bool result = replaceData.PerformReplacements(SourceFiles.FileNames, destFileNames, WholeWord);
+            bool result = replaceData.PerformReplacements(SourceFilesData.FileNames, destFileNames, WholeWord);
 
             if (result == false)
             {

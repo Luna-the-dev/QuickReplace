@@ -16,8 +16,8 @@ namespace TextReplace.MVVM.ViewModel
 			set
 			{
 				_hasHeader = value;
-                ReplaceData.HasHeader = (value == Visibility.Visible) ? true : false;
-                Debug.WriteLine(ReplaceData.HasHeader);
+                ReplaceFileData.HasHeader = (value == Visibility.Visible) ? true : false;
+                Debug.WriteLine(ReplaceFileData.HasHeader);
                 OnPropertyChanged();
 			}
 		}
@@ -28,11 +28,53 @@ namespace TextReplace.MVVM.ViewModel
             set
             {
                 _delimiter = value;
-                ReplaceData.Delimiter = value;
-                Debug.WriteLine(ReplaceData.Delimiter);
+                ReplaceFileData.Delimiter = value;
+                Debug.WriteLine(ReplaceFileData.Delimiter);
                 OnPropertyChanged();
             }
         }
+
+        private Visibility _replaceFileReadSuccess = Visibility.Hidden;
+        public Visibility ReplaceFileReadSuccess
+        {
+            get { return _replaceFileReadSuccess; }
+            set
+            {
+                _replaceFileReadSuccess = value;
+                OnPropertyChanged();
+            }
+        }
+        private Visibility _replaceFileReadFail = Visibility.Hidden;
+        public Visibility ReplaceFileReadFail
+        {
+            get { return _replaceFileReadFail; }
+            set
+            {
+                _replaceFileReadFail = value;
+                OnPropertyChanged();
+            }
+        }
+        private Visibility _sourceFileReadSuccess = Visibility.Hidden;
+        public Visibility SourceFileReadSuccess
+        {
+            get { return _sourceFileReadSuccess; }
+            set
+            {
+                _sourceFileReadSuccess = value;
+                OnPropertyChanged();
+            }
+        }
+        private Visibility _sourceFileReadFail = Visibility.Hidden;
+        public Visibility SourceFileReadFail
+        {
+            get { return _sourceFileReadFail; }
+            set 
+            {
+                _sourceFileReadFail = value;
+                OnPropertyChanged();
+            }
+        }
+
         private const string INVALID_DELIMITER_CHARS = "\n";
 
         // commands
@@ -43,34 +85,42 @@ namespace TextReplace.MVVM.ViewModel
         private void ReplaceFileCmd()
         {
             // open a file dialogue for the user and update the replace file
-            bool result = Model.ReplaceData.SetNewReplaceFileFromUser();
+            bool? result = ReplaceFileData.SetNewReplaceFileFromUser();
 
-            if (result == false)
+            if (result == true)
+            {
+                Debug.Write("Replace file name:\t");
+                Debug.WriteLine(ReplaceFileData.FileName);
+                ReplaceFileReadSuccess = Visibility.Visible;
+                ReplaceFileReadFail = Visibility.Hidden;
+                Debug.WriteLine(ReplaceFileReadSuccess);
+            }
+            else if (result == false) 
             {
                 Debug.WriteLine("ReplaceFile either could not be read or parsed.");
+                ReplaceFileReadSuccess = Visibility.Hidden;
+                ReplaceFileReadFail = Visibility.Visible;
             }
-
-            Debug.Write("Replace file name: ");
-            Debug.WriteLine(Model.ReplaceData.FileName);
-
-            /*foreach (var kvp in Model.ReplaceData.ReplacePhrases)
-            {
-                Debug.WriteLine($"key: {kvp.Key}\tvalue: {kvp.Value}");
-            }*/
         }
 
         private void SourceFilesCmd()
         {
             // open a file dialogue for the user and update the source files
-            bool result = Model.SourceFiles.SetNewSourceFilesFromUser();
+            bool? result = Model.SourceFilesData.SetNewSourceFilesFromUser();
 
-            if (result == false)
+            if (result == true)
+            {
+                Debug.Write("Source file name(s):");
+                Model.SourceFilesData.FileNames.ForEach(i => Debug.WriteLine($"\t{i}"));
+                SourceFileReadSuccess = Visibility.Visible;
+                SourceFileReadFail = Visibility.Hidden;
+            }
+            else if (result == false)
             {
                 Debug.WriteLine("SourceFile could not be read.");
+                SourceFileReadSuccess = Visibility.Hidden;
+                SourceFileReadFail = Visibility.Visible;
             }
-
-            Debug.Write("Source file name(s): ");
-            Model.SourceFiles.FileNames.ForEach(i => Debug.WriteLine(i));
         }
 
         public void HasHeaderCmd()
