@@ -3,11 +3,8 @@ using System.Windows.Controls;
 
 namespace TextReplace.Core.DropdownMenuControl
 {
-
     public class DropdownMenu : ContentControl
     {
-
-
         public bool IsOpen
         {
             get { return (bool)GetValue(IsOpenProperty); }

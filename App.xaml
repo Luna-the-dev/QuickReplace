@@ -13,8 +13,9 @@
                 <ResourceDictionary Source="Theme/UploadButtonTheme.xaml"/>
                 <ResourceDictionary Source="Theme/DropdownMenuTheme.xaml"/>
                 <ResourceDictionary Source="Theme/InputBarTheme.xaml"/>
-                <ResourceDictionary Source="Theme/ConfirmButtonTheme.xaml"/>
-                <ResourceDictionary Source="Theme/CancelButtonTheme.xaml"/>
+                <ResourceDictionary Source="Theme/ButtonConfirmTheme.xaml"/>
+                <ResourceDictionary Source="Theme/ButtonResetTheme.xaml"/>
+                <ResourceDictionary Source="Theme/ButtonCancelTheme.xaml"/>
                 <ResourceDictionary Source="Theme/Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 

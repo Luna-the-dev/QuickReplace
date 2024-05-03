@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextReplace.MVVM.View"
         xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
+        xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
         mc:Ignorable="d"
         Title="DelimiterInputWindow"
         MinHeight="200" MinWidth="350"
@@ -15,16 +16,13 @@
         AllowsTransparency="True"
         WindowStartupLocation="CenterOwner">
 
-    <Window.DataContext>
-        <viewModel:InputWindowViewModel/>
-    </Window.DataContext>
-
     <Border Background="{StaticResource BackgroundColor}"
             BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="125"/>
+                <ColumnDefinition Width="125"/>
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
 
@@ -37,32 +35,51 @@
                 <RowDefinition MinHeight="45"/>
             </Grid.RowDefinitions>
 
-            <local:TopBorderView Grid.ColumnSpan="3" x:Name="TopBorder"/>
+            <local:TopBorderView Grid.ColumnSpan="4" x:Name="TopBorder"/>
 
             <TextBlock Grid.Column="1" Grid.Row="2"
+                       Grid.ColumnSpan="2"
                        HorizontalAlignment="Stretch"
                        Name="BodyTextBox"
                        TextWrapping="Wrap"
                        Foreground="{StaticResource TextLight}"
                        FontFamily="/Fonts/#Poppins"
-                       Margin="0,0,0,10" />
-            
-            <TextBox Grid.Column="1" Grid.Row="3"
-                     Name="InputTextBox" Padding="3 3 3 3"
-                     Style="{StaticResource InputBar}"/>
+                       Margin="0 0 0 10" />
 
-            <Grid Grid.Column="1" Grid.Row="4"
-                  Margin="0,10,0,0" Height="30">
+            <AdornerDecorator Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2">
+                <Border Background="#353340" CornerRadius="10">
+                    <TextBox Name="InputTextBox" Style="{DynamicResource InputBar}"
+                             TextChanged="SetInputText">
+                        <wm:WatermarkService.Watermark>
+                            <TextBlock x:Name="InputWatermark"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"
+                                       Foreground="LightGray"
+                                       Margin="4 0 0 0"
+                                       FontFamily="/Fonts/#Poppins"/>
+                        </wm:WatermarkService.Watermark>
+                    </TextBox>
+                </Border>
+            </AdornerDecorator>
+
+
+
+            <Grid Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2"
+                  Margin="0 10 0 0" Height="30">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Button Name="BtnOk" Content="Confirm" Grid.Column="0"
-                        Margin="0 0 5 0" Padding="8"
-                        Style="{StaticResource ConfirmButtonTheme}" Click="BtnOk_Click" />
-                <Button Name="BtnCancel" Content="Cancel" Grid.Column="1"
-                        Margin="5 0 0 0" Padding="8"
-                        Style="{StaticResource CancelButtonTheme}" Click="BtnCancel_Click" />
+                <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
+                              Margin="0 0 5 0" Padding="8"
+                              Style="{StaticResource ButtonConfirmTheme}" Click="BtnOk_Click" />
+                <ToggleButton Name="BtnReset" Content="Reset" Grid.Column="1"
+                              Margin="2.5 0 2.5 0" Padding="8"
+                              Style="{StaticResource ButtonResetTheme}" Click="BtnReset_Click" />
+                <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="2"
+                              Margin="5 0 0 0" Padding="8"
+                              Style="{StaticResource ButtonCancelTheme}" Click="BtnCancel_Click" />
             </Grid>
         </Grid>
     </Border>

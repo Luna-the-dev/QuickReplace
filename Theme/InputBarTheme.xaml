@@ -2,45 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style TargetType="{x:Type TextBox}"
            x:Key="InputBar">
-        <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="{x:Type TextBox}">
-                    <Border CornerRadius="10"
-                            Background="#353340">
-                        <Grid>
-                            <Rectangle StrokeThickness="1"/>
-                            <TextBox Margin="1"
-                                     BorderThickness="0"
-                                     Background="Transparent"
-                                     VerticalContentAlignment="Center"
-                                     Padding="5"
-                                     Foreground="{DynamicResource TextLight}"
-                                     CaretBrush="{DynamicResource TextLight}"
-                                     x:Name="SearchBarBox"/>
-
-                            <TextBlock IsHitTestVisible="False"
-                                       Text="{TemplateBinding Text}"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Left"
-                                       Margin="10 0 0 0"
-                                       Foreground="DarkGray"
-                                       Grid.Column="1">
-                                <TextBlock.Style>
-                                    <Style TargetType="{x:Type TextBlock}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Text, ElementName=SearchBarBox}"
-                                                         Value="">
-                                                <Setter Property="Visibility" Value="Visible"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                        <Setter Property="Visibility" Value="Hidden"/>
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </Grid>
-                    </Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Margin" Value="1"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Foreground" Value="{DynamicResource TextLight}"/>
+        <Setter Property="CaretBrush" Value="{DynamicResource TextLight}"/>
+        <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
     </Style>
 </ResourceDictionary>

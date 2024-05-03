@@ -45,8 +45,8 @@
 
     <SolidColorBrush x:Key="CancelBtn">
         <SolidColorBrush.Color>
-            <!--#FF6464-->
-            <Color A="255" R="250" G="100" B="100"/>
+            <!--#E55050-->
+            <Color A="255" R="229" G="80" B="80"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
     
@@ -61,6 +61,20 @@
         <SolidColorBrush.Color>
             <!--#F2F2F2-->
             <Color A="255" R="242" G="242" B="242"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="ResetBtn">
+        <SolidColorBrush.Color>
+            <!--#E59A39-->
+            <Color A="255" R="229" G="154" B="57"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="ResetBtnDark">
+        <SolidColorBrush.Color>
+            <!--#A57531-->
+            <Color A="255" R="165" G="117" B="49"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
 

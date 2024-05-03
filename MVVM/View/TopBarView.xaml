@@ -31,29 +31,32 @@
                 Content="Upload Replace"
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
-                FontWeight="Medium"/>
+                FontWeight="Medium"
+                Command="{Binding ReplaceFile}"/>
 
         <dropdownmenu:DropdownMenu Width="25" Height="15" Grid.Column="1" HorizontalAlignment="Left">
             <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
-                    <Button Grid.Row="0" Command="{Binding ToggleWholeWord}">
+                    <!--Contains header button-->
+                    <Button Grid.Row="0" Command="{Binding ToggleHasHeader}">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="120"/>
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Whole word" Padding="0 0 20 0"
+                                <TextBlock Text="Contains header" Padding="0 0 20 0"
                                            FontFamily="/Fonts/#Poppins" FontSize="12"
                                            FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
                                 <TextBlock Grid.Column="1" HorizontalAlignment="Right"
-                                           Text="✓" Visibility="{Binding WholeWord}"
+                                           Text="✓" Visibility="{Binding HasHeader}"
                                            FontFamily="/Fonts/#Poppins" FontSize="12"
                                            FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
 
+                    <!--Custom delimiter button-->
                     <Button Content="Custom Delimiter" Grid.Row="1"
                             FontFamily="/Fonts/#Poppins" FontSize="12"
                             FontWeight="Medium" Foreground="{StaticResource TextLight}"
@@ -72,7 +75,8 @@
                 Content="Upload Source"
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
-                FontWeight="Medium"/>
+                FontWeight="Medium"
+                Command="{Binding SourceFiles}"/>
 
         <Viewbox Width="25" Height="25" Grid.Column="5" HorizontalAlignment="Left" Margin="0 0 0 3">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>

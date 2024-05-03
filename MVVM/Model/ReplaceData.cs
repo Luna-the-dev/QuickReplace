@@ -52,14 +52,14 @@ namespace TextReplace.MVVM.Model
         private static string _delimiter = string.Empty;
         public static string Delimiter
         {
-            get { return _delimiter = string.Empty; }
+            get { return _delimiter; }
             set { _delimiter = value; }
         }
         // a flag used by the replace file parser to determine if there is a header line or not
         private static bool _hasHeader = false;
         public static bool HasHeader
         {
-            get { return _hasHeader = false; }
+            get { return _hasHeader; }
             set { _hasHeader = value; }
         }
         // delimiters which decides what seperates whole words
