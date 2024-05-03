@@ -15,8 +15,6 @@ namespace TextReplace.Core.DropdownMenuControl
         public static readonly DependencyProperty IsOpenProperty =
             DependencyProperty.Register("IsOpen", typeof(bool), typeof(DropdownMenu), new PropertyMetadata(false));
 
-
-
         static DropdownMenu()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(DropdownMenu), new FrameworkPropertyMetadata(typeof(DropdownMenu)));

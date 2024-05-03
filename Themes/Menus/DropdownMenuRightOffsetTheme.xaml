@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:DropdownMenuControl;assembly=DropdownMenuControl">
-    <Style TargetType="{x:Type local:DropdownMenu}">
+    <Style TargetType="{x:Type local:DropdownMenu}"
+           x:Key="DropdownMenuRightOffsetTheme">
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
@@ -50,6 +51,7 @@
                         <!--The popup window-->
                         <Popup Placement="Bottom"
                                VerticalOffset="15"
+                               HorizontalOffset="-110"
                                PlacementTarget="{Binding ElementName=tripleDots}"
                                IsOpen="{Binding IsChecked, ElementName=tripleDots}"
                                StaysOpen="False">

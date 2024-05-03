@@ -7,17 +7,21 @@
              StartupUri="MVVM/View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
-            
+
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Theme/MenuButtonTheme.xaml"/>
-                <ResourceDictionary Source="Theme/UploadButtonTheme.xaml"/>
-                <ResourceDictionary Source="Theme/UnclickableUploadButtonTheme.xaml"/>
-                <ResourceDictionary Source="Theme/DropdownMenuTheme.xaml"/>
-                <ResourceDictionary Source="Theme/InputBarTheme.xaml"/>
-                <ResourceDictionary Source="Theme/ButtonConfirmTheme.xaml"/>
-                <ResourceDictionary Source="Theme/ButtonResetTheme.xaml"/>
-                <ResourceDictionary Source="Theme/ButtonCancelTheme.xaml"/>
-                <ResourceDictionary Source="Theme/Colors.xaml"/>
+                <ResourceDictionary Source="Themes/Colors.xaml"/>
+                <ResourceDictionary Source="Themes/InputBarTheme.xaml"/>
+                
+                <!-- Menu themes-->
+                <ResourceDictionary Source="Themes/Menus/DropdownMenuTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Menus/DropdownMenuRightOffsetTheme.xaml"/>
+                <!-- Button themes -->
+                <ResourceDictionary Source="Themes/Buttons/UploadButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/UnclickableUploadButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/ButtonConfirmTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/ButtonResetTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/ButtonCancelTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/MenuButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">

@@ -9,18 +9,17 @@ namespace TextReplace.MVVM.ViewModel
 {
     class TopBarViewModel : ObservableObject
     {
-		private Visibility _hasHeader = Visibility.Hidden;
-		public Visibility HasHeader
-		{
-			get { return _hasHeader; }
-			set
-			{
-				_hasHeader = value;
-                ReplaceFileData.HasHeader = (value == Visibility.Visible) ? true : false;
-                Debug.WriteLine(ReplaceFileData.HasHeader);
+        private Visibility _hasHeader = Visibility.Hidden;
+        public Visibility HasHeader
+        {
+            get { return _hasHeader; }
+            set
+            {
+                _hasHeader = value;
+                ReplaceData.HasHeader = (value == Visibility.Visible) ? true : false;
                 OnPropertyChanged();
-			}
-		}
+            }
+        }
         private string _delimiter = string.Empty;
         public string Delimiter
         {
@@ -28,13 +27,12 @@ namespace TextReplace.MVVM.ViewModel
             set
             {
                 _delimiter = value;
-                ReplaceFileData.Delimiter = value;
-                Debug.WriteLine(ReplaceFileData.Delimiter);
+                ReplaceData.Delimiter = value;
                 OnPropertyChanged();
             }
         }
-        private bool _caseSensitive = false;
-        public bool CaseSensitive
+        private Visibility _caseSensitive = Visibility.Hidden;
+        public Visibility CaseSensitive
         {
             get { return _caseSensitive; }
             set
@@ -43,8 +41,8 @@ namespace TextReplace.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
-        private bool _wholeWord = false;
-        public bool WholeWord
+        private Visibility _wholeWord = Visibility.Hidden;
+        public Visibility WholeWord
         {
             get { return _wholeWord; }
             set
@@ -88,7 +86,7 @@ namespace TextReplace.MVVM.ViewModel
         public Visibility SourceFileReadFail
         {
             get { return _sourceFileReadFail; }
-            set 
+            set
             {
                 _sourceFileReadFail = value;
                 OnPropertyChanged();
@@ -120,18 +118,20 @@ namespace TextReplace.MVVM.ViewModel
         // commands
         public RelayCommand ReplaceFile => new RelayCommand(o => ReplaceFileCmd());
         public RelayCommand SourceFiles => new RelayCommand(o => SourceFilesCmd());
-        public RelayCommand ToggleHasHeader => new RelayCommand(o => HasHeaderCmd());
         public RelayCommand Replace => new RelayCommand(o => ReplaceCmd());
+        public RelayCommand ToggleHasHeader => new RelayCommand(o => ToggleHasHeaderCmd());
+        public RelayCommand ToggleCaseSensitive => new RelayCommand(o => ToggleCaseSensitiveCmd());
+        public RelayCommand ToggleWholeWord => new RelayCommand(o => ToggleWholeWordCmd());
 
         private void ReplaceFileCmd()
         {
             // open a file dialogue for the user and update the replace file
-            bool? result = ReplaceFileData.SetNewReplaceFileFromUser();
+            bool? result = ReplaceData.SetNewReplaceFileFromUser();
 
             if (result == true)
             {
                 Debug.Write("Replace file name:\t");
-                Debug.WriteLine(ReplaceFileData.FileName);
+                Debug.WriteLine(ReplaceData.FileName);
                 ReplaceFileReadSuccess = Visibility.Visible;
                 ReplaceFileReadFail = Visibility.Hidden;
             }
@@ -167,27 +167,25 @@ namespace TextReplace.MVVM.ViewModel
             SetReplaceButtonClickability();
         }
 
-        public void HasHeaderCmd()
-		{
-			HasHeader = (HasHeader == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
-		}
-
         private void ReplaceCmd()
         {
-            if (ReplaceFileData.FileName == string.Empty || SourceFilesData.FileNames.Count == 0)
+            if (ReplaceData.FileName == string.Empty || SourceFilesData.FileNames.Count == 0)
             {
                 Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
                 return;
             }
 
-            ReplaceFileData replaceData = new ReplaceFileData(CaseSensitive);
+            bool caseSensitive = (CaseSensitive == Visibility.Visible) ? true : false;
+            ReplaceData replaceData = new ReplaceData(caseSensitive);
+
             string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // create a list of destination file names
             List<string> destFileNames = SourceFilesData.GenerateDestFileNames(suffix);
 
             // perform the text replacements
-            bool result = replaceData.PerformReplacements(SourceFilesData.FileNames, destFileNames, WholeWord);
+            bool wholeWord = (WholeWord == Visibility.Visible) ? true : false;
+            bool result = replaceData.PerformReplacements(SourceFilesData.FileNames, destFileNames, wholeWord);
             SourceFilesData.FileNames.ForEach(o => Debug.WriteLine(o));
             destFileNames.ForEach(o => Debug.WriteLine(o));
 
@@ -199,6 +197,21 @@ namespace TextReplace.MVVM.ViewModel
             {
                 Debug.WriteLine("Youre the greatest programmer to ever live");
             }
+        }
+
+        private void ToggleHasHeaderCmd()
+        {
+            HasHeader = (HasHeader == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void ToggleCaseSensitiveCmd()
+        {
+            CaseSensitive = (CaseSensitive == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void ToggleWholeWordCmd()
+        {
+            WholeWord = (WholeWord == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
         }
 
         /// <summary>

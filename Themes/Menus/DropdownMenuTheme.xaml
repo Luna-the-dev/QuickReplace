@@ -1,0 +1,114 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:DropdownMenuControl;assembly=DropdownMenuControl">
+    <Style TargetType="{x:Type local:DropdownMenu}"
+           x:Key="DropdownMenuTheme">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="local:DropdownMenu">
+                    <Grid>
+                        <!--The popup window icon-->
+                        <ToggleButton x:Name="tripleDots">
+                            <ToggleButton.Template>
+                                <ControlTemplate>
+                                    <Border x:Name="border" Background="Transparent" CornerRadius="4">
+                                        <Viewbox>
+                                            <Path Fill="{DynamicResource TextLight}" Margin="100" Stretch="UniformToFill" Data="M240,560Q207,560 183.5,536.5Q160,513 160,480Q160,447 183.5,423.5Q207,400 240,400Q273,400 296.5,423.5Q320,447 320,480Q320,513 296.5,536.5Q273,560 240,560ZM480,560Q447,560 423.5,536.5Q400,513 400,480Q400,447 423.5,423.5Q447,400 480,400Q513,400 536.5,423.5Q560,447 560,480Q560,513 536.5,536.5Q513,560 480,560ZM720,560Q687,560 663.5,536.5Q640,513 640,480Q640,447 663.5,423.5Q687,400 720,400Q753,400 776.5,423.5Q800,447 800,480Q800,513 776.5,536.5Q753,560 720,560Z" />
+                                        </Viewbox>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver"
+                                                 Value="True">
+                                            <Trigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Duration="0:0:0.05"
+                                                                        Storyboard.TargetName="border"
+                                                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                                        From="#272537"
+                                                                        To="#5A3B61" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.EnterActions>
+                                            <Trigger.ExitActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <ColorAnimation Duration="0:0:0.1"
+                                                                        Storyboard.TargetName="border"
+                                                                        Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                                        From="#5A3B61"
+                                                                        To="#272537" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </Trigger.ExitActions>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <!--The popup window-->
+                        <Popup Placement="Bottom"
+                               VerticalOffset="15"
+                               PlacementTarget="{Binding ElementName=tripleDots}"
+                               IsOpen="{Binding IsChecked, ElementName=tripleDots}"
+                               StaysOpen="False">
+                            <ContentControl Content="{TemplateBinding Content}" Background="white"/>
+                        </Popup>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <!--Style for the Buttons in the popup window-->
+        <Style.Resources>
+            <Style BasedOn="{StaticResource {x:Type Button}}"
+                   TargetType="Button">
+                <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
+                <Setter Property="FontSize" Value="12"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Foreground" Value="#FAFAFF"/>
+                <Setter Property="Background" Value="#48365A"/>
+                <Setter Property="Padding" Value="20 10"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="Button">
+                            <Border Padding="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter Content="{TemplateBinding Content}"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Trigger.EnterActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Duration="0:0:0.05"
+                                                    Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                    From="#48365A"
+                                                    To="#5A3B61" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.EnterActions>
+                        <Trigger.ExitActions>
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ColorAnimation Duration="0:0:0.1"
+                                                    Storyboard.TargetProperty="Background.(SolidColorBrush.Color)"
+                                                    From="#5A3B61"
+                                                    To="#48365A" />
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </Trigger.ExitActions>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Style.Resources>
+    </Style>
+</ResourceDictionary>

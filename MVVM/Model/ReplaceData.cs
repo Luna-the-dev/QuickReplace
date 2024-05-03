@@ -5,7 +5,7 @@ using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.Model
 {
-    class ReplaceFileData
+    class ReplaceData
     {
         private static string _fileName = string.Empty;
         public static string FileName
@@ -68,7 +68,7 @@ namespace TextReplace.MVVM.Model
         /*
          * Constructor
          */
-        public ReplaceFileData(bool caseSensitive)
+        public ReplaceData(bool caseSensitive)
         {
             CaseSensitive = caseSensitive;
         }

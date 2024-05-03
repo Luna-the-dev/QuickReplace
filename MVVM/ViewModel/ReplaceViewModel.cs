@@ -34,7 +34,7 @@ namespace TextReplace.MVVM.ViewModel
 
         private void ReplaceCmd()
         {
-            ReplaceFileData replaceData = new ReplaceFileData(CaseSensitive);
+            ReplaceData replaceData = new ReplaceData(CaseSensitive);
             string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // create a list of destination file names
