@@ -57,10 +57,10 @@ namespace TextReplace.MVVM.View
         public InputWindow(Window owner, string title, string body, string input, int windowHeight = 200, int windowWidth = 300)
         {
             InitializeComponent();
+            Owner = owner;
             WindowName = title;
             BodyText = body;
             InputWatermarkText = input;
-            Owner = owner;
         }
 
         private void SetInputText(object sender, RoutedEventArgs e)

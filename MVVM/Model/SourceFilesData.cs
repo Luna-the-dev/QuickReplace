@@ -23,12 +23,19 @@ namespace TextReplace.MVVM.Model
                 }
             }
         }
-        // optional user specified file path for the output file
+        // optional user specified file path for the output files
         private static string _outputDirectory = string.Empty;
         public static string OutputDirectory
         {
             get { return _outputDirectory; }
             set { _outputDirectory = value; }
+        }
+        // optional user specified suffix for the output files
+        private static string _suffix = string.Empty;
+        public static string Suffix
+        {
+            get { return _suffix; }
+            set { _suffix = value; }
         }
 
         /// <summary>
@@ -72,16 +79,17 @@ namespace TextReplace.MVVM.Model
         /// </summary>
         /// <param name="suffix"></param>
         /// <returns>A list of destination file names</returns>
-        public static List<string> GenerateDestFileNames(string suffix)
+        public static List<string> GenerateDestFileNames()
         {
             List<string> destFileNames = new List<string>();
             foreach (var name in FileNames)
             {
                 string? directory = (OutputDirectory == string.Empty) ? Path.GetDirectoryName(name) : OutputDirectory;
-                destFileNames.Add(string.Format(@"{0}\{1}-{2}{3}",
+                string suffix = (Suffix == string.Empty) ? "-replacify" : Suffix;
+                destFileNames.Add(string.Format(@"{0}\{1}{2}{3}",
                                                 directory,
                                                 Path.GetFileNameWithoutExtension(name),
-                                                suffix,
+                                                Suffix,
                                                 Path.GetExtension(name)
                                                 ));
             }

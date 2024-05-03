@@ -1,10 +1,8 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Windows;
-using System.Windows.Controls;
 using TextReplace.Core;
 using TextReplace.MVVM.Model;
-using TextReplace.MVVM.View;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -32,6 +30,17 @@ namespace TextReplace.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+        private string _suffix = string.Empty;
+        public string Suffix
+        {
+            get { return _suffix; }
+            set
+            {
+                _suffix = value;
+                SourceFilesData.Suffix = value;
+                OnPropertyChanged();
+            }
+        }
         private Visibility _caseSensitive = Visibility.Hidden;
         public Visibility CaseSensitive
         {
@@ -52,13 +61,6 @@ namespace TextReplace.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
-        private string _outputFilePath = string.Empty;
-        public string OutputFilePath
-        {
-            get { return _outputFilePath; }
-            set { _outputFilePath = value; }
-        }
-
 
         // visibility flags for top bar components
         private Visibility _replaceFileReadSuccess = Visibility.Hidden;
@@ -123,6 +125,7 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         private const string INVALID_DELIMITER_CHARS = "\n";
+        private const string INVALID_SUFFIX_CHARS = "<>:\"/\\|?*\n\t";
 
         // commands
         public RelayCommand ReplaceFile => new RelayCommand(o => ReplaceFileCmd());
@@ -191,7 +194,7 @@ namespace TextReplace.MVVM.ViewModel
             string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // create a list of destination file names
-            List<string> destFileNames = SourceFilesData.GenerateDestFileNames(suffix);
+            List<string> destFileNames = SourceFilesData.GenerateDestFileNames();
 
             // perform the text replacements
             bool wholeWord = (WholeWord == Visibility.Visible) ? true : false;
@@ -258,17 +261,55 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         /// <summary>
+        /// Checks to see if the suffix is valid, and then sets the suffix
+        /// </summary>
+        /// <param name="suffix"></param>
+        /// <returns></returns>
+        public bool SetSuffix(string suffix)
+        {
+            if (IsSuffixValid(suffix))
+            {
+                Suffix = suffix;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Checks if the delimiter string contains any invalid characters.
         /// </summary>
         /// <param name="delimiter"></param>
         /// <returns>True if the string is empty or does not contain any invalid characters.</returns>
         private bool IsDelimiterValid(string delimiter)
         {
-            if (delimiter == string.Empty)
+            foreach (char c in delimiter)
             {
-                return true;
+                if (INVALID_DELIMITER_CHARS.Contains(c))
+                {
+                    return false;
+                }
             }
-            return INVALID_DELIMITER_CHARS.Contains(delimiter) ? false : true;
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if the suffix string contains any invalid characters.
+        /// </summary>
+        /// <param name="suffix"></param>
+        /// <returns>True if the string is empty or does not contain any invalid characters.</returns>
+        private bool IsSuffixValid(string suffix)
+        {
+            foreach (char c in suffix)
+            {
+                if (INVALID_SUFFIX_CHARS.Contains(c) || char.IsControl(c))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>

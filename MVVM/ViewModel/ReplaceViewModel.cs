@@ -38,7 +38,7 @@ namespace TextReplace.MVVM.ViewModel
             string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // create a list of destination file names
-            List<string> destFileNames = SourceFilesData.GenerateDestFileNames(suffix);
+            List<string> destFileNames = SourceFilesData.GenerateDestFileNames();
 
             // perform the text replacements
             bool result = replaceData.PerformReplacements(SourceFilesData.FileNames, destFileNames, WholeWord);

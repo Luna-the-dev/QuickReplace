@@ -187,7 +187,21 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Change directory" Padding="0 0 15 0"
+                                <TextBlock Text="Change output directory" Padding="0 0 15 0"
+                                           FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                    <!--Output file suffix option-->
+                    <Button Click="OpenFileSuffixInputWindow">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Output file suffix" Padding="0 0 15 0"
                                            FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
