@@ -51,7 +51,7 @@
                         <!--The popup window-->
                         <Popup Placement="Bottom"
                                VerticalOffset="15"
-                               HorizontalOffset="-110"
+                               HorizontalOffset="-170"
                                PlacementTarget="{Binding ElementName=tripleDots}"
                                IsOpen="{Binding IsChecked, ElementName=tripleDots}"
                                StaysOpen="False">

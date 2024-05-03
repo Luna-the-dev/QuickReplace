@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace TextReplace.MVVM.View
 {

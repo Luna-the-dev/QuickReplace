@@ -47,7 +47,7 @@
             <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
                     <!--Contains header option-->
-                    <Button Grid.Row="0" Command="{Binding ToggleHasHeader}">
+                    <Button Command="{Binding ToggleHasHeader}">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -66,10 +66,18 @@
                     </Button>
 
                     <!--Custom delimiter option-->
-                    <Button Content="Custom Delimiter" Grid.Row="1"
-                            FontFamily="/Fonts/#Poppins" FontSize="12"
-                            FontWeight="Medium" Foreground="{StaticResource TextLight}"
-                            Click="OpenDelimiterInputWindow"/>
+                    <Button Click="OpenDelimiterInputWindow">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Custom delimiter" Padding="0 0 20 0"
+                                           FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
                 </StackPanel>
             </Border>
         </dropdownmenu:DropdownMenu>
@@ -134,7 +142,7 @@
             <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
                     <!--Case sensitive option-->
-                    <Button Grid.Row="0" Command="{Binding ToggleCaseSensitive}">
+                    <Button Command="{Binding ToggleCaseSensitive}">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -153,7 +161,7 @@
                     </Button>
 
                     <!--Whole word option-->
-                    <Button Grid.Row="0" Command="{Binding ToggleWholeWord}">
+                    <Button Command="{Binding ToggleWholeWord}">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -170,7 +178,21 @@
                             </Grid>
                         </Button.Content>
                     </Button>
-                    
+
+                    <!--Output directory option-->
+                    <Button Command="{Binding ChangeOutputDirectory}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Change directory path" Padding="0 0 20 0"
+                                           FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
                 </StackPanel>
             </Border>
         </dropdownmenu:DropdownMenu>

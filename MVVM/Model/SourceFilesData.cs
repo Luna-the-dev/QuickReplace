@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Xml.Linq;
 using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.Model
@@ -21,6 +22,13 @@ namespace TextReplace.MVVM.Model
                     throw new Exception("An input file is not readable. SourceFilesData was not updated.");
                 }
             }
+        }
+        // optional user specified file path for the output file
+        private static string _outputDirectory = string.Empty;
+        public static string OutputDirectory
+        {
+            get { return _outputDirectory; }
+            set { _outputDirectory = value; }
         }
 
         /// <summary>
@@ -69,8 +77,9 @@ namespace TextReplace.MVVM.Model
             List<string> destFileNames = new List<string>();
             foreach (var name in FileNames)
             {
+                string? directory = (OutputDirectory == string.Empty) ? Path.GetDirectoryName(name) : OutputDirectory;
                 destFileNames.Add(string.Format(@"{0}\{1}-{2}{3}",
-                                                Path.GetDirectoryName(name),
+                                                directory,
                                                 Path.GetFileNameWithoutExtension(name),
                                                 suffix,
                                                 Path.GetExtension(name)

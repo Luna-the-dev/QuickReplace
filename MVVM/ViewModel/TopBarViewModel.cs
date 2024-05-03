@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.Core;
@@ -51,7 +52,15 @@ namespace TextReplace.MVVM.ViewModel
                 OnPropertyChanged();
             }
         }
+        private string _outputFilePath = string.Empty;
+        public string OutputFilePath
+        {
+            get { return _outputFilePath; }
+            set { _outputFilePath = value; }
+        }
 
+
+        // visibility flags for top bar components
         private Visibility _replaceFileReadSuccess = Visibility.Hidden;
         public Visibility ReplaceFileReadSuccess
         {
@@ -122,6 +131,7 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ToggleHasHeader => new RelayCommand(o => ToggleHasHeaderCmd());
         public RelayCommand ToggleCaseSensitive => new RelayCommand(o => ToggleCaseSensitiveCmd());
         public RelayCommand ToggleWholeWord => new RelayCommand(o => ToggleWholeWordCmd());
+        public RelayCommand ChangeOutputDirectory => new RelayCommand(o => ChangeOutputDirectoryCmd());
 
         private void ReplaceFileCmd()
         {
@@ -195,7 +205,7 @@ namespace TextReplace.MVVM.ViewModel
             }
             else
             {
-                Debug.WriteLine("Youre the greatest programmer to ever live");
+                Debug.WriteLine("Replacements successfully performed.");
             }
         }
 
@@ -212,6 +222,21 @@ namespace TextReplace.MVVM.ViewModel
         private void ToggleWholeWordCmd()
         {
             WholeWord = (WholeWord == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        private void ChangeOutputDirectoryCmd()
+        {
+            // configure open file dialog box
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            dialog.Title = "Select Folder";
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
+            {
+                Debug.WriteLine("Change default file path window was closed");
+                return;
+            }
+            
+            SourceFilesData.OutputDirectory = dialog.FileName;
         }
 
         /// <summary>
