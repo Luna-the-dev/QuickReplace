@@ -54,7 +54,7 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Contains header" Padding="0 0 20 0"
+                                <TextBlock Text="Contains header" Padding="0 0 15 0"
                                            FontFamily="/Fonts/#Poppins" FontSize="12"
                                            FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
                                 <TextBlock Grid.Column="1" HorizontalAlignment="Right"
@@ -73,7 +73,7 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Custom delimiter" Padding="0 0 20 0"
+                                <TextBlock Text="Custom delimiter" Padding="0 0 15 0"
                                            FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
@@ -149,7 +149,7 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Case sensitive" Padding="0 0 20 0"
+                                <TextBlock Text="Case sensitive" Padding="0 0 15 0"
                                    FontFamily="/Fonts/#Poppins" FontSize="12"
                                    FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
                                 <TextBlock Grid.Column="1" HorizontalAlignment="Right"
@@ -187,12 +187,11 @@
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Change directory path" Padding="0 0 20 0"
+                                <TextBlock Text="Change directory" Padding="0 0 15 0"
                                            FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
-
                 </StackPanel>
             </Border>
         </dropdownmenu:DropdownMenu>
