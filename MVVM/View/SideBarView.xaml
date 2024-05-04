@@ -1,0 +1,35 @@
+﻿<UserControl x:Class="TextReplace.MVVM.View.SideBarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TextReplace.MVVM.View"
+             xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="175">
+
+
+    <UserControl.DataContext>
+        <viewModel:SideBarViewModel/>
+    </UserControl.DataContext>
+
+    <Border Padding="4 8 4 0"
+            Background="{StaticResource SideBarBackground}">
+        <StackPanel>
+            <RadioButton Content="Home"
+                         Height="50"
+                         Foreground="White"
+                         FontSize="14"
+                         Style="{StaticResource MenuButtonTheme}"
+                         IsChecked="True"
+                         Command="{Binding HomeViewCommand}"/>
+
+            <RadioButton Content="Replace"
+                         Height="50"
+                         Foreground="White"
+                         FontSize="14"
+                         Style="{StaticResource MenuButtonTheme}"
+                         Command="{Binding ReplaceViewCommand}"/>
+        </StackPanel>
+    </Border>
+</UserControl>

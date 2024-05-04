@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <Folder Include="Images\Icons\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

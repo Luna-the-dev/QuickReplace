@@ -33,6 +33,7 @@
             <!-- Top row with close buttons -->
             <view:TopBorderView Grid.ColumnSpan="2" WindowName="Replacify"/>
 
+            <!-- Replacify text -->
             <TextBlock Grid.Row="1"
                        Text="Replacify"
                        VerticalAlignment="Center"
@@ -41,27 +42,33 @@
                        FontSize="22"
                        Margin="20 0 0 0"
                        FontFamily="/Fonts/#Poppins"/>
+            
+            <!-- Side bar -->
+            <!-- <ContentControl Grid.Row="2" Content="{Binding SideBarView}"/> -->
+            <Border Grid.Row="2" Padding="4 8 4 0"
+                    Background="{StaticResource SideBarBackground}">
+                <StackPanel>
+                    <RadioButton Content="Home"
+                                 Height="50"
+                                 Foreground="White"
+                                 FontSize="14"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 IsChecked="True"
+                                 Command="{Binding HomeViewCommand}"/>
 
+                    <RadioButton Content="Replace"
+                                 Height="50"
+                                 Foreground="White"
+                                 FontSize="14"
+                                 Style="{StaticResource MenuButtonTheme}"
+                                 Command="{Binding ReplaceViewCommand}"/>
+                </StackPanel>
+            </Border>
 
-            <StackPanel Grid.Row="2">
-                <RadioButton Content="Home"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             IsChecked="True"
-                             Command="{Binding HomeViewCommand}"/>
-
-                <RadioButton Content="Replace"
-                             Height="50"
-                             Foreground="White"
-                             FontSize="14"
-                             Style="{StaticResource MenuButtonTheme}"
-                             Command="{Binding ReplaceViewCommand}"/>
-            </StackPanel>
-
+            <!-- Top bar -->
             <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding TopBarView}"/>
 
+            <!-- Current view -->
             <Border Grid.Row="2" Grid.Column="1"
                     Background="{StaticResource BackgroundColorMedium}">
                 <ContentControl Content="{Binding CurrentView}"/>

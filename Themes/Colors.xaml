@@ -64,6 +64,20 @@
         </SolidColorBrush.Color>
     </SolidColorBrush>
 
+    <SolidColorBrush x:Key="SideBarBackground">
+        <SolidColorBrush.Color>
+            <!--#22202f-->
+            <Color A="255" R="34" G="32" B="47"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
+    <SolidColorBrush x:Key="SideBarHighlighted">
+        <SolidColorBrush.Color>
+            <!--#2E2B3F-->
+            <Color A="255" R="46" G="43" B="63"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
     <SolidColorBrush x:Key="CancelBtn">
         <SolidColorBrush.Color>
             <!--#E55050-->
