@@ -1,9 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using System.Diagnostics;
+using TextReplace.Messages;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class MainViewModel : ObservableObject
+    partial class MainViewModel : ObservableRecipient, IRecipient<ActiveContentViewMsg>
     {
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(HomeViewCommand))]
@@ -29,18 +32,27 @@ namespace TextReplace.MVVM.ViewModel
 
             _topBarView = TopBarVm;
             _sideBarView = SideBarVm;
+
+            WeakReferenceMessenger.Default.Register(this);
         }
 
         [RelayCommand]
         private void HomeView()
         {
             CurrentView = HomeVm;
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(CurrentView));
         }
 
         [RelayCommand]
         private void ReplaceView()
         {
             CurrentView = ReplaceVm;
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(CurrentView));
+        }
+
+        public void Receive(ActiveContentViewMsg message)
+        {
+            CurrentView = message.Value;
         }
     }
 }

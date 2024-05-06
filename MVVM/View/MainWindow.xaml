@@ -44,26 +44,7 @@
                        FontFamily="/Fonts/#Poppins"/>
             
             <!-- Side bar -->
-            <!-- <ContentControl Grid.Row="2" Content="{Binding SideBarView}"/> -->
-            <Border Grid.Row="2" Padding="4 8 4 0"
-                    Background="{StaticResource SideBarBackground}">
-                <StackPanel>
-                    <RadioButton Content="Home"
-                                 Height="50"
-                                 Foreground="White"
-                                 FontSize="14"
-                                 Style="{StaticResource MenuButtonTheme}"
-                                 IsChecked="True"
-                                 Command="{Binding HomeViewCommand}"/>
-
-                    <RadioButton Content="Replace"
-                                 Height="50"
-                                 Foreground="White"
-                                 FontSize="14"
-                                 Style="{StaticResource MenuButtonTheme}"
-                                 Command="{Binding ReplaceViewCommand}"/>
-                </StackPanel>
-            </Border>
+            <ContentControl Grid.Row="2" Content="{Binding SideBarView}"/>
 
             <!-- Top bar -->
             <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding TopBarView}"/>
