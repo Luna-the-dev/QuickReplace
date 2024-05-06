@@ -1,41 +1,25 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using TextReplace.Core;
+﻿using System.Diagnostics;
 using TextReplace.MVVM.Model;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    class ReplaceViewModel : ObservableObject
+    partial class ReplaceViewModel : ObservableObject
     {
+        [ObservableProperty]
         private bool _caseSensitive = false;
-        public bool CaseSensitive
-        {
-            get { return _caseSensitive; }
-            set
-            {
-                _caseSensitive = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private bool _wholeWord = false;
-        public bool WholeWord
-        {
-            get { return _wholeWord; }
-            set
-            {
-                _wholeWord = value;
-                OnPropertyChanged();
-            }
-        }
+        
 
         // commands
-        public RelayCommand Replace => new RelayCommand(o => ReplaceCmd());
+        public RelayCommand Replace => new RelayCommand(() => ReplaceCmd());
 
         private void ReplaceCmd()
         {
             ReplaceData replaceData = new ReplaceData(CaseSensitive);
-            string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // create a list of destination file names
             List<string> destFileNames = SourceFilesData.GenerateDestFileNames();

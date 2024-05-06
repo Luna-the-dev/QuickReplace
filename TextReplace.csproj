@@ -9,20 +9,27 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Images\**" />
+    <Compile Remove="Services\**" />
+    <EmbeddedResource Remove="Images\**" />
+    <EmbeddedResource Remove="Services\**" />
+    <None Remove="Images\**" />
+    <None Remove="Services\**" />
+    <Page Remove="Images\**" />
+    <Page Remove="Services\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="Fonts\Poppins-ExtraLight.ttf" />
     <None Remove="Fonts\Poppins-Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="CsvHelper" Version="32.0.1" />
     <PackageReference Include="DropdownMenu.WPF" Version="1.0.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
     <PackageReference Include="WpfAnimatedGif" Version="2.0.2" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Images\Icons\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
   <ItemGroup>

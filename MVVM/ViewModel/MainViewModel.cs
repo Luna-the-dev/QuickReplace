@@ -1,42 +1,22 @@
-﻿using TextReplace.Core;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    class MainViewModel : ObservableObject
+    partial class MainViewModel : ObservableObject
     {
+        [ObservableProperty]
         private object _currentView;
-        public object CurrentView
-        {
-            get { return _currentView; }
-            set
-            {
-                _currentView = value;
-                OnPropertyChanged();
-            }
-        }
-        private object _topBarView;
-        public object TopBarView
-        {
-            get { return _topBarView; }
-            set
-            {
-                _topBarView = value;
-                OnPropertyChanged();
-            }
-        }
-        private object _sideBarView;
-        public object SideBarView
-        {
-            get { return _sideBarView; }
-            set
-            {
-                _sideBarView = value;
-                OnPropertyChanged();
-            }
-        }
 
-        public RelayCommand HomeViewCommand => new RelayCommand(o => { CurrentView = HomeVm; });
-        public RelayCommand ReplaceViewCommand => new RelayCommand(o => { CurrentView = ReplaceVm; });
+        [ObservableProperty]
+        private object _topBarView;
+
+        [ObservableProperty]
+        private object _sideBarView;
+        
+
+        public RelayCommand HomeViewCommand => new RelayCommand(() => { CurrentView = HomeVm; });
+        public RelayCommand ReplaceViewCommand => new RelayCommand(() => { CurrentView = ReplaceVm; });
 
         public HomeViewModel HomeVm = new HomeViewModel();
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
@@ -50,6 +30,11 @@ namespace TextReplace.MVVM.ViewModel
 
             _topBarView = TopBarVm;
             _sideBarView = SideBarVm;
+        }
+
+        private void temp()
+        {
+
         }
     }
 }

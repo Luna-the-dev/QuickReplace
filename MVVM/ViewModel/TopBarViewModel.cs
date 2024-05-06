@@ -1,140 +1,66 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Windows;
-using TextReplace.Core;
 using TextReplace.MVVM.Model;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    class TopBarViewModel : ObservableObject
+    partial class TopBarViewModel : ObservableObject
     {
+        [ObservableProperty]
         private Visibility _hasHeader = Visibility.Hidden;
-        public Visibility HasHeader
+        partial void OnHasHeaderChanging(Visibility value)
         {
-            get { return _hasHeader; }
-            set
-            {
-                _hasHeader = value;
-                ReplaceData.HasHeader = (value == Visibility.Visible) ? true : false;
-                OnPropertyChanged();
-            }
-        }
-        private string _delimiter = string.Empty;
-        public string Delimiter
-        {
-            get { return _delimiter; }
-            set
-            {
-                _delimiter = value;
-                ReplaceData.Delimiter = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _suffix = string.Empty;
-        public string Suffix
-        {
-            get { return _suffix; }
-            set
-            {
-                _suffix = value;
-                SourceFilesData.Suffix = value;
-                OnPropertyChanged();
-            }
-        }
-        private Visibility _caseSensitive = Visibility.Hidden;
-        public Visibility CaseSensitive
-        {
-            get { return _caseSensitive; }
-            set
-            {
-                _caseSensitive = value;
-                OnPropertyChanged();
-            }
-        }
-        private Visibility _wholeWord = Visibility.Hidden;
-        public Visibility WholeWord
-        {
-            get { return _wholeWord; }
-            set
-            {
-                _wholeWord = value;
-                OnPropertyChanged();
-            }
+            ReplaceData.HasHeader = (value == Visibility.Visible) ? true : false;
         }
 
+        [ObservableProperty]
+        private string _delimiter = string.Empty;
+        partial void OnDelimiterChanging(string value)
+        {
+            ReplaceData.Delimiter = value;
+        }
+
+        [ObservableProperty]
+        private string _suffix = string.Empty;
+        partial void OnSuffixChanging(string value)
+        {
+            SourceFilesData.Suffix = value;
+        }
+
+        [ObservableProperty]
+        private Visibility _caseSensitive = Visibility.Hidden;
+
+        [ObservableProperty]
+        private Visibility _wholeWord = Visibility.Hidden;
+
         // visibility flags for top bar components
+        [ObservableProperty]
         private Visibility _replaceFileReadSuccess = Visibility.Hidden;
-        public Visibility ReplaceFileReadSuccess
-        {
-            get { return _replaceFileReadSuccess; }
-            set
-            {
-                _replaceFileReadSuccess = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
         private Visibility _replaceFileReadFail = Visibility.Hidden;
-        public Visibility ReplaceFileReadFail
-        {
-            get { return _replaceFileReadFail; }
-            set
-            {
-                _replaceFileReadFail = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
         private Visibility _sourceFileReadSuccess = Visibility.Hidden;
-        public Visibility SourceFileReadSuccess
-        {
-            get { return _sourceFileReadSuccess; }
-            set
-            {
-                _sourceFileReadSuccess = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
         private Visibility _sourceFileReadFail = Visibility.Hidden;
-        public Visibility SourceFileReadFail
-        {
-            get { return _sourceFileReadFail; }
-            set
-            {
-                _sourceFileReadFail = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
         private Visibility _replaceisClickable = Visibility.Hidden;
-        public Visibility ReplaceisClickable
-        {
-            get { return _replaceisClickable; }
-            set
-            {
-                _replaceisClickable = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
         private Visibility _replaceisUnclickable = Visibility.Visible;
-        public Visibility ReplaceisUnclickable
-        {
-            get { return _replaceisUnclickable; }
-            set
-            {
-                _replaceisUnclickable = value;
-                OnPropertyChanged();
-            }
-        }
 
         private const string INVALID_DELIMITER_CHARS = "\n";
         private const string INVALID_SUFFIX_CHARS = "<>:\"/\\|?*\n\t";
 
         // commands
-        public RelayCommand ReplaceFile => new RelayCommand(o => ReplaceFileCmd());
-        public RelayCommand SourceFiles => new RelayCommand(o => SourceFilesCmd());
-        public RelayCommand Replace => new RelayCommand(o => ReplaceCmd());
-        public RelayCommand ToggleHasHeader => new RelayCommand(o => ToggleHasHeaderCmd());
-        public RelayCommand ToggleCaseSensitive => new RelayCommand(o => ToggleCaseSensitiveCmd());
-        public RelayCommand ToggleWholeWord => new RelayCommand(o => ToggleWholeWordCmd());
-        public RelayCommand ChangeOutputDirectory => new RelayCommand(o => ChangeOutputDirectoryCmd());
+        public RelayCommand ReplaceFile => new RelayCommand(() => ReplaceFileCmd());
+        public RelayCommand SourceFiles => new RelayCommand(() => SourceFilesCmd());
+        public RelayCommand Replace => new RelayCommand(() => ReplaceCmd());
+        public RelayCommand ToggleHasHeader => new RelayCommand(() => ToggleHasHeaderCmd());
+        public RelayCommand ToggleCaseSensitive => new RelayCommand(() => ToggleCaseSensitiveCmd());
+        public RelayCommand ToggleWholeWord => new RelayCommand(() => ToggleWholeWordCmd());
+        public RelayCommand ChangeOutputDirectory => new RelayCommand(() => ChangeOutputDirectoryCmd());
 
         private void ReplaceFileCmd()
         {
@@ -190,8 +116,6 @@ namespace TextReplace.MVVM.ViewModel
 
             bool caseSensitive = (CaseSensitive == Visibility.Visible) ? true : false;
             ReplaceData replaceData = new ReplaceData(caseSensitive);
-
-            string suffix = "replacify"; // TODO let the user change this with GUI later
 
             // create a list of destination file names
             List<string> destFileNames = SourceFilesData.GenerateDestFileNames();

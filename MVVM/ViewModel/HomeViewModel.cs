@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace TextReplace.MVVM.ViewModel
+﻿namespace TextReplace.MVVM.ViewModel
 {
     class HomeViewModel
     {

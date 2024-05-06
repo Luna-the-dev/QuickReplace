@@ -1,24 +1,17 @@
-﻿using TextReplace.Core;
-using TextReplace.MVVM.Model;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
+﻿using TextReplace.MVVM.Model;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+
 
 namespace TextReplace.MVVM.ViewModel
 {
-    class SideBarViewModel : ObservableObject
+    partial class SideBarViewModel : ObservableObject
     {
+        [ObservableProperty]
         private object _selectedView;
-        public object SelectedView
-        {
-            get { return _selectedView; }
-            set
-            {
-                _selectedView = value;
-                OnPropertyChanged();
-            }
-        }
 
-        public RelayCommand HomeViewCommand => new RelayCommand(o => { MainContent.ActiveView = HomeVm; });
-        public RelayCommand ReplaceViewCommand => new RelayCommand(o => { MainContent.ActiveView = ReplaceVm; });
+        public RelayCommand HomeViewCommand => new RelayCommand(() => { MainContent.ActiveView = HomeVm; });
+        public RelayCommand ReplaceViewCommand => new RelayCommand(() => { MainContent.ActiveView = ReplaceVm; });
 
         public HomeViewModel HomeVm = new HomeViewModel();
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
