@@ -10,11 +10,20 @@ namespace TextReplace.MVVM.ViewModel
     partial class TopBarViewModel : ObservableObject
     {
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ToggleHasHeaderCommand))]
         private Visibility _hasHeader = Visibility.Hidden;
         partial void OnHasHeaderChanging(Visibility value)
         {
             ReplaceData.HasHeader = (value == Visibility.Visible) ? true : false;
         }
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ToggleCaseSensitiveCommand))]
+        private Visibility _caseSensitive = Visibility.Hidden;
+
+        [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(ToggleWholeWordCommand))]
+        private Visibility _wholeWord = Visibility.Hidden;
 
         [ObservableProperty]
         private string _delimiter = string.Empty;
@@ -29,12 +38,6 @@ namespace TextReplace.MVVM.ViewModel
         {
             SourceFilesData.Suffix = value;
         }
-
-        [ObservableProperty]
-        private Visibility _caseSensitive = Visibility.Hidden;
-
-        [ObservableProperty]
-        private Visibility _wholeWord = Visibility.Hidden;
 
         // visibility flags for top bar components
         [ObservableProperty]
@@ -57,9 +60,6 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ReplaceFile => new RelayCommand(() => ReplaceFileCmd());
         public RelayCommand SourceFiles => new RelayCommand(() => SourceFilesCmd());
         public RelayCommand Replace => new RelayCommand(() => ReplaceCmd());
-        public RelayCommand ToggleHasHeader => new RelayCommand(() => ToggleHasHeaderCmd());
-        public RelayCommand ToggleCaseSensitive => new RelayCommand(() => ToggleCaseSensitiveCmd());
-        public RelayCommand ToggleWholeWord => new RelayCommand(() => ToggleWholeWordCmd());
         public RelayCommand ChangeOutputDirectory => new RelayCommand(() => ChangeOutputDirectoryCmd());
 
         private void ReplaceFileCmd()
@@ -136,17 +136,20 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
-        private void ToggleHasHeaderCmd()
+        [RelayCommand]
+        private void ToggleHasHeader()
         {
             HasHeader = (HasHeader == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
         }
 
-        private void ToggleCaseSensitiveCmd()
+        [RelayCommand]
+        private void ToggleCaseSensitive()
         {
             CaseSensitive = (CaseSensitive == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
         }
 
-        private void ToggleWholeWordCmd()
+        [RelayCommand]
+        private void ToggleWholeWord()
         {
             WholeWord = (WholeWord == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
         }

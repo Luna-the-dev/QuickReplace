@@ -6,6 +6,8 @@ namespace TextReplace.MVVM.ViewModel
     partial class MainViewModel : ObservableObject
     {
         [ObservableProperty]
+        [NotifyCanExecuteChangedFor(nameof(HomeViewCommand))]
+        [NotifyCanExecuteChangedFor(nameof(ReplaceViewCommand))]
         private object _currentView;
 
         [ObservableProperty]
@@ -13,10 +15,7 @@ namespace TextReplace.MVVM.ViewModel
 
         [ObservableProperty]
         private object _sideBarView;
-        
 
-        public RelayCommand HomeViewCommand => new RelayCommand(() => { CurrentView = HomeVm; });
-        public RelayCommand ReplaceViewCommand => new RelayCommand(() => { CurrentView = ReplaceVm; });
 
         public HomeViewModel HomeVm = new HomeViewModel();
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
@@ -32,9 +31,16 @@ namespace TextReplace.MVVM.ViewModel
             _sideBarView = SideBarVm;
         }
 
-        private void temp()
+        [RelayCommand]
+        private void HomeView()
         {
+            CurrentView = HomeVm;
+        }
 
+        [RelayCommand]
+        private void ReplaceView()
+        {
+            CurrentView = ReplaceVm;
         }
     }
 }
