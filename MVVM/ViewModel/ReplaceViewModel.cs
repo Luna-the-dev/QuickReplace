@@ -1,36 +1,38 @@
-﻿using System.Diagnostics;
-using TextReplace.MVVM.Model;
-using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using System.Windows;
+using TextReplace.Messages;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class ReplaceViewModel : ObservableObject
+    partial class ReplaceViewModel : ObservableRecipient, IRecipient<FileNameMsg>
     {
         [ObservableProperty]
-        private bool _caseSensitive = false;
+        private string _fileName = string.Empty;
+        partial void OnFileNameChanged(string value)
+        {
+            IsDefaultFileNameVisible = (value == string.Empty) ? Visibility.Visible : Visibility.Hidden;
+            IsFileNameVisible =        (value == string.Empty) ? Visibility.Hidden : Visibility.Visible;
+        }
 
         [ObservableProperty]
-        private bool _wholeWord = false;
-        
+        private Visibility _isDefaultFileNameVisible = Visibility.Visible;
+        [ObservableProperty]
+        private Visibility _isFileNameVisible = Visibility.Hidden;
 
-        // commands
-        public RelayCommand Replace => new RelayCommand(() => ReplaceCmd());
-
-        private void ReplaceCmd()
+        public ReplaceViewModel()
         {
-            ReplaceData replaceData = new ReplaceData(CaseSensitive);
+            WeakReferenceMessenger.Default.Register(this);
+        }
 
-            // create a list of destination file names
-            List<string> destFileNames = SourceFilesData.GenerateDestFileNames();
 
-            // perform the text replacements
-            bool result = replaceData.PerformReplacements(SourceFilesData.FileNames, destFileNames, WholeWord);
 
-            if (result == false)
-            {
-                Debug.WriteLine("A replacement could not be made.");
-            }
+
+
+
+        public void Receive(FileNameMsg message)
+        {
+            FileName = message.Value;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.IO;
-using System.Xml.Linq;
 using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.Model

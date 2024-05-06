@@ -4,6 +4,9 @@ using System.Windows;
 using TextReplace.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using TextReplace.Messages;
+using System.IO;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -80,6 +83,8 @@ namespace TextReplace.MVVM.ViewModel
                 ReplaceFileReadSuccess = Visibility.Hidden;
                 ReplaceFileReadFail = Visibility.Visible;
             }
+
+            WeakReferenceMessenger.Default.Send(new FileNameMsg(Path.GetFileName(ReplaceData.FileName)));
 
             SetReplaceButtonClickability();
         }
