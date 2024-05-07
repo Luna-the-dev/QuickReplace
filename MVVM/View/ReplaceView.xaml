@@ -27,12 +27,11 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Column="0" Grid.Row="1"
-                   Text="Replacements:"
+                   Text="Replacements"
                    VerticalAlignment="Center"
-                   HorizontalAlignment="Right"
+                   HorizontalAlignment="Center"
                    Foreground="{StaticResource TextLight}"
                    FontSize="18"
-                   Margin="0 0 15 0"
                    FontFamily="/Fonts/#Poppins"/>
 
         <TextBlock Grid.Column="1" Grid.Row="1"
@@ -52,6 +51,28 @@
                    Foreground="{StaticResource TextUnclickable}"
                    FontSize="18"
                    FontFamily="/Fonts/#Poppins"/>
+
+        <StackPanel Grid.Column="0" Grid.Row="2" Margin="30 5">
+            <!--Contains header option-->
+            <ToggleButton Command="{Binding ToggleHasHeaderCommand}"
+                          Style="{StaticResource OptionsMenuToggleButtonTheme}">
+                <ToggleButton.Content>
+                    <TextBlock Text="Has header" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </ToggleButton.Content>
+            </ToggleButton>
+
+            <!--Custom delimiter option-->
+            <Button Click="OpenDelimiterInputWindow" Style="{StaticResource OptionsMenuButtonTheme}">
+                <Button.Content>
+                    <TextBlock Text="Delimiter"
+                               x:Name="delimiterMenuOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+        </StackPanel>
 
     </Grid>
 </UserControl>

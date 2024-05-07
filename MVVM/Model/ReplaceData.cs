@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Validation;
+using CommunityToolkit.Mvvm.Messaging;
+using TextReplace.Messages.Replace;
 
 namespace TextReplace.MVVM.Model
 {
@@ -52,18 +54,26 @@ namespace TextReplace.MVVM.Model
         public static string Delimiter
         {
             get { return _delimiter; }
-            set { _delimiter = value; }
+            set
+            {
+                _delimiter = value;
+                WeakReferenceMessenger.Default.Send(new DelimiterMsg(value));
+            }
         }
         // a flag used by the replace file parser to determine if there is a header line or not
         private static bool _hasHeader = false;
         public static bool HasHeader
         {
             get { return _hasHeader; }
-            set { _hasHeader = value; }
+            set
+            {
+                _hasHeader = value;
+                WeakReferenceMessenger.Default.Send(new HasHeaderMsg(value));
+            }
         }
         // delimiters which decides what seperates whole words
         private const string WORD_DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
-
+        private const string INVALID_DELIMITER_CHARS = "\n";
 
         /*
          * Constructor
@@ -145,12 +155,7 @@ namespace TextReplace.MVVM.Model
                     case ".xlsx":
                         // TODO: add excel file support
                     case ".txt":
-                        if (IsDelimiterValid())
-                        {
-                            return DataValidation.ParseDSV(fileName, Delimiter, HasHeader);
-                        }
-                        Debug.WriteLine($"{Delimiter} is an invalid delimiter.");
-                        return new Dictionary<string, string>();
+                        return DataValidation.ParseDSV(fileName, Delimiter, HasHeader);
                     default:
                         Debug.WriteLine($"{extension} is not a supported file type.");
                         return new Dictionary<string, string>();
@@ -338,11 +343,37 @@ namespace TextReplace.MVVM.Model
             return true;
         }
 
-        private static bool IsDelimiterValid()
+        /// <summary>
+        /// Checks to see if the delimiter is valid, and then sets the delimiter
+        /// </summary>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static bool SetDelimiter(string delimiter)
         {
-            if (Delimiter == string.Empty || Delimiter.Contains("\n"))
+            if (IsDelimiterValid(delimiter))
+            {
+                Delimiter = delimiter;
+                return true;
+            }
+            else
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Checks if the delimiter string contains any invalid characters.
+        /// </summary>
+        /// <param name="delimiter"></param>
+        /// <returns>True if the string is empty or does not contain any invalid characters.</returns>
+        private static bool IsDelimiterValid(string delimiter)
+        {
+            foreach (char c in delimiter)
+            {
+                if (INVALID_DELIMITER_CHARS.Contains(c))
+                {
+                    return false;
+                }
             }
             return true;
         }

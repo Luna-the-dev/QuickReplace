@@ -5,35 +5,28 @@ using TextReplace.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using TextReplace.Messages;
+using TextReplace.Messages.Replace;
 using System.IO;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class TopBarViewModel : ObservableObject
+    partial class TopBarViewModel : ObservableObject,
+        IRecipient<HasHeaderMsg>,
+        IRecipient<DelimiterMsg>
     {
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ToggleHasHeaderCommand))]
-        private Visibility _hasHeader = Visibility.Hidden;
-        partial void OnHasHeaderChanging(Visibility value)
-        {
-            ReplaceData.HasHeader = (value == Visibility.Visible) ? true : false;
-        }
+        private Visibility _hasHeader = (ReplaceData.HasHeader) ? Visibility.Visible : Visibility.Hidden;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ToggleCaseSensitiveCommand))]
         private Visibility _caseSensitive = Visibility.Hidden;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ToggleWholeWordCommand))]
-        private Visibility _wholeWord = Visibility.Hidden;
+        private string _delimiter = ReplaceData.Delimiter;
 
         [ObservableProperty]
-        private string _delimiter = string.Empty;
-        partial void OnDelimiterChanging(string value)
-        {
-            ReplaceData.Delimiter = value;
-        }
+        [NotifyCanExecuteChangedFor(nameof(ToggleWholeWordCommand))]
+        private Visibility _wholeWord = Visibility.Hidden;
 
         [ObservableProperty]
         private string _suffix = string.Empty;
@@ -56,14 +49,19 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private Visibility _replaceisUnclickable = Visibility.Visible;
 
-        private const string INVALID_DELIMITER_CHARS = "\n";
         private const string INVALID_SUFFIX_CHARS = "<>:\"/\\|?*\n\t";
 
         // commands
-        public RelayCommand ReplaceFile => new RelayCommand(() => ReplaceFileCmd());
-        public RelayCommand SourceFiles => new RelayCommand(() => SourceFilesCmd());
-        public RelayCommand Replace => new RelayCommand(() => ReplaceCmd());
-        public RelayCommand ChangeOutputDirectory => new RelayCommand(() => ChangeOutputDirectoryCmd());
+        public RelayCommand ReplaceFile => new RelayCommand(ReplaceFileCmd);
+        public RelayCommand SourceFiles => new RelayCommand(SourceFilesCmd);
+        public RelayCommand Replace => new RelayCommand(ReplaceCmd);
+        public RelayCommand ToggleHasHeaderCommand => new RelayCommand(() => { ReplaceData.HasHeader = !ReplaceData.HasHeader; });
+        public RelayCommand ChangeOutputDirectory => new RelayCommand(ChangeOutputDirectoryCmd);
+
+        public TopBarViewModel()
+        {
+            WeakReferenceMessenger.Default.RegisterAll(this);
+        }
 
         private void ReplaceFileCmd()
         {
@@ -142,12 +140,6 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         [RelayCommand]
-        private void ToggleHasHeader()
-        {
-            HasHeader = (HasHeader == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
-        }
-
-        [RelayCommand]
         private void ToggleCaseSensitive()
         {
             CaseSensitive = (CaseSensitive == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
@@ -175,21 +167,13 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         /// <summary>
-        /// Checks to see if the delimiter is valid, and then sets the delimiter
+        /// Wrapper function for ReplaceData.SetDelimiter
         /// </summary>
         /// <param name="delimiter"></param>
         /// <returns></returns>
         public bool SetDelimiter(string delimiter)
         {
-            if (IsDelimiterValid(delimiter))
-            {
-                Delimiter = delimiter;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return ReplaceData.SetDelimiter(delimiter);
         }
 
         /// <summary>
@@ -208,23 +192,6 @@ namespace TextReplace.MVVM.ViewModel
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Checks if the delimiter string contains any invalid characters.
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns>True if the string is empty or does not contain any invalid characters.</returns>
-        private bool IsDelimiterValid(string delimiter)
-        {
-            foreach (char c in delimiter)
-            {
-                if (INVALID_DELIMITER_CHARS.Contains(c))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
 
         /// <summary>
@@ -260,6 +227,16 @@ namespace TextReplace.MVVM.ViewModel
                 ReplaceisClickable = Visibility.Hidden;
                 ReplaceisUnclickable = Visibility.Visible;
             }
+        }
+
+        public void Receive(HasHeaderMsg message)
+        {
+            HasHeader = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public void Receive(DelimiterMsg message)
+        {
+            Delimiter = message.Value;
         }
     }
 }

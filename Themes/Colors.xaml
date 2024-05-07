@@ -14,7 +14,14 @@
             <Color A="255" R="72" G="54" B="90"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
-    
+
+    <SolidColorBrush x:Key="BtnHighlighted">
+        <SolidColorBrush.Color>
+            <!--#8B5499-->
+            <Color A="255" R="139" G="84" B="153"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
     <SolidColorBrush x:Key="BtnUnclickable">
         <SolidColorBrush.Color>
             <!--#504759-->

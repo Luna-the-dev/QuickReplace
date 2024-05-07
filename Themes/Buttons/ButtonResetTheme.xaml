@@ -21,9 +21,6 @@
                         <Trigger Property="IsPressed" Value="True">
                             <Setter Property="BorderThickness" TargetName="border" Value="0 0 0 0"/>
                         </Trigger>
-                        <Trigger Property="IsEnabled" Value="False">
-                            <Setter Property="Opacity" TargetName="border" Value="0.20"/>
-                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>

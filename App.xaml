@@ -15,6 +15,9 @@
                 <!-- Menu themes-->
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuRightOffsetTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Menus/OptionsMenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Menus/OptionsMenuToggleButtonTheme.xaml"/>
+
                 <!-- Button themes -->
                 <ResourceDictionary Source="Themes/Buttons/UploadButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/UnclickableUploadButtonTheme.xaml"/>

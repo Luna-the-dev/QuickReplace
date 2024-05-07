@@ -68,8 +68,8 @@
                 <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
                 <Setter Property="FontSize" Value="12"/>
                 <Setter Property="FontWeight" Value="Medium"/>
-                <Setter Property="Foreground" Value="#FAFAFF"/>
-                <Setter Property="Background" Value="#48365A"/>
+                <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+                <Setter Property="Background" Value="{StaticResource BtnDark}"/>
                 <Setter Property="Padding" Value="20 10"/>
                 <Setter Property="BorderThickness" Value="0"/>
                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
