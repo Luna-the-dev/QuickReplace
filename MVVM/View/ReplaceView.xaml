@@ -71,7 +71,8 @@
                                Foreground="{StaticResource TextLight}"/>
                 </Button.Content>
             </Button>
-            <ToggleButton Style="{StaticResource OptionsMenuToggleButtonTheme}">
+            <ToggleButton Command="{Binding ToggleSortCommand}"
+                          Style="{StaticResource OptionsMenuToggleButtonTheme}">
                 <ToggleButton.Content>
                     <TextBlock Text="Sort" HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
@@ -82,34 +83,71 @@
 
         <ScrollViewer Style="{DynamicResource ScrollViewerTheme}" Grid.Column="1" Grid.Row="2"
                       Background="{StaticResource BackgroundColor}">
-            <ItemsControl Grid.Column="0" ItemsSource="{Binding ReplacePhrases}" Margin="0 4">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical" Width="auto"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="{StaticResource BtnLight}" CornerRadius="4"
-                                Height="30" Margin="8 4 14 4" Padding="10 0">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Item1}"
-                                           FontFamily="/Fonts/#Poppins" FontSize="14"
-                                           Foreground="{StaticResource TextLight}"
-                                           VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Item2}"
-                                           FontFamily="/Fonts/#Poppins" FontSize="14"
-                                           Foreground="{StaticResource TextLight}"
-                                           VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+            <Grid>
+                <!-- Unsorted replace phrases view -->
+                <ItemsControl Margin="0 4"
+                              ItemsSource="{Binding ReplacePhrases}"
+                              Visibility="{Binding IsUnsortedPhrasesVisible}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Width="auto"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource BtnLight}" CornerRadius="4"
+                                    Height="30" Margin="8 4 14 4" Padding="10 0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Item1}"
+                                               FontFamily="/Fonts/#Poppins" FontSize="14"
+                                               Foreground="{StaticResource TextLight}"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Item2}"
+                                               FontFamily="/Fonts/#Poppins" FontSize="14"
+                                               Foreground="{StaticResource TextLight}"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Sorted replace phrases view -->
+                <ItemsControl Margin="0 4"
+                              ItemsSource="{Binding ReplacePhrasesSorted}"
+                              Visibility="{Binding IsSortedPhrasesVisible}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" Width="auto"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{StaticResource BtnLight}" CornerRadius="4"
+                                    Height="30" Margin="8 4 14 4" Padding="10 0">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="{Binding Item1}"
+                                               FontFamily="/Fonts/#Poppins" FontSize="14"
+                                               Foreground="{StaticResource TextLight}"
+                                               VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding Item2}"
+                                               FontFamily="/Fonts/#Poppins" FontSize="14"
+                                               Foreground="{StaticResource TextLight}"
+                                               VerticalAlignment="Center"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
         </ScrollViewer>
     </Grid>
 

@@ -73,8 +73,8 @@
 
     <SolidColorBrush x:Key="BackgroundColorExtraDark">
         <SolidColorBrush.Color>
-            <!--#09090F-->
-            <Color A="255" R="9" G="9" B="15"/>
+            <!--#0A0911-->
+            <Color A="255" R="10" G="9" B="17"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
 
