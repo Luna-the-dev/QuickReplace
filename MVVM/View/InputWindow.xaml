@@ -16,6 +16,10 @@
         AllowsTransparency="True"
         WindowStartupLocation="CenterOwner">
 
+    <Window.DataContext>
+        <viewModel:InputViewModel/>
+    </Window.DataContext>
+
     <Border Background="{StaticResource BackgroundColor}"
             BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
         <Grid>
@@ -48,8 +52,9 @@
 
             <AdornerDecorator Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2">
                 <Border Background="#353340" CornerRadius="10">
-                    <TextBox Name="InputTextBox" Style="{DynamicResource InputBar}"
-                             TextChanged="SetInputText">
+                    <TextBox Style="{DynamicResource InputBar}"
+                             Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                             Name="InputTextBox">
                         <wm:WatermarkService.Watermark>
                             <TextBlock x:Name="InputWatermark"
                                        VerticalAlignment="Center"
@@ -71,15 +76,18 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <ToggleButton Content="Confirm" Grid.Column="0"
+                              Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsUnclickable}"
+                              Style="{StaticResource InputWindowUnclickableButtonTheme}"/>
                 <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
-                              Margin="0 0 5 0" Padding="8"
-                              Style="{StaticResource ButtonConfirmTheme}" Click="BtnOk_Click" />
+                              Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsClickable}"
+                              Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
                 <ToggleButton Name="BtnReset" Content="Reset" Grid.Column="1"
                               Margin="2.5 0 2.5 0" Padding="8"
-                              Style="{StaticResource ButtonResetTheme}" Click="BtnReset_Click" />
+                              Style="{StaticResource InputWindowResetButtonTheme}" Click="BtnReset_Click" />
                 <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="2"
                               Margin="5 0 0 0" Padding="8"
-                              Style="{StaticResource ButtonCancelTheme}" Click="BtnCancel_Click" />
+                              Style="{StaticResource InputWindowCancelButtonTheme}" Click="BtnCancel_Click" />
             </Grid>
         </Grid>
     </Border>

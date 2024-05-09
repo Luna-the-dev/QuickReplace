@@ -14,6 +14,7 @@ namespace TextReplace.MVVM.View
             get { return WindowName; }
             set { TopBorder.WindowName = value; }
         }
+
         public string BodyText
         {
             get { return BodyTextBox.Text; }

@@ -11,6 +11,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Themes/Colors.xaml"/>
                 <ResourceDictionary Source="Themes/InputBarTheme.xaml"/>
+                <ResourceDictionary Source="Themes/ScrollbarTheme.xaml"/>
                 
                 <!-- Menu themes-->
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuTheme.xaml"/>
@@ -21,9 +22,10 @@
                 <!-- Button themes -->
                 <ResourceDictionary Source="Themes/Buttons/UploadButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/UnclickableUploadButtonTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Buttons/ButtonConfirmTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Buttons/ButtonResetTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Buttons/ButtonCancelTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/InputWindowUnclickableButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/InputWindowConfirmButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/InputWindowResetButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/InputWindowCancelButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/MenuButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
@@ -41,6 +43,10 @@
 
             <DataTemplate DataType="{x:Type viewModel:SideBarViewModel}">
                 <view:SideBarView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:InputViewModel}">
+                <view:InputWindow/>
             </DataTemplate>
 
         </ResourceDictionary>

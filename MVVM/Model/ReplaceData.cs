@@ -26,7 +26,7 @@ namespace TextReplace.MVVM.Model
             }
         }
         // key is the phrase to replace, value is what it is being replaced with
-        private static Dictionary<string, string> _replacePhrases = new Dictionary<string, string>();
+        private static Dictionary<string, string> _replacePhrases = [];
         public static Dictionary<string, string> ReplacePhrases
         {
             get { return _replacePhrases; }
@@ -117,6 +117,7 @@ namespace TextReplace.MVVM.Model
                 // parse through phrases and attempt to save them. parser will return an
                 // empty dictionary if something was wrong, so setter will throw an error
                 ReplacePhrases = ParseReplacePhrases(dialog.FileName);
+                WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrases));
                 // set file name directly rather than with the setter because we just ran the
                 // same validation as the setter anyways
                 _fileName = dialog.FileName;

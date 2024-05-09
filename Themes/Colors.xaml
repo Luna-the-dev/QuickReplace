@@ -71,6 +71,13 @@
         </SolidColorBrush.Color>
     </SolidColorBrush>
 
+    <SolidColorBrush x:Key="BackgroundColorExtraDark">
+        <SolidColorBrush.Color>
+            <!--#09090F-->
+            <Color A="255" R="9" G="9" B="15"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
     <SolidColorBrush x:Key="SideBarBackground">
         <SolidColorBrush.Color>
             <!--#22202f-->
