@@ -54,7 +54,8 @@
                 <Border Background="#353340" CornerRadius="10">
                     <TextBox Style="{DynamicResource InputBar}"
                              Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
-                             Name="InputTextBox">
+                             Name="InputTextBox"
+                             KeyDown="InputTextBoxKeyDown">
                         <wm:WatermarkService.Watermark>
                             <TextBlock x:Name="InputWatermark"
                                        VerticalAlignment="Center"

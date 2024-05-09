@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Input;
 
 namespace TextReplace.MVVM.View
 {
@@ -20,7 +21,8 @@ namespace TextReplace.MVVM.View
             get { return BodyTextBox.Text; }
             set
             {
-                var parts = value.Split(new[] { "<u>", "</u>" }, StringSplitOptions.None);
+                string[] separator = ["<u>", "</u>"];
+                var parts = value.Split(separator, StringSplitOptions.None);
                 bool isUnderline = false; // Start in normal mode
                 foreach (var part in parts)
                 {
@@ -62,6 +64,8 @@ namespace TextReplace.MVVM.View
             WindowName = title;
             BodyText = body;
             InputWatermarkText = input;
+            Height = windowHeight;
+            Width = windowWidth;
         }
 
         private void SetInputText(object sender, RoutedEventArgs e)
@@ -91,6 +95,20 @@ namespace TextReplace.MVVM.View
             BtnCancel.IsChecked = true;
             InputText = string.Empty;
             Close();
+        }
+
+        private void InputTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            // if the user presses enter and has typed something in,
+            // close window. if nothing is typed, do nothing
+            if (e.Key == Key.Return && InputText != string.Empty)
+            {
+                Close();
+            }
+            else if (e.Key == Key.Escape)
+            {
+                Keyboard.ClearFocus();
+            }
         }
     }
 }
