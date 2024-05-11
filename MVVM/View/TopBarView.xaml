@@ -44,7 +44,7 @@
         <dropdownmenu:DropdownMenu Width="25" Height="15"
                                    Grid.Column="1" HorizontalAlignment="Left"
                                    Style="{StaticResource DropdownMenuTheme}">
-            <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
+            <Border BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
                     <!--Contains header option-->
                     <Button Command="{Binding ToggleHasHeaderCommand}">
@@ -140,7 +140,7 @@
         <dropdownmenu:DropdownMenu Width="25" Height="15"
                                    Grid.Column="6" HorizontalAlignment="Left"
                                    Style="{StaticResource DropdownMenuRightOffsetTheme}">
-            <Border Background="#483050" BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
+            <Border BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
                     <!--Case sensitive option-->
                     <Button Command="{Binding ToggleCaseSensitiveCommand}">

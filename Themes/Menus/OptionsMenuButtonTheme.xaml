@@ -6,7 +6,7 @@
         <Setter Property="Margin" Value="0 2.5 0 2.5"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
-        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontSize" Value="13"/>
         <Setter Property="FontWeight" Value="Medium"/>
         <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
         <Setter Property="Background" Value="{StaticResource BtnLight}"/>

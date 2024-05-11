@@ -18,6 +18,9 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<SetReplacePhrasesMsg>
     {
         [ObservableProperty]
+        private object _customComboBoxView = new CustomComboBoxViewModel();
+
+        [ObservableProperty]
         private string _fileName = string.Empty;
         partial void OnFileNameChanged(string value)
         {
@@ -45,9 +48,13 @@ namespace TextReplace.MVVM.ViewModel
             new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrases.OrderBy(x => x.Key).Select(x => new ReplacePhrase(x.Key, x.Value)));
         [ObservableProperty]
         private Visibility _isSortedPhrasesVisible = Visibility.Hidden;
+
+        [ObservableProperty]
+        private string _functionSelect = "Search";
         
         public RelayCommand ToggleHasHeaderCommand => new RelayCommand(() => { ReplaceData.HasHeader = !ReplaceData.HasHeader; });
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
+        public RelayCommand<string> SetFunctionSelectCommand => new RelayCommand<string>((s) => { FunctionSelect = s ?? string.Empty; });
 
         public ReplaceViewModel()
         {

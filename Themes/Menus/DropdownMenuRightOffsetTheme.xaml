@@ -53,9 +53,9 @@
                                VerticalOffset="15"
                                HorizontalOffset="-170"
                                PlacementTarget="{Binding ElementName=tripleDots}"
-                               IsOpen="{Binding IsChecked, ElementName=tripleDots}"
+                               IsOpen="{Binding IsChecked, ElementName=tripleDots, Mode=OneTime}"
                                StaysOpen="False">
-                            <ContentControl Content="{TemplateBinding Content}" Background="white"/>
+                            <ContentControl Content="{TemplateBinding Content}"/>
                         </Popup>
                     </Grid>
                 </ControlTemplate>
