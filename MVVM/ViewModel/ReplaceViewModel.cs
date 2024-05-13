@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
+using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -35,16 +36,10 @@ namespace TextReplace.MVVM.ViewModel
         private string _delimiter = ReplaceData.Delimiter;
 
         [ObservableProperty]
-        private ObservableCollection<ReplacePhrase> _replacePhrases =
+        private static ObservableCollection<ReplacePhrase> _replacePhrases =
             new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrases.Select(x => new ReplacePhrase(x.Key, x.Value)));
-        [ObservableProperty]
-        private Visibility _isUnsortedPhrasesVisible = Visibility.Visible;
-
-        [ObservableProperty]
-        private ObservableCollection<ReplacePhrase> _replacePhrasesSorted =
-            new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrases.OrderBy(x => x.Key).Select(x => new ReplacePhrase(x.Key, x.Value)));
-        [ObservableProperty]
-        private Visibility _isSortedPhrasesVisible = Visibility.Hidden;
+        
+        private bool SortReplacePhrases = false;
 
         [ObservableProperty]
         private Visibility _isEditGUIVisible = Visibility.Visible;
@@ -71,11 +66,7 @@ namespace TextReplace.MVVM.ViewModel
         private string _searchText = string.Empty;
         partial void OnSearchTextChanged(string value)
         {
-            if (value == string.Empty)
-            {
-                return;
-            }
-
+            UpdatedReplacePhrases();
         }
 
 
@@ -97,11 +88,49 @@ namespace TextReplace.MVVM.ViewModel
             return ReplaceData.SetDelimiter(delimiter);
         }
 
+        /// <summary>
+        /// Toggle whether the phrases should be sorted and then update the replace phrases view
+        /// </summary>
         private void ToggleSort()
         {
-            IsUnsortedPhrasesVisible = (IsUnsortedPhrasesVisible == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
-            IsSortedPhrasesVisible = (IsSortedPhrasesVisible == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
+            SortReplacePhrases = !SortReplacePhrases;
+            UpdatedReplacePhrases();
         }
+
+        /// <summary>
+        /// Updates the replace phrases view by whether or not it should be sorted or
+        /// if the user is searching for a specific phrase
+        /// </summary>
+        private void UpdatedReplacePhrases()
+        {
+            // if there is no search text, display the replace phrases like normal
+            if (SearchText == string.Empty)
+            {
+                ReplacePhrases = (SortReplacePhrases) ?
+                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases().OrderBy(x => x.Item1)) :
+                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases());
+            }
+            else
+            {
+                ReplacePhrases = (SortReplacePhrases) ?
+                new ObservableCollection<ReplacePhrase>(GetReplacePhrases()
+                        .Where(x => x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                        .OrderBy(x => x.Item1)) :
+                new ObservableCollection<ReplacePhrase>(GetReplacePhrases()
+                        .Where(x => x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
+            }
+        }
+
+        /// <summary>
+        /// Utility function used by UpdatedReplacePhrases() to cut down on repeat code
+        /// </summary>
+        /// <returns>Returns ReplaceData.ReplacePhrases as an enumerable of ReplacePhrase objects</returns>
+        private IEnumerable<ReplacePhrase> GetReplacePhrases()
+        {
+            return ReplaceData.ReplacePhrases.Select(x => new ReplacePhrase(x.Key, x.Value));
+        }
+
+        // Message receivers
 
         public void Receive(FileNameMsg message)
         {

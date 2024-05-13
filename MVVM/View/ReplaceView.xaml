@@ -82,82 +82,49 @@
             </ToggleButton>
         </StackPanel>
 
+        <!-- Replace phrases view -->
         <ScrollViewer Style="{DynamicResource ScrollViewerTheme}" Grid.Column="1" Grid.Row="2"
                       Background="{StaticResource BackgroundColor}">
-            <Grid>
-                <!-- Unsorted replace phrases view -->
-                <ItemsControl Margin="0 4"
-                              ItemsSource="{Binding ReplacePhrases}"
-                              Visibility="{Binding IsUnsortedPhrasesVisible}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" Width="auto"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="{StaticResource BtnLight}" CornerRadius="4"
-                                    Height="30" Margin="8 4 14 4" Padding="10 0">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Item1}"
-                                               FontFamily="/Fonts/#Poppins" FontSize="14"
-                                               Foreground="{StaticResource TextLight}"
-                                               VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding Item2}"
-                                               FontFamily="/Fonts/#Poppins" FontSize="14"
-                                               Foreground="{StaticResource TextLight}"
-                                               VerticalAlignment="Center"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-
-                <!-- Sorted replace phrases view -->
-                <ItemsControl Margin="0 4"
-                              ItemsSource="{Binding ReplacePhrasesSorted}"
-                              Visibility="{Binding IsSortedPhrasesVisible}">
-                    <ItemsControl.ItemsPanel>
-                        <ItemsPanelTemplate>
-                            <StackPanel Orientation="Vertical" Width="auto"/>
-                        </ItemsPanelTemplate>
-                    </ItemsControl.ItemsPanel>
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Border Background="{StaticResource BtnLight}" CornerRadius="4"
-                                    Height="30" Margin="8 4 14 4" Padding="10 0">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="1*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Item1}"
-                                               FontFamily="/Fonts/#Poppins" FontSize="14"
-                                               Foreground="{StaticResource TextLight}"
-                                               VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding Item2}"
-                                               FontFamily="/Fonts/#Poppins" FontSize="14"
-                                               Foreground="{StaticResource TextLight}"
-                                               VerticalAlignment="Center"/>
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </Grid>
+            <ItemsControl Margin="0 4"
+                          ItemsSource="{Binding ReplacePhrases}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical" Width="auto"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{StaticResource BtnLight}" CornerRadius="4"
+                                Height="30" Margin="8 4 14 4" Padding="10 0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Item1}"
+                                            FontFamily="/Fonts/#Poppins" FontSize="14"
+                                            Foreground="{StaticResource TextLight}"
+                                            VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Item2}"
+                                            FontFamily="/Fonts/#Poppins" FontSize="14"
+                                            Foreground="{StaticResource TextLight}"
+                                            VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
         </ScrollViewer>
 
+        <!-- Combo box for selecting Edit/Add -->
         <ComboBox Grid.Row="1" Grid.Column="2"
                   SelectedIndex="{Binding ReplaceViewFunction}"
                   Style="{StaticResource CustomComboBoxTheme}">
-            <ComboBoxItem Content="Search"/>
+            <ComboBoxItem Content="Edit"/>
             <ComboBoxItem Content="Add"/>
         </ComboBox>
 
+        <!-- Edit function right column -->
         <Grid Grid.Row="2" Grid.Column="2"
               Visibility="{Binding IsEditGUIVisible}">
             <Grid.ColumnDefinitions>
@@ -180,7 +147,7 @@
                     <TextBox Style="{DynamicResource InputBar}"
                              Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
                         <wm:WatermarkService.Watermark>
-                            <TextBlock x:Name="Search"
+                            <TextBlock Text="Search"
                                        VerticalAlignment="Center"
                                        HorizontalAlignment="Left"
                                        Foreground="LightGray"

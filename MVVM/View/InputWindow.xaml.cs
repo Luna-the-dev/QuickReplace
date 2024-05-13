@@ -57,13 +57,13 @@ namespace TextReplace.MVVM.View
             InitializeComponent();
         }
 
-        public InputWindow(Window owner, string title, string body, string input, int windowHeight = 200, int windowWidth = 300)
+        public InputWindow(Window owner, string title, string body, string watermark, int windowHeight = 200, int windowWidth = 300)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
             BodyText = body;
-            InputWatermarkText = input;
+            InputWatermarkText = watermark;
             Height = windowHeight;
             Width = windowWidth;
         }
