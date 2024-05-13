@@ -17,7 +17,6 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<DelimiterMsg>,
         IRecipient<SetReplacePhrasesMsg>
     {
-
         [ObservableProperty]
         private string _fileName = string.Empty;
         partial void OnFileNameChanged(string value)
@@ -46,7 +45,40 @@ namespace TextReplace.MVVM.ViewModel
             new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrases.OrderBy(x => x.Key).Select(x => new ReplacePhrase(x.Key, x.Value)));
         [ObservableProperty]
         private Visibility _isSortedPhrasesVisible = Visibility.Hidden;
-        
+
+        [ObservableProperty]
+        private Visibility _isEditGUIVisible = Visibility.Visible;
+        [ObservableProperty]
+        private Visibility _isAddGUIVisible = Visibility.Hidden;
+
+        [ObservableProperty]
+        private int _replaceViewFunction = 0;
+        partial void OnReplaceViewFunctionChanged(int value)
+        {
+            if (value == 0)
+            {
+                IsEditGUIVisible = Visibility.Visible;
+                IsAddGUIVisible = Visibility.Hidden;
+            }
+            else if (value == 1)
+            {
+                IsEditGUIVisible = Visibility.Hidden;
+                IsAddGUIVisible = Visibility.Visible;
+            }
+        }
+
+        [ObservableProperty]
+        private string _searchText = string.Empty;
+        partial void OnSearchTextChanged(string value)
+        {
+            if (value == string.Empty)
+            {
+                return;
+            }
+
+        }
+
+
         public RelayCommand ToggleHasHeaderCommand => new RelayCommand(() => { ReplaceData.HasHeader = !ReplaceData.HasHeader; });
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
 
@@ -102,5 +134,11 @@ namespace TextReplace.MVVM.ViewModel
     {
         public string Item1 { get; set; } = item1;
         public string Item2 { get; set; } = item2;
+    }
+
+    struct ComboBoxData(int index, string value)
+    {
+        public int Index { get; set; } = index;
+        public string Value { get; set; } = value;
     }
 }
