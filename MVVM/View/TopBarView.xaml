@@ -211,6 +211,5 @@
                 </StackPanel>
             </Border>
         </dropdownmenu:DropdownMenu>
-
     </Grid>
 </UserControl>

@@ -83,37 +83,34 @@
         </StackPanel>
 
         <!-- Replace phrases view -->
-        <ScrollViewer Style="{DynamicResource ScrollViewerTheme}" Grid.Column="1" Grid.Row="2"
+        <ScrollViewer Grid.Column="1" Grid.Row="2"
+                      Style="{DynamicResource ScrollViewerTheme}"
                       Background="{StaticResource BackgroundColor}">
-            <ItemsControl Margin="0 4"
-                          ItemsSource="{Binding ReplacePhrases}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <StackPanel Orientation="Vertical" Width="auto"/>
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-                <ItemsControl.ItemTemplate>
+            <ListBox Margin="0 4" Background="Transparent" BorderThickness="0"
+                     ItemsSource="{Binding ReplacePhrases}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                    <ContentPresenter />
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{StaticResource BtnLight}" CornerRadius="4"
-                                Height="30" Margin="8 4 14 4" Padding="10 0">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Item1}"
-                                            FontFamily="/Fonts/#Poppins" FontSize="14"
-                                            Foreground="{StaticResource TextLight}"
-                                            VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Item2}"
-                                            FontFamily="/Fonts/#Poppins" FontSize="14"
-                                            Foreground="{StaticResource TextLight}"
-                                            VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
+                        <RadioButton Style="{DynamicResource ReplacePhraseTheme}">
+                            <RadioButton.IsChecked>
+                                <Binding Path="IsSelected"
+                                         RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
+                                         Mode="TwoWay"/>
+                            </RadioButton.IsChecked>
+                        </RadioButton>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </ScrollViewer>
 
         <!-- Combo box for selecting Edit/Add -->
@@ -189,6 +186,41 @@
                     <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                 </Trigger>
             </Style.Triggers>
+        </Style>
+
+        <!-- Individual replace phrase styling -->
+        <Style TargetType="RadioButton" x:Key="ReplacePhraseTheme">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Border x:Name="border" Background="{StaticResource BtnLight}"
+                                CornerRadius="4" Height="30" Margin="8 4 14 4" Padding="10 0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="{Binding Item1}"
+                                           FontFamily="/Fonts/#Poppins" FontSize="14"
+                                           Foreground="{StaticResource TextLight}"
+                                           VerticalAlignment="Center"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Item2}"
+                                           FontFamily="/Fonts/#Poppins" FontSize="14"
+                                           Foreground="{StaticResource TextLight}"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="RadioButton.IsChecked" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnHighlighted}"/>
+                            </Trigger>
+                            <Trigger Property="RadioButton.IsChecked" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
     </UserControl.Resources>
 </UserControl>

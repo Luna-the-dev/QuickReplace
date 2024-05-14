@@ -36,10 +36,13 @@ namespace TextReplace.MVVM.ViewModel
         private string _delimiter = ReplaceData.Delimiter;
 
         [ObservableProperty]
-        private static ObservableCollection<ReplacePhrase> _replacePhrases =
+        private ObservableCollection<ReplacePhrase> _replacePhrases =
             new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrases.Select(x => new ReplacePhrase(x.Key, x.Value)));
         
         private bool SortReplacePhrases = false;
+
+        [ObservableProperty]
+        private ReplacePhrase _selectedPhrase = new ReplacePhrase();
 
         [ObservableProperty]
         private Visibility _isEditGUIVisible = Visibility.Visible;
@@ -114,10 +117,16 @@ namespace TextReplace.MVVM.ViewModel
             {
                 ReplacePhrases = (SortReplacePhrases) ?
                 new ObservableCollection<ReplacePhrase>(GetReplacePhrases()
-                        .Where(x => x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase))
+                        .Where(x => {
+                            return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                                   x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+                        })
                         .OrderBy(x => x.Item1)) :
                 new ObservableCollection<ReplacePhrase>(GetReplacePhrases()
-                        .Where(x => x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
+                        .Where(x => {
+                            return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
+                                   x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
+                        }));
             }
         }
 

@@ -60,6 +60,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public TopBarViewModel()
         {
+            Suffix = "-replacify";
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -126,8 +127,8 @@ namespace TextReplace.MVVM.ViewModel
             // perform the text replacements
             bool wholeWord = (WholeWord == Visibility.Visible) ? true : false;
             bool result = replaceData.PerformReplacements(SourceFilesData.FileNames, destFileNames, wholeWord);
-            SourceFilesData.FileNames.ForEach(o => Debug.WriteLine(o));
-            destFileNames.ForEach(o => Debug.WriteLine(o));
+            Debug.WriteLine("Output file names:");
+            destFileNames.ForEach(o => Debug.WriteLine($"\t{o}"));
 
             if (result == false)
             {
