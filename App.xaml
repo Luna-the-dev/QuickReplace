@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:TextReplace"
              xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
              xmlns:view="clr-namespace:TextReplace.MVVM.View"
+             xmlns:popup="clr-namespace:TextReplace.MVVM.View.PopupWindows"
              StartupUri="MVVM/View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -46,15 +47,15 @@
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewModel:InputViewModel}">
-                <view:InputWindow/>
+                <popup:InputWindow/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewModel:InputResetViewModel}">
-                <view:InputResetWindow/>
+                <popup:InputResetWindow/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewModel:DoubleInputViewModel}">
-                <view:DoubleInputWindow/>
+                <popup:DoubleInputWindow/>
             </DataTemplate>
 
         </ResourceDictionary>

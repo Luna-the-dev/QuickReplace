@@ -22,7 +22,7 @@ namespace TextReplace.MVVM.ViewModel
             IsFileSelected = (value != string.Empty);
         }
         [ObservableProperty]
-        private bool _isFileSelected = false;
+        private bool _isFileSelected = (ReplaceData.FileName != string.Empty);
 
         [ObservableProperty]
         private bool _hasHeader = ReplaceData.HasHeader;
@@ -44,32 +44,16 @@ namespace TextReplace.MVVM.ViewModel
         private ReplacePhrase _selectedPhrase = new ReplacePhrase();
         partial void OnSelectedPhraseChanged(ReplacePhrase value)
         {
+            if (Equals(value, default(ReplacePhrase)))
+            {
+                IsPhraseSelected = false;
+                return;
+            }
             IsPhraseSelected = true;
             WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg( (value.Item1, value.Item2) ));
         }
         [ObservableProperty]
         private bool _isPhraseSelected = false;
-
-        [ObservableProperty]
-        private Visibility _isEditGUIVisible = Visibility.Visible;
-        [ObservableProperty]
-        private Visibility _isAddGUIVisible = Visibility.Hidden;
-
-        [ObservableProperty]
-        private int _replaceViewFunction = 0;
-        partial void OnReplaceViewFunctionChanged(int value)
-        {
-            if (value == 0)
-            {
-                IsEditGUIVisible = Visibility.Visible;
-                IsAddGUIVisible = Visibility.Hidden;
-            }
-            else if (value == 1)
-            {
-                IsEditGUIVisible = Visibility.Hidden;
-                IsAddGUIVisible = Visibility.Visible;
-            }
-        }
 
         [ObservableProperty]
         private string _searchText = string.Empty;
@@ -128,7 +112,7 @@ namespace TextReplace.MVVM.ViewModel
         /// Updates the second item in the replacement phrases of the selected phrase
         /// </summary>
         /// <param name="item2"></param>
-        public void ChangeSelectedPhrase(string item2)
+        public void EditSelectedPhrase(string item2)
         {
             if (string.IsNullOrEmpty(SelectedPhrase.Item1))
             {
@@ -139,6 +123,19 @@ namespace TextReplace.MVVM.ViewModel
             ReplaceData.ReplacePhrases[SelectedPhrase.Item1] = item2;
             UpdateReplacePhrases(SelectedPhrase.Item1);
             SelectedPhrase = new ReplacePhrase(SelectedPhrase.Item1, item2, true);
+        }
+
+        public void RemoveSelectedPhrase()
+        {
+            if (string.IsNullOrEmpty(SelectedPhrase.Item1))
+            {
+                Debug.WriteLine("Selected phrase is null");
+                return;
+            }
+
+            ReplaceData.ReplacePhrases.Remove(SelectedPhrase.Item1);
+            UpdateReplacePhrases();
+            SelectedPhrase = new ReplacePhrase();
         }
 
         /// <summary>

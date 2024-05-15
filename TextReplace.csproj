@@ -38,10 +38,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="MVVM\View\DoubleInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\DoubleInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MVVM\View\InputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\ConfirmWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MVVM\View\PopupWindows\InputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

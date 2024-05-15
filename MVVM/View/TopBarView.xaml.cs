@@ -41,10 +41,9 @@ namespace TextReplace.MVVM.View
             }
             string defaultInputTest = "Ex. :, -, or ;";
 
-            var dialog = new InputResetWindow(window, title, body, defaultInputTest);
+            var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
-            // if the cancel button was checked and is non-null
             if (dialog.BtnCancel.IsChecked == false)
             {
                 viewModel.SetDelimiter(dialog.InputText);
@@ -70,10 +69,9 @@ namespace TextReplace.MVVM.View
             }
             string defaultInputTest = "-replacify";
 
-            var dialog = new InputResetWindow(window, title, body, defaultInputTest);
+            var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
-            // if the cancel button was checked and is non-null
             if (dialog.BtnCancel.IsChecked == false)
             {
                 viewModel.SetSuffix(dialog.InputText);

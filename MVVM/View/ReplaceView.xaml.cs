@@ -41,10 +41,9 @@ namespace TextReplace.MVVM.View
             }
             string defaultInputTest = "Ex. :, -, or ;";
 
-            var dialog = new InputResetWindow(window, title, body, defaultInputTest);
+            var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
-            // if the cancel button was checked and is non-null
             if (dialog.BtnCancel.IsChecked == false)
             {
                 viewModel.SetDelimiter(dialog.InputText);
@@ -62,13 +61,30 @@ namespace TextReplace.MVVM.View
             string watermark = "Replacement phrase";
             string inputText = (viewModel.SelectedPhrase.Item2 != null) ? viewModel.SelectedPhrase.Item2 : string.Empty;
 
-            var dialog = new InputWindow(window, title, body, watermark, inputText);
+            var dialog = new PopupWindows.InputWindow(window, title, body, watermark, inputText);
             dialog.ShowDialog();
 
-            // if the cancel button was checked and is non-null
             if (dialog.BtnCancel.IsChecked == false)
             {
-                viewModel.ChangeSelectedPhrase(dialog.InputText);
+                viewModel.EditSelectedPhrase(dialog.InputText);
+            }
+        }
+
+        private void OpenRemoveWindow(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (ReplaceViewModel)DataContext;
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = textInfo.ToTitleCase(editMenuOption.Text);
+            string body = "Are you sure you would like to remove the selected phrase?";
+
+            var dialog = new PopupWindows.ConfirmWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnCancel.IsChecked == false)
+            {
+                viewModel.RemoveSelectedPhrase();
             }
         }
 

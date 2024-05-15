@@ -3,7 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace TextReplace.MVVM.View
+namespace TextReplace.MVVM.View.PopupWindows
 {
     /// <summary>
     /// Interaction logic for InputWindow.xaml
@@ -57,13 +57,14 @@ namespace TextReplace.MVVM.View
             InitializeComponent();
         }
 
-        public InputResetWindow(Window owner, string title, string body, string watermark, int windowHeight = 200, int windowWidth = 300)
+        public InputResetWindow(Window owner, string title, string body, string watermark, string inputText = "", int windowHeight = 200, int windowWidth = 300)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
             BodyText = body;
             InputWatermarkText = watermark;
+            InputText = inputText;
             Height = windowHeight;
             Width = windowWidth;
         }
