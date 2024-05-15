@@ -28,6 +28,7 @@
                 <ResourceDictionary Source="Themes/Buttons/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionToggleButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/UnclickableOptionButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">

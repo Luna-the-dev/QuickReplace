@@ -45,8 +45,14 @@ namespace TextReplace.MVVM.ViewModel
         private ReplacePhrase _selectedPhrase = new ReplacePhrase();
         partial void OnSelectedPhraseChanged(ReplacePhrase value)
         {
+            IsPhraseSelected = Visibility.Visible;
+            IsPhraseUnselected = Visibility.Hidden;
             WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg( (value.Item1, value.Item2) ));
         }
+        [ObservableProperty]
+        private Visibility _isPhraseSelected = Visibility.Hidden;
+        [ObservableProperty]
+        private Visibility _isPhraseUnselected = Visibility.Visible;
 
         [ObservableProperty]
         private Visibility _isEditGUIVisible = Visibility.Visible;

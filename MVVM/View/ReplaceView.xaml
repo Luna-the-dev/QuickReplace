@@ -160,8 +160,20 @@
             </AdornerDecorator>
 
             <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
+                    Style="{StaticResource UnclickableOptionButtonTheme}"
+                    Visibility="{Binding IsPhraseUnselected}">
+                <Button.Content>
+                    <TextBlock Text="Edit"
+                               HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
                     Click="OpenEditInputWindow"
-                    Style="{StaticResource OptionButtonTheme}">
+                    Style="{StaticResource OptionButtonTheme}"
+                    Visibility="{Binding IsPhraseSelected}">
                 <Button.Content>
                     <TextBlock Text="Edit"
                                x:Name="editMenuOption" HorizontalAlignment="Center"
