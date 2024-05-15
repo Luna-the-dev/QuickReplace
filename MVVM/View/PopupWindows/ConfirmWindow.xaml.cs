@@ -53,6 +53,7 @@ namespace TextReplace.MVVM.View.PopupWindows
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
+            BtnOk.IsEnabled = true;
             Close();
         }
 

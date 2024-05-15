@@ -44,7 +44,7 @@ namespace TextReplace.MVVM.View
             var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
-            if (dialog.BtnCancel.IsChecked == false)
+            if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
             {
                 viewModel.SetDelimiter(dialog.InputText);
             }
@@ -72,7 +72,7 @@ namespace TextReplace.MVVM.View
             var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
-            if (dialog.BtnCancel.IsChecked == false)
+            if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
             {
                 viewModel.SetSuffix(dialog.InputText);
             }

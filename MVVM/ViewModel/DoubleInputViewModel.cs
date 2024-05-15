@@ -1,21 +1,25 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Windows;
+using System.Windows.Input;
+using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
     partial class DoubleInputViewModel : ObservableRecipient
     {
         [ObservableProperty]
-        private string _inputText = string.Empty;
-        partial void OnInputTextChanged(string value)
+        private string _topInputText = string.Empty;
+        partial void OnTopInputTextChanged(string value)
         {
-            ConfirmIsClickable = (value == string.Empty) ? Visibility.Hidden : Visibility.Visible;
-            ConfirmIsUnclickable = (value == string.Empty) ? Visibility.Visible : Visibility.Hidden;
+            if (value == string.Empty || ReplaceData.ReplacePhrases.ContainsKey(value))
+            {
+                ConfirmIsClickable = false;
+            }
+            else
+            {
+                ConfirmIsClickable = true;
+            }
         }
-
         [ObservableProperty]
-        private Visibility _confirmIsClickable = Visibility.Hidden;
-        [ObservableProperty]
-        private Visibility _confirmIsUnclickable = Visibility.Visible;
+        private bool _confirmIsClickable = false;
     }
 }

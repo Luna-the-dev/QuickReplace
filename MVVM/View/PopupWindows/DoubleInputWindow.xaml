@@ -31,29 +31,29 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
-                <RowDefinition MinHeight="15" MaxHeight="30"/>
+                <RowDefinition MinHeight="20" MaxHeight="30"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="15"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition MinHeight="45"/>
+                <RowDefinition MinHeight="40"/>
             </Grid.RowDefinitions>
 
             <local:TopBorderView Grid.ColumnSpan="3" x:Name="TopBorder"/>
 
             <TextBlock Grid.Column="1" Grid.Row="2"
                        HorizontalAlignment="Stretch"
+                       TextAlignment="Center"
                        Name="BodyTextBox"
                        TextWrapping="Wrap"
                        Foreground="{StaticResource TextLight}"
                        FontFamily="/Fonts/#Poppins"
                        Margin="0 0 0 10" />
 
-            <AdornerDecorator Grid.Column="1" Grid.Row="3">
+            <AdornerDecorator Grid.Column="1" Grid.Row="3" Margin="0 5 0 2.5">
                 <Border Background="#353340" CornerRadius="10">
                     <TextBox Style="{DynamicResource InputBar}"
-                             Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding TopInputText, UpdateSourceTrigger=PropertyChanged}"
                              Name="TopInputTextBox"
                              KeyDown="TopInputTextBoxKeyDown">
                         <wm:WatermarkService.Watermark>
@@ -68,10 +68,9 @@
                 </Border>
             </AdornerDecorator>
 
-            <AdornerDecorator Grid.Column="1" Grid.Row="5">
+            <AdornerDecorator Grid.Column="1" Grid.Row="4" Margin="0 2.5 0 0">
                 <Border Background="#353340" CornerRadius="10">
                     <TextBox Style="{DynamicResource InputBar}"
-                             Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
                              Name="BottomInputTextBox"
                              KeyDown="BottomInputTextBoxKeyDown">
                         <wm:WatermarkService.Watermark>
@@ -86,17 +85,14 @@
                 </Border>
             </AdornerDecorator>
 
-            <Grid Grid.Column="1" Grid.Row="6"
+            <Grid Grid.Column="1" Grid.Row="5"
                   Margin="0 10 0 0" Height="30">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ToggleButton Content="Confirm" Grid.Column="0"
-                              Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsUnclickable}"
-                              Style="{StaticResource InputWindowUnclickableButtonTheme}"/>
                 <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
-                              Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsClickable}"
+                              Margin="0 0 5 0" Padding="8" IsEnabled="{Binding ConfirmIsClickable}"
                               Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
                 <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
                               Margin="5 0 0 0" Padding="8"

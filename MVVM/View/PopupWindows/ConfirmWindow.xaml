@@ -31,8 +31,8 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
-                <RowDefinition MinHeight="15" MaxHeight="30"/>
-                <RowDefinition MinHeight="60" Height="Auto"/>
+                <RowDefinition MinHeight="20" MaxHeight="50"/>
+                <RowDefinition MinHeight="40" Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition MinHeight="40"/>
             </Grid.RowDefinitions>
@@ -40,7 +40,6 @@
             <local:TopBorderView Grid.ColumnSpan="3" x:Name="TopBorder"/>
 
             <TextBlock Grid.Column="1" Grid.Row="2"
-                       VerticalAlignment="Center"
                        HorizontalAlignment="Stretch"
                        TextAlignment="Center"
                        Name="BodyTextBox"

@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View.PopupWindows
 {
@@ -76,7 +77,7 @@ namespace TextReplace.MVVM.View.PopupWindows
 
         public DoubleInputWindow(Window owner, string title, string body,
                                  string topWatermark, string bottomWatermark,
-                                 string topInputText, string bottomInputText,
+                                 string topInputText = "", string bottomInputText = "",
                                  int windowHeight = 200, int windowWidth = 300)
         {
             InitializeComponent();
@@ -99,14 +100,16 @@ namespace TextReplace.MVVM.View.PopupWindows
             {
                 BtnCancel.IsChecked = true;
             }
+            else
+            {
+                BtnOk.IsChecked = true;
+            }
             Close();
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             BtnCancel.IsChecked = true;
-            TopInputText = string.Empty;
-            BottomInputText = string.Empty;
             Close();
         }
 

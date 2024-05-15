@@ -125,6 +125,18 @@ namespace TextReplace.MVVM.ViewModel
             SelectedPhrase = new ReplacePhrase(SelectedPhrase.Item1, item2, true);
         }
 
+        public void AddNewPhrase(string item1, string item2)
+        {
+            if (ReplaceData.ReplacePhrases.ContainsKey(item1))
+            {
+                Debug.WriteLine("Replace phrase already exists.");
+                return;
+            }
+
+            ReplaceData.ReplacePhrases.Add(item1, item2);
+            UpdateReplacePhrases();
+        }
+
         public void RemoveSelectedPhrase()
         {
             if (string.IsNullOrEmpty(SelectedPhrase.Item1))

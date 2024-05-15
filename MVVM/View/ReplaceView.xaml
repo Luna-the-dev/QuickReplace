@@ -182,6 +182,18 @@
                                Foreground="{StaticResource TextLight}"/>
                 </Button.Content>
             </Button>
+
+            <Button Grid.Column="1" Grid.Row="2" Width="140" Height="40"
+                    Click="OpenAddWindow"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsFileSelected}">
+                <Button.Content>
+                    <TextBlock Text="Add"
+                               x:Name="addMenuOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
         </Grid>
 
     </Grid>
@@ -190,7 +202,6 @@
     <!-- User control -->
     <UserControl.Resources>
         <!-- Style for file name -->
-        
         <Style x:Key="FileNameTheme" TargetType="{x:Type TextBlock}">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="True">

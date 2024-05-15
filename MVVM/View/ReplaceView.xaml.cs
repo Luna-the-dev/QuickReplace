@@ -44,7 +44,7 @@ namespace TextReplace.MVVM.View
             var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
-            if (dialog.BtnCancel.IsChecked == false)
+            if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
             {
                 viewModel.SetDelimiter(dialog.InputText);
             }
@@ -64,7 +64,7 @@ namespace TextReplace.MVVM.View
             var dialog = new PopupWindows.InputWindow(window, title, body, watermark, inputText);
             dialog.ShowDialog();
 
-            if (dialog.BtnCancel.IsChecked == false)
+            if (dialog.BtnOk.IsChecked == true)
             {
                 viewModel.EditSelectedPhrase(dialog.InputText);
             }
@@ -82,9 +82,29 @@ namespace TextReplace.MVVM.View
             var dialog = new PopupWindows.ConfirmWindow(window, title, body);
             dialog.ShowDialog();
 
-            if (dialog.BtnCancel.IsChecked == false)
+            if (dialog.BtnOk.IsChecked == true)
             {
                 viewModel.RemoveSelectedPhrase();
+            }
+        }
+
+        private void OpenAddWindow(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (ReplaceViewModel)DataContext;
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = textInfo.ToTitleCase(editMenuOption.Text);
+            string body = "Edit the replacement phrase.";
+            string topWatermark = "Original";
+            string bottomWatermark = "Replace with";
+
+            var dialog = new PopupWindows.DoubleInputWindow(window, title, body, topWatermark, bottomWatermark);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                viewModel.AddNewPhrase(dialog.TopInputText, dialog.BottomInputText);
             }
         }
 

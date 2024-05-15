@@ -77,13 +77,16 @@ namespace TextReplace.MVVM.View.PopupWindows
             {
                 BtnCancel.IsChecked = true;
             }
+            else
+            {
+                BtnOk.IsChecked = true;
+            }
             Close();
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             BtnCancel.IsChecked = true;
-            InputText = string.Empty;
             Close();
         }
 

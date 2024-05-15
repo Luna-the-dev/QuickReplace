@@ -31,7 +31,7 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="25"/>
-                <RowDefinition MinHeight="15" MaxHeight="30"/>
+                <RowDefinition MinHeight="20" MaxHeight="30"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -73,11 +73,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ToggleButton Content="Confirm" Grid.Column="0"
-                              Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsUnclickable}"
-                              Style="{StaticResource InputWindowUnclickableButtonTheme}"/>
                 <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
-                              Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsClickable}"
+                              Margin="0 0 5 0" Padding="8" IsEnabled="{Binding ConfirmIsClickable}"
                               Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
                 <ToggleButton Name="BtnReset" Content="Reset" Grid.Column="1"
                               Margin="2.5 0 2.5 0" Padding="8"
