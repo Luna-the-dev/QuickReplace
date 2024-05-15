@@ -75,6 +75,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand ToggleHasHeaderCommand => new RelayCommand(() => { ReplaceData.HasHeader = !ReplaceData.HasHeader; });
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
+        public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
 
         public ReplaceViewModel()
         {
@@ -98,6 +99,23 @@ namespace TextReplace.MVVM.ViewModel
         {
             SortReplacePhrases = !SortReplacePhrases;
             UpdatedReplacePhrases();
+        }
+
+        /// <summary>
+        /// Sets the selected phrase
+        /// </summary>
+        /// <param name="phrase"></param>
+        private void SetSelectedPhrase(object? phrase)
+        {
+            // for some reason if i pass in the ReplacePhrase, this doesn't fire
+            // on the first click, however if i pass it as a generic obect and
+            // cast it to ReplacePhrase, it works. probably some MVVM community toolkit quirk
+            if (phrase == null)
+            {
+                return;
+            }
+            ReplacePhrase p = (ReplacePhrase)phrase;
+            SelectedPhrase = p;
         }
 
         /// <summary>

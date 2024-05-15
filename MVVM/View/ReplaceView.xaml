@@ -87,8 +87,8 @@
                       Style="{DynamicResource ScrollViewerTheme}"
                       Background="{StaticResource BackgroundColor}"
                       PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
-            <ListBox Margin="0 4" Background="Transparent" BorderThickness="0"
-                      ItemsSource="{Binding ReplacePhrases}">
+            <ListBox x:Name="listBox" Margin="0 4" Background="Transparent"
+                     BorderThickness="0" ItemsSource="{Binding ReplacePhrases}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="Template">
@@ -102,7 +102,9 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <RadioButton Style="{DynamicResource ReplacePhraseTheme}">
+                        <RadioButton Command="{Binding Path=DataContext.SetSelectedPhraseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                     CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
+                                     Style="{DynamicResource ReplacePhraseTheme}">
                             <RadioButton.IsChecked>
                                 <Binding Path="IsSelected"
                                          RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
@@ -132,7 +134,7 @@
             </Grid.ColumnDefinitions>
             
             <Grid.RowDefinitions>
-                <RowDefinition />
+                <RowDefinition Height="25"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="50"/>
