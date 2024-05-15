@@ -1,4 +1,4 @@
-﻿<Window x:Class="TextReplace.MVVM.View.InputWindow"
+﻿<Window x:Class="TextReplace.MVVM.View.InputResetWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -7,7 +7,7 @@
         xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
         xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
         mc:Ignorable="d"
-        Title="InputWindow"
+        Title="InputResetWindow"
         MinHeight="200" MinWidth="350"
         SizeToContent="WidthAndHeight"
         WindowStyle="None"
@@ -17,7 +17,7 @@
         WindowStartupLocation="CenterOwner">
 
     <Window.DataContext>
-        <viewModel:InputViewModel/>
+        <viewModel:InputResetViewModel/>
     </Window.DataContext>
 
     <Border Background="{StaticResource BackgroundColor}"
@@ -71,6 +71,7 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
                     <ColumnDefinition />
+                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ToggleButton Content="Confirm" Grid.Column="0"
                               Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsUnclickable}"
@@ -78,7 +79,10 @@
                 <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
                               Margin="0 0 5 0" Padding="8" Visibility="{Binding ConfirmIsClickable}"
                               Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
-                <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
+                <ToggleButton Name="BtnReset" Content="Reset" Grid.Column="1"
+                              Margin="2.5 0 2.5 0" Padding="8"
+                              Style="{StaticResource InputWindowResetButtonTheme}" Click="BtnReset_Click" />
+                <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="2"
                               Margin="5 0 0 0" Padding="8"
                               Style="{StaticResource InputWindowCancelButtonTheme}" Click="BtnCancel_Click" />
             </Grid>

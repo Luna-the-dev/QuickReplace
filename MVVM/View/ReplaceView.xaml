@@ -55,16 +55,16 @@
                    FontFamily="/Fonts/#Poppins"/>
 
         <!-- Left side options -->
-        <StackPanel Grid.Column="0" Grid.Row="2" Margin="30 5">
+        <StackPanel Grid.Column="0" Grid.Row="2" Margin="0 5" Width="140">
             <ToggleButton Command="{Binding ToggleHasHeaderCommand}"
-                          Style="{StaticResource OptionsMenuToggleButtonTheme}">
+                          Style="{StaticResource OptionToggleButtonTheme}">
                 <ToggleButton.Content>
                     <TextBlock Text="Has header" HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
                 </ToggleButton.Content>
             </ToggleButton>
-            <Button Click="OpenDelimiterInputWindow" Style="{StaticResource OptionsMenuButtonTheme}">
+            <Button Click="OpenDelimiterInputWindow" Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="Delimiter"
                                x:Name="delimiterMenuOption" HorizontalAlignment="Center"
@@ -73,7 +73,7 @@
                 </Button.Content>
             </Button>
             <ToggleButton Command="{Binding ToggleSortCommand}"
-                          Style="{StaticResource OptionsMenuToggleButtonTheme}">
+                          Style="{StaticResource OptionToggleButtonTheme}">
                 <ToggleButton.Content>
                     <TextBlock Text="Sort" HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
@@ -91,6 +91,7 @@
                      BorderThickness="0" ItemsSource="{Binding ReplacePhrases}">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -128,9 +129,9 @@
         <Grid Grid.Row="2" Grid.Column="2"
               Visibility="{Binding IsEditGUIVisible}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="22"/>
                 <ColumnDefinition />
-                <ColumnDefinition Width="25"/>
+                <ColumnDefinition Width="22"/>
             </Grid.ColumnDefinitions>
             
             <Grid.RowDefinitions>
@@ -157,6 +158,17 @@
                     </TextBox>
                 </Border>
             </AdornerDecorator>
+
+            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
+                    Click="OpenEditInputWindow"
+                    Style="{StaticResource OptionButtonTheme}">
+                <Button.Content>
+                    <TextBlock Text="Edit"
+                               x:Name="editMenuOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
         </Grid>
 
     </Grid>

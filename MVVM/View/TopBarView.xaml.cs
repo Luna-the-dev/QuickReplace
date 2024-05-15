@@ -41,7 +41,7 @@ namespace TextReplace.MVVM.View
             }
             string defaultInputTest = "Ex. :, -, or ;";
 
-            var dialog = new InputWindow(window, title, body, defaultInputTest);
+            var dialog = new InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
             // if the cancel button was checked and is non-null
@@ -70,7 +70,7 @@ namespace TextReplace.MVVM.View
             }
             string defaultInputTest = "-replacify";
 
-            var dialog = new InputWindow(window, title, body, defaultInputTest);
+            var dialog = new InputResetWindow(window, title, body, defaultInputTest);
             dialog.ShowDialog();
 
             // if the cancel button was checked and is non-null

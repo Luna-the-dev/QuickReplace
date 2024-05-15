@@ -8,7 +8,7 @@ namespace TextReplace.MVVM.View
     /// <summary>
     /// Interaction logic for InputWindow.xaml
     /// </summary>
-    public partial class InputWindow : Window
+    public partial class InputResetWindow : Window
     {
         public string WindowName
         {
@@ -52,19 +52,18 @@ namespace TextReplace.MVVM.View
             }
         }
 
-        public InputWindow()
+        public InputResetWindow()
         {
             InitializeComponent();
         }
 
-        public InputWindow(Window owner, string title, string body, string watermark, string inputText, int windowHeight = 200, int windowWidth = 300)
+        public InputResetWindow(Window owner, string title, string body, string watermark, int windowHeight = 200, int windowWidth = 300)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
             BodyText = body;
             InputWatermarkText = watermark;
-            InputText = inputText;
             Height = windowHeight;
             Width = windowWidth;
         }
@@ -77,6 +76,12 @@ namespace TextReplace.MVVM.View
             {
                 BtnCancel.IsChecked = true;
             }
+            Close();
+        }
+
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
+        {
+            InputText = string.Empty;
             Close();
         }
 

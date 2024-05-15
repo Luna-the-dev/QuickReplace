@@ -348,7 +348,7 @@ namespace TextReplace.MVVM.Model
         /// Checks to see if the delimiter is valid, and then sets the delimiter
         /// </summary>
         /// <param name="delimiter"></param>
-        /// <returns></returns>
+        /// <returns>Returns trie if delimiter was set, false otherwise</returns>
         public static bool SetDelimiter(string delimiter)
         {
             if (IsDelimiterValid(delimiter))

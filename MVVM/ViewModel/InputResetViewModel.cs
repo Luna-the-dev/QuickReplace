@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class InputViewModel : ObservableRecipient
+    partial class InputResetViewModel : ObservableRecipient
     {
         [ObservableProperty]
         private string _inputText = string.Empty;

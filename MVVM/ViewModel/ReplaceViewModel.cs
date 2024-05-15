@@ -43,6 +43,10 @@ namespace TextReplace.MVVM.ViewModel
 
         [ObservableProperty]
         private ReplacePhrase _selectedPhrase = new ReplacePhrase();
+        partial void OnSelectedPhraseChanged(ReplacePhrase value)
+        {
+            WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg( (value.Item1, value.Item2) ));
+        }
 
         [ObservableProperty]
         private Visibility _isEditGUIVisible = Visibility.Visible;
@@ -69,7 +73,7 @@ namespace TextReplace.MVVM.ViewModel
         private string _searchText = string.Empty;
         partial void OnSearchTextChanged(string value)
         {
-            UpdatedReplacePhrases();
+            UpdateReplacePhrases();
         }
 
 
@@ -86,7 +90,7 @@ namespace TextReplace.MVVM.ViewModel
         /// Wrapper function for ReplaceData.SetDelimiter
         /// </summary>
         /// <param name="delimiter"></param>
-        /// <returns></returns>
+        /// <returns>Returns trie if delimiter was set, false otherwise.</returns>
         public bool SetDelimiter(string delimiter)
         {
             return ReplaceData.SetDelimiter(delimiter);
@@ -98,7 +102,7 @@ namespace TextReplace.MVVM.ViewModel
         private void ToggleSort()
         {
             SortReplacePhrases = !SortReplacePhrases;
-            UpdatedReplacePhrases();
+            UpdateReplacePhrases();
         }
 
         /// <summary>
@@ -115,32 +119,51 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             ReplacePhrase p = (ReplacePhrase)phrase;
+            p.IsSelected = true;
             SelectedPhrase = p;
+        }
+
+        /// <summary>
+        /// Updates the second item in the replacement phrases of the selected phrase
+        /// </summary>
+        /// <param name="item2"></param>
+        public void ChangeSelectedPhrase(string item2)
+        {
+            if (string.IsNullOrEmpty(SelectedPhrase.Item1))
+            {
+                Debug.WriteLine("Selected phrase is null");
+                return;
+            }
+
+            ReplaceData.ReplacePhrases[SelectedPhrase.Item1] = item2;
+            UpdateReplacePhrases(SelectedPhrase.Item1);
+            SelectedPhrase = new ReplacePhrase(SelectedPhrase.Item1, item2, true);
         }
 
         /// <summary>
         /// Updates the replace phrases view by whether or not it should be sorted or
         /// if the user is searching for a specific phrase
         /// </summary>
-        private void UpdatedReplacePhrases()
+        /// <param name="selectedPhrase"></param>
+        private void UpdateReplacePhrases(string selectedPhrase = "")
         {
             // if there is no search text, display the replace phrases like normal
             if (SearchText == string.Empty)
             {
                 ReplacePhrases = (SortReplacePhrases) ?
-                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases().OrderBy(x => x.Item1)) :
-                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases());
+                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase).OrderBy(x => x.Item1)) :
+                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase));
             }
             else
             {
                 ReplacePhrases = (SortReplacePhrases) ?
-                new ObservableCollection<ReplacePhrase>(GetReplacePhrases()
+                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase)
                         .Where(x => {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
                         })
                         .OrderBy(x => x.Item1)) :
-                new ObservableCollection<ReplacePhrase>(GetReplacePhrases()
+                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase)
                         .Where(x => {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
@@ -152,9 +175,21 @@ namespace TextReplace.MVVM.ViewModel
         /// Utility function used by UpdatedReplacePhrases() to cut down on repeat code
         /// </summary>
         /// <returns>Returns ReplaceData.ReplacePhrases as an enumerable of ReplacePhrase objects</returns>
-        private IEnumerable<ReplacePhrase> GetReplacePhrases()
+        private IEnumerable<ReplacePhrase> GetReplacePhrases(string selectedPhrase = "")
         {
-            return ReplaceData.ReplacePhrases.Select(x => new ReplacePhrase(x.Key, x.Value));
+            // simply get the replacement phrases if no selected phrase is specified
+            if (selectedPhrase == string.Empty)
+            {
+                return ReplaceData.ReplacePhrases.Select(x => new ReplacePhrase(x.Key, x.Value));
+            }
+
+            // if a selected phrase is specified, mark that specific phrase as selected
+            return ReplaceData.ReplacePhrases.Select(x => {
+
+                return (x.Key == selectedPhrase) ?
+                    new ReplacePhrase(x.Key, x.Value, true) :
+                    new ReplacePhrase(x.Key, x.Value, false);
+            });
         }
 
         // Message receivers
@@ -186,10 +221,11 @@ namespace TextReplace.MVVM.ViewModel
     /// </summary>
     /// <param name="item1"></param>
     /// <param name="item2"></param>
-    struct ReplacePhrase(string item1, string item2)
+    struct ReplacePhrase(string item1, string item2, bool isSelected = false)
     {
         public string Item1 { get; set; } = item1;
         public string Item2 { get; set; } = item2;
+        public bool IsSelected { get; set; } = isSelected;
     }
 
     struct ComboBoxData(int index, string value)

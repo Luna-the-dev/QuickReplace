@@ -4,6 +4,8 @@
            TargetType="{x:Type RadioButton}"
            x:Key="MenuButtonTheme">
         <Style.Setters>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="RadioButton">
@@ -20,17 +22,11 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            
         </Style.Setters>
-
         <Style.Triggers>
             <Trigger Property="IsChecked" Value="True">
                 <Setter Property="Background" Value="{StaticResource SideBarHighlighted}"/>
             </Trigger>
         </Style.Triggers>
-        
     </Style>
 </ResourceDictionary>

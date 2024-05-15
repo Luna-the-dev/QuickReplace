@@ -17,8 +17,6 @@
                 <!-- Menu themes-->
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuRightOffsetTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Menus/OptionsMenuButtonTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Menus/OptionsMenuToggleButtonTheme.xaml"/>
 
                 <!-- Button themes -->
                 <ResourceDictionary Source="Themes/Buttons/UploadButtonTheme.xaml"/>
@@ -28,6 +26,8 @@
                 <ResourceDictionary Source="Themes/Buttons/InputWindowResetButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/InputWindowCancelButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/MenuButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/OptionButtonTheme.xaml"/>
+                <ResourceDictionary Source="Themes/Buttons/OptionToggleButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
@@ -48,6 +48,14 @@
 
             <DataTemplate DataType="{x:Type viewModel:InputViewModel}">
                 <view:InputWindow/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:InputResetViewModel}">
+                <view:InputResetWindow/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:DoubleInputViewModel}">
+                <view:DoubleInputWindow/>
             </DataTemplate>
 
         </ResourceDictionary>

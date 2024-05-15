@@ -29,6 +29,13 @@
         </SolidColorBrush.Color>
     </SolidColorBrush>
 
+    <SolidColorBrush x:Key="BtnHighlightedShadow">
+        <SolidColorBrush.Color>
+            <!--#73467F-->
+            <Color A="255" R="115" G="70" B="127"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
     <SolidColorBrush x:Key="BtnUnclickable">
         <SolidColorBrush.Color>
             <!--#504759-->

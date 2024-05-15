@@ -6,9 +6,9 @@ using System.Windows.Input;
 namespace TextReplace.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for InputWindow.xaml
+    /// Interaction logic for DoubleInputWindow.xaml
     /// </summary>
-    public partial class InputWindow : Window
+    public partial class DoubleInputWindow : Window
     {
         public string WindowName
         {
@@ -35,36 +35,59 @@ namespace TextReplace.MVVM.View
                 }
             }
         }
-        public string InputWatermarkText
+
+        public string TopInputWatermarkText
         {
-            get { return InputWatermark.Text.ToString() ?? string.Empty; }
+            get { return TopInputWatermark.Text.ToString() ?? string.Empty; }
             set
             {
-                InputWatermark.Text = value;
+                TopInputWatermark.Text = value;
             }
         }
-        public string InputText
+        public string TopInputText
         {
-            get { return InputTextBox.Text.ToString() ?? string.Empty; }
+            get { return TopInputTextBox.Text.ToString() ?? string.Empty; }
             set
             {
-                InputTextBox.Text = value;
+                TopInputTextBox.Text = value;
             }
         }
 
-        public InputWindow()
+        public string BottomInputWatermarkText
+        {
+            get { return BottomInputWatermark.Text.ToString() ?? string.Empty; }
+            set
+            {
+                BottomInputWatermark.Text = value;
+            }
+        }
+        public string BottomInputText
+        {
+            get { return BottomInputTextBox.Text.ToString() ?? string.Empty; }
+            set
+            {
+                BottomInputTextBox.Text = value;
+            }
+        }
+
+        public DoubleInputWindow()
         {
             InitializeComponent();
         }
 
-        public InputWindow(Window owner, string title, string body, string watermark, string inputText, int windowHeight = 200, int windowWidth = 300)
+        public DoubleInputWindow(Window owner, string title, string body,
+                                 string topWatermark, string bottomWatermark,
+                                 string topInputText, string bottomInputText,
+                                 int windowHeight = 200, int windowWidth = 300)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
             BodyText = body;
-            InputWatermarkText = watermark;
-            InputText = inputText;
+            TopInputWatermarkText = topWatermark;
+            BottomInputWatermarkText = bottomWatermark;
+            TopInputText = topInputText;
+            BottomInputText = bottomInputText;
             Height = windowHeight;
             Width = windowWidth;
         }
@@ -73,7 +96,7 @@ namespace TextReplace.MVVM.View
         {
             // if the user didnt enter a value, dont replace
             // the delimiter with an empty string.
-            if (InputText == string.Empty)
+            if (TopInputText == string.Empty)
             {
                 BtnCancel.IsChecked = true;
             }
@@ -83,15 +106,30 @@ namespace TextReplace.MVVM.View
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             BtnCancel.IsChecked = true;
-            InputText = string.Empty;
+            TopInputText = string.Empty;
+            BottomInputText = string.Empty;
             Close();
         }
 
-        private void InputTextBoxKeyDown(object sender, KeyEventArgs e)
+        private void TopInputTextBoxKeyDown(object sender, KeyEventArgs e)
         {
             // if the user presses enter and has typed something in,
             // close window. if nothing is typed, do nothing
-            if (e.Key == Key.Return && InputText != string.Empty)
+            if (e.Key == Key.Return && TopInputText != string.Empty)
+            {
+                BottomInputTextBox.Focus();
+            }
+            else if (e.Key == Key.Escape)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void BottomInputTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            // if the user presses enter and has typed something in,
+            // close window. if nothing is typed, do nothing
+            if (e.Key == Key.Return && BottomInputText != string.Empty)
             {
                 Close();
             }
