@@ -19,6 +19,7 @@ namespace TextReplace.MVVM.ViewModel
                 ConfirmIsClickable = true;
             }
         }
+
         [ObservableProperty]
         private bool _confirmIsClickable = false;
     }

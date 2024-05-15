@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using TextReplace.MVVM.ViewModel;
+using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.View.PopupWindows
 {
@@ -21,6 +21,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             get { return BodyTextBox.Text; }
             set
             {
+                BodyTextBox.Text = "";
                 string[] separator = ["<u>", "</u>"];
                 var parts = value.Split(separator, StringSplitOptions.None);
                 bool isUnderline = false; // Start in normal mode
@@ -35,6 +36,7 @@ namespace TextReplace.MVVM.View.PopupWindows
                 }
             }
         }
+        public string DefaultBodyText { get; set; } = string.Empty;
 
         public string TopInputWatermarkText
         {
@@ -84,12 +86,22 @@ namespace TextReplace.MVVM.View.PopupWindows
             Owner = owner;
             WindowName = title;
             BodyText = body;
+            DefaultBodyText = body;
             TopInputWatermarkText = topWatermark;
             BottomInputWatermarkText = bottomWatermark;
             TopInputText = topInputText;
             BottomInputText = bottomInputText;
             Height = windowHeight;
             Width = windowWidth;
+        }
+
+        // please ignore this MVVM violation, breaking MVVM keeps this from getting too complicated.
+        // doing this in here rather than in the view model so that it can keep underscore styling
+        private void TopInputTextBoxTextChanged(object sender, EventArgs e)
+        {
+            BodyText = (ReplaceData.ReplacePhrases.ContainsKey(TopInputText)) ?
+                "<u>Original phrase already exists.</u>" :
+                DefaultBodyText;
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)

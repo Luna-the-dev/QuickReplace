@@ -42,6 +42,7 @@
             <local:TopBorderView Grid.ColumnSpan="3" x:Name="TopBorder"/>
 
             <TextBlock Grid.Column="1" Grid.Row="2"
+                       IsEnabled="{Binding ConfirmIsClickable}"
                        HorizontalAlignment="Stretch"
                        TextAlignment="Center"
                        Name="BodyTextBox"
@@ -55,7 +56,8 @@
                     <TextBox Style="{DynamicResource InputBar}"
                              Text="{Binding TopInputText, UpdateSourceTrigger=PropertyChanged}"
                              Name="TopInputTextBox"
-                             KeyDown="TopInputTextBoxKeyDown">
+                             KeyDown="TopInputTextBoxKeyDown"
+                             TextChanged="TopInputTextBoxTextChanged">
                         <wm:WatermarkService.Watermark>
                             <TextBlock x:Name="TopInputWatermark"
                                        VerticalAlignment="Center"
@@ -100,5 +102,4 @@
             </Grid>
         </Grid>
     </Border>
-    
 </Window>

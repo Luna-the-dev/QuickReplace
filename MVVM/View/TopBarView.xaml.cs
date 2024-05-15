@@ -24,7 +24,7 @@ namespace TextReplace.MVVM.View
         // do a teeny tiny little MVVM violation by referencing it here.
         private void OpenDelimiterInputWindow(object sender, RoutedEventArgs e)
         {
-            var viewModel = ((TopBarViewModel)(this.DataContext));
+            var viewModel = (TopBarViewModel)(DataContext);
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             var window = Window.GetWindow(sender as DependencyObject);
@@ -52,7 +52,7 @@ namespace TextReplace.MVVM.View
 
         private void OpenFileSuffixInputWindow(object sender, RoutedEventArgs e)
         {
-            var viewModel = ((TopBarViewModel)(this.DataContext));
+            var viewModel = (TopBarViewModel)(DataContext);
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             var window = Window.GetWindow(sender as DependencyObject);

@@ -135,6 +135,7 @@ namespace TextReplace.MVVM.ViewModel
 
             ReplaceData.ReplacePhrases.Add(item1, item2);
             UpdateReplacePhrases();
+            SelectedPhrase = new ReplacePhrase(item1, item2);
         }
 
         public void RemoveSelectedPhrase()
