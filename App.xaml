@@ -20,7 +20,6 @@
 
                 <!-- Button themes -->
                 <ResourceDictionary Source="Themes/Buttons/UploadButtonTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Buttons/UnclickableUploadButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/InputWindowUnclickableButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/InputWindowConfirmButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/InputWindowResetButtonTheme.xaml"/>
@@ -28,7 +27,6 @@
                 <ResourceDictionary Source="Themes/Buttons/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionToggleButtonTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Buttons/UnclickableOptionButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">

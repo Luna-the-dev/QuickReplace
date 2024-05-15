@@ -37,26 +37,30 @@
                    FontFamily="/Fonts/#Poppins"/>
 
         <TextBlock Grid.Column="1" Grid.Row="1"
-                   Text="{Binding FileName}"
-                   Visibility="{Binding IsFileNameVisible}"
+                   IsEnabled="{Binding IsFileSelected}"
+                   Style="{DynamicResource FileNameTheme}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
-                   Foreground="{StaticResource TextLight}"
-                   FontSize="18"
-                   FontFamily="/Fonts/#Poppins"/>
-
-        <TextBlock Grid.Column="1" Grid.Row="1"
-                   Text="No file selected."
-                   Visibility="{Binding IsDefaultFileNameVisible}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   Foreground="{StaticResource TextUnclickable}"
                    FontSize="18"
                    FontFamily="/Fonts/#Poppins"/>
 
         <!-- Left side options -->
-        <StackPanel Grid.Column="0" Grid.Row="2" Margin="0 5" Width="140">
-            <ToggleButton Command="{Binding ToggleHasHeaderCommand}"
+        <Grid Grid.Column="0" Grid.Row="2" Margin="0 5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="22"/>
+                <ColumnDefinition />
+                <ColumnDefinition Width="22"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
+            <ToggleButton Grid.Column="1" Grid.Row="0"
+                          IsChecked="{Binding HasHeader}"
                           Style="{StaticResource OptionToggleButtonTheme}">
                 <ToggleButton.Content>
                     <TextBlock Text="Has header" HorizontalAlignment="Center"
@@ -64,7 +68,10 @@
                                Foreground="{StaticResource TextLight}"/>
                 </ToggleButton.Content>
             </ToggleButton>
-            <Button Click="OpenDelimiterInputWindow" Style="{StaticResource OptionButtonTheme}">
+
+            <Button Grid.Column="1" Grid.Row="1"
+                    Click="OpenDelimiterInputWindow"
+                    Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="Delimiter"
                                x:Name="delimiterMenuOption" HorizontalAlignment="Center"
@@ -72,7 +79,10 @@
                                Foreground="{StaticResource TextLight}"/>
                 </Button.Content>
             </Button>
-            <ToggleButton Command="{Binding ToggleSortCommand}"
+
+            <ToggleButton Grid.Column="1" Grid.Row="2"
+                          Command="{Binding ToggleSortCommand}"
+                          IsEnabled="{Binding IsFileSelected}"
                           Style="{StaticResource OptionToggleButtonTheme}">
                 <ToggleButton.Content>
                     <TextBlock Text="Sort" HorizontalAlignment="Center"
@@ -80,7 +90,7 @@
                                Foreground="{StaticResource TextLight}"/>
                 </ToggleButton.Content>
             </ToggleButton>
-        </StackPanel>
+        </Grid>
 
         <!-- Replace phrases view -->
         <ScrollViewer Grid.Column="1" Grid.Row="2"
@@ -160,20 +170,9 @@
             </AdornerDecorator>
 
             <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
-                    Style="{StaticResource UnclickableOptionButtonTheme}"
-                    Visibility="{Binding IsPhraseUnselected}">
-                <Button.Content>
-                    <TextBlock Text="Edit"
-                               HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
-
-            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
                     Click="OpenEditInputWindow"
                     Style="{StaticResource OptionButtonTheme}"
-                    Visibility="{Binding IsPhraseSelected}">
+                    IsEnabled="{Binding IsPhraseSelected}">
                 <Button.Content>
                     <TextBlock Text="Edit"
                                x:Name="editMenuOption" HorizontalAlignment="Center"
@@ -186,8 +185,25 @@
     </Grid>
 
     
-    <!-- User control for the middle replacements scrollviewer -->
+    <!-- User control -->
     <UserControl.Resources>
+        <!-- Style for file name -->
+        
+        <Style x:Key="FileNameTheme" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="True">
+                    <Setter Property="Text" Value="{Binding FileName}"/>
+                    <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+                </Trigger>
+
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Text" Value="No file selected."/>
+                    <Setter Property="Foreground" Value="{StaticResource TextUnclickable}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>        
+        
+        <!-- Style for the middle replacements scrollviewer -->
         <Style x:Key="ScrollViewerTheme" TargetType="{x:Type ScrollViewer}">
             <Setter Property="Template">
                 <Setter.Value>

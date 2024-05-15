@@ -45,9 +45,7 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private Visibility _sourceFileReadFail = Visibility.Hidden;
         [ObservableProperty]
-        private Visibility _replaceisClickable = Visibility.Hidden;
-        [ObservableProperty]
-        private Visibility _replaceisUnclickable = Visibility.Visible;
+        private bool _replaceIsClickable = false;
 
         private const string INVALID_SUFFIX_CHARS = "<>:\"/\\|?*\n\t";
 
@@ -217,17 +215,8 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         private void SetReplaceButtonClickability()
         {
-            if (ReplaceFileReadSuccess == Visibility.Visible &&
-                SourceFileReadSuccess == Visibility.Visible)
-            {
-                ReplaceisClickable = Visibility.Visible;
-                ReplaceisUnclickable = Visibility.Hidden;
-            }
-            else
-            {
-                ReplaceisClickable = Visibility.Hidden;
-                ReplaceisUnclickable = Visibility.Visible;
-            }
+            ReplaceIsClickable = (ReplaceFileReadSuccess == Visibility.Visible &&
+                                  SourceFileReadSuccess == Visibility.Visible);
         }
 
         public void Receive(HasHeaderMsg message)

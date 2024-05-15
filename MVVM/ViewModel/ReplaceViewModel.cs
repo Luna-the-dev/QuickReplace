@@ -1,14 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -22,16 +19,18 @@ namespace TextReplace.MVVM.ViewModel
         private string _fileName = string.Empty;
         partial void OnFileNameChanged(string value)
         {
-            IsDefaultFileNameVisible = (value == string.Empty) ? Visibility.Visible : Visibility.Hidden;
-            IsFileNameVisible =        (value == string.Empty) ? Visibility.Hidden : Visibility.Visible;
+            IsFileSelected = (value != string.Empty);
         }
         [ObservableProperty]
-        private Visibility _isDefaultFileNameVisible = Visibility.Visible;
-        [ObservableProperty]
-        private Visibility _isFileNameVisible = Visibility.Hidden;
+        private bool _isFileSelected = false;
 
         [ObservableProperty]
-        private Visibility _hasHeader = (ReplaceData.HasHeader) ? Visibility.Visible : Visibility.Hidden;
+        private bool _hasHeader = ReplaceData.HasHeader;
+        partial void OnHasHeaderChanged(bool value)
+        {
+            ReplaceData.HasHeader = HasHeader;
+        }
+
         [ObservableProperty]
         private string _delimiter = ReplaceData.Delimiter;
 
@@ -45,14 +44,11 @@ namespace TextReplace.MVVM.ViewModel
         private ReplacePhrase _selectedPhrase = new ReplacePhrase();
         partial void OnSelectedPhraseChanged(ReplacePhrase value)
         {
-            IsPhraseSelected = Visibility.Visible;
-            IsPhraseUnselected = Visibility.Hidden;
+            IsPhraseSelected = true;
             WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg( (value.Item1, value.Item2) ));
         }
         [ObservableProperty]
-        private Visibility _isPhraseSelected = Visibility.Hidden;
-        [ObservableProperty]
-        private Visibility _isPhraseUnselected = Visibility.Visible;
+        private bool _isPhraseSelected = false;
 
         [ObservableProperty]
         private Visibility _isEditGUIVisible = Visibility.Visible;
@@ -83,7 +79,6 @@ namespace TextReplace.MVVM.ViewModel
         }
 
 
-        public RelayCommand ToggleHasHeaderCommand => new RelayCommand(() => { ReplaceData.HasHeader = !ReplaceData.HasHeader; });
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
 
@@ -207,7 +202,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(HasHeaderMsg message)
         {
-            HasHeader = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+            HasHeader = message.Value;
         }
 
         public void Receive(DelimiterMsg message)

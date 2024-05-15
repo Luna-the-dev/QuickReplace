@@ -62,6 +62,22 @@
                 </MultiTrigger.Conditions>
                 <Setter Property="Background" Value="{DynamicResource BtnHighlightedShadow}"/>
             </MultiTrigger>
+
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
+                <Setter Property="Foreground" Value="{DynamicResource TextUnclickable}"/>
+                <Setter Property="Background" Value="{DynamicResource BtnUnclickable}"/>
+                <Setter Property="Margin" Value="0 4"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ToggleButton}">
+                            <Border CornerRadius="6" Background="{TemplateBinding Background}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
         </Style.Triggers>
     </Style>
 </ResourceDictionary>

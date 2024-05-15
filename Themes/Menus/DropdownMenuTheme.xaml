@@ -52,7 +52,7 @@
                         <Popup Placement="Bottom"
                                VerticalOffset="15"
                                PlacementTarget="{Binding ElementName=tripleDots}"
-                               IsOpen="{Binding IsChecked, ElementName=tripleDots, Mode=OneWay}"
+                               IsOpen="{Binding IsChecked, ElementName=tripleDots}"
                                StaysOpen="False">
                             <ContentControl Content="{TemplateBinding Content}"/>
                         </Popup>
@@ -60,8 +60,9 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <!--Style for the Buttons in the popup window-->
+
         <Style.Resources>
+            <!--Style for the Buttons in the popup window-->
             <Style BasedOn="{StaticResource {x:Type Button}}"
                    TargetType="Button">
                 <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>

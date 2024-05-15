@@ -125,16 +125,7 @@
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
                 FontWeight="Medium"
-                Visibility="{Binding ReplaceisClickable}"
-                Command="{Binding Replace}"/>
-        <Button Width="140" Height="40"
-                Grid.Column="5"
-                HorizontalAlignment="Left"
-                Content="Replacify"
-                Style="{StaticResource UnclickableUploadButtonTheme}"
-                FontSize="14"
-                FontWeight="Medium"
-                Visibility="{Binding ReplaceisUnclickable}"
+                IsEnabled="{Binding ReplaceIsClickable}"
                 Command="{Binding Replace}"/>
 
         <dropdownmenu:DropdownMenu Width="25" Height="15"
