@@ -145,6 +145,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             // close window. if nothing is typed, do nothing
             if (e.Key == Key.Return && BottomInputText != string.Empty)
             {
+                BtnOk.IsChecked = true;
                 Close();
             }
             else if (e.Key == Key.Escape)
