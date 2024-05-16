@@ -10,7 +10,7 @@ namespace TextReplace.MVVM.ViewModel
         private string _topInputText = string.Empty;
         partial void OnTopInputTextChanged(string value)
         {
-            if (value == string.Empty || ReplaceData.ReplacePhrases.ContainsKey(value))
+            if (value == string.Empty || ReplaceData.ReplacePhrasesDict.ContainsKey(value))
             {
                 ConfirmIsClickable = false;
             }

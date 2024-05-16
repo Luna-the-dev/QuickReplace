@@ -2,9 +2,9 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class SetReplacePhrasesMsg : ValueChangedMessage<Dictionary<string, string>>
+    class SetReplacePhrasesMsg : ValueChangedMessage<List<(string, string)>>
     {
-        public SetReplacePhrasesMsg(Dictionary<string, string> value) : base(value)
+        public SetReplacePhrasesMsg(List<(string, string)> value) : base(value)
         {
         }
     }

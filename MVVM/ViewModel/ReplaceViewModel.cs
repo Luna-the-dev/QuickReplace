@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Windows;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
 
@@ -36,7 +36,7 @@ namespace TextReplace.MVVM.ViewModel
 
         [ObservableProperty]
         private ObservableCollection<ReplacePhrase> _replacePhrases =
-            new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrases.Select(x => new ReplacePhrase(x.Key, x.Value)));
+            new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrasesDict.Select(x => new ReplacePhrase(x.Key, x.Value)));
         
         private bool SortReplacePhrases = false;
 
@@ -108,6 +108,21 @@ namespace TextReplace.MVVM.ViewModel
             SelectedPhrase = p;
         }
 
+        public void AddNewPhrase(string item1, string item2)
+        {
+            // TODO: let user specify index with combobox
+            int index = 0;
+
+            bool res = ReplaceData.AddReplacePhrase(item1, item2, index);
+            if (res == false)
+            {
+                Debug.WriteLine("New phrase could not be added.");
+                return;
+            }
+            UpdateReplacePhrases();
+            SelectedPhrase = new ReplacePhrase(item1, item2);
+        }
+
         /// <summary>
         /// Updates the second item in the replacement phrases of the selected phrase
         /// </summary>
@@ -120,22 +135,14 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
 
-            ReplaceData.ReplacePhrases[SelectedPhrase.Item1] = item2;
-            UpdateReplacePhrases(SelectedPhrase.Item1);
-            SelectedPhrase = new ReplacePhrase(SelectedPhrase.Item1, item2, true);
-        }
-
-        public void AddNewPhrase(string item1, string item2)
-        {
-            if (ReplaceData.ReplacePhrases.ContainsKey(item1))
+            bool res = ReplaceData.EditReplacePhrase(SelectedPhrase.Item1, item2);
+            if (res == false)
             {
-                Debug.WriteLine("Replace phrase already exists.");
+                Debug.WriteLine("Phrase could not be edited.");
                 return;
             }
-
-            ReplaceData.ReplacePhrases.Add(item1, item2);
-            UpdateReplacePhrases();
-            SelectedPhrase = new ReplacePhrase(item1, item2);
+            UpdateReplacePhrases(SelectedPhrase.Item1);
+            SelectedPhrase = new ReplacePhrase(SelectedPhrase.Item1, item2, true);
         }
 
         public void RemoveSelectedPhrase()
@@ -146,7 +153,12 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
 
-            ReplaceData.ReplacePhrases.Remove(SelectedPhrase.Item1);
+            bool res = ReplaceData.RemoveReplacePhrase(SelectedPhrase.Item1);
+            if (res == false)
+            {
+                Debug.WriteLine("Phrase could not be removed.");
+                return;
+            }
             UpdateReplacePhrases();
             SelectedPhrase = new ReplacePhrase();
         }
@@ -191,15 +203,15 @@ namespace TextReplace.MVVM.ViewModel
             // simply get the replacement phrases if no selected phrase is specified
             if (selectedPhrase == string.Empty)
             {
-                return ReplaceData.ReplacePhrases.Select(x => new ReplacePhrase(x.Key, x.Value));
+                return ReplaceData.ReplacePhrasesList.Select(x => new ReplacePhrase(x.Item1, x.Item2));
             }
 
             // if a selected phrase is specified, mark that specific phrase as selected
-            return ReplaceData.ReplacePhrases.Select(x => {
+            return ReplaceData.ReplacePhrasesList.Select(x => {
 
-                return (x.Key == selectedPhrase) ?
-                    new ReplacePhrase(x.Key, x.Value, true) :
-                    new ReplacePhrase(x.Key, x.Value, false);
+                return (x.Item1 == selectedPhrase) ?
+                    new ReplacePhrase(x.Item1, x.Item2, true) :
+                    new ReplacePhrase(x.Item1, x.Item2, false);
             });
         }
 
@@ -222,16 +234,18 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(SetReplacePhrasesMsg message)
         {
-            ReplacePhrases = new ObservableCollection<ReplacePhrase>(message.Value.Select(x => new ReplacePhrase(x.Key, x.Value)));
+            ReplacePhrases = new ObservableCollection<ReplacePhrase>(message.Value.Select(x => new ReplacePhrase(x.Item1, x.Item2)));
         }
     }
 
     /// <summary>
     /// Struct representing a single replacement phrase from ReplaceData.ReplacePhrases.
-    /// Item1 is the original phrase, Item2 is the replacement
+    /// Item1 is the original phrase, Item2 is the replacement, isSelected is used to mark
+    /// a selected phrase when updating the UI with UpdateReplacePhrases()
     /// </summary>
     /// <param name="item1"></param>
     /// <param name="item2"></param>
+    /// <param name="isSelected"></param>
     struct ReplacePhrase(string item1, string item2, bool isSelected = false)
     {
         public string Item1 { get; set; } = item1;

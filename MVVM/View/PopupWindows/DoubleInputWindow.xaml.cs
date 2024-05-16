@@ -99,7 +99,7 @@ namespace TextReplace.MVVM.View.PopupWindows
         // doing this in here rather than in the view model so that it can keep underscore styling
         private void TopInputTextBoxTextChanged(object sender, EventArgs e)
         {
-            BodyText = (ReplaceData.ReplacePhrases.ContainsKey(TopInputText)) ?
+            BodyText = (ReplaceData.ReplacePhrasesDict.ContainsKey(TopInputText)) ?
                 "<u>Original phrase already exists.</u>" :
                 DefaultBodyText;
         }

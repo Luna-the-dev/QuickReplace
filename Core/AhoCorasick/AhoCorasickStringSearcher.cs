@@ -21,7 +21,7 @@
         // Total number of outputs added to nodes
         public long TotalOutputs { get; private set; }
 
-        public bool CaseSentitive { get; private set; }
+        public bool CaseSensitive { get; private set; }
 
         private readonly int StartState;
 
@@ -30,14 +30,14 @@
 
         public AhoCorasickStringSearcher(bool caseSensitive)
         {
-            CaseSentitive = caseSensitive;
+            CaseSensitive = caseSensitive;
             StartState = CreateNewState();
         }
 
         private int CreateNewState()
         {
             int state = NumStates++;
-            if (CaseSentitive)
+            if (CaseSensitive)
             {
                 GotoTransitions.Add(state, new Dictionary<string, int>());
             }
@@ -51,7 +51,7 @@
 
         private Dictionary<string, int> GetStateTransitions(int state)
         {
-            Dictionary<string, int> transitions = (CaseSentitive) ?
+            Dictionary<string, int> transitions = (CaseSensitive) ?
                 new Dictionary<string, int>() :
                 new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 

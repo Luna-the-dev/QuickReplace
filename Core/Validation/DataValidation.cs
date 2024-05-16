@@ -33,6 +33,30 @@ namespace TextReplace.Core.Validation
         }
 
         /// <summary>
+        /// Verifies that the replace phrases are valid by checking if the
+        /// dictionary has entries and that all keys are non-empty.
+        /// </summary>
+        /// <param name="phrases"></param>
+        /// <returns>True if valid, false otherwise.</returns>
+        public static bool AreReplacePhrasesValid(List<(string, string)> phrases)
+        {
+            if (phrases.Count == 0)
+            {
+                return false;
+            }
+
+            foreach (var phrase in phrases)
+            {
+                // if the thing to replace is empty, its invalid
+                if (phrase.Item1 == string.Empty)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Parses "delimiter seperated value" files such as .csv or .tsv. Defaults to .csv files.
         /// </summary>
         /// <param name="delimiter"></param>

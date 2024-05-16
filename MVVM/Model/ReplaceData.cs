@@ -26,15 +26,32 @@ namespace TextReplace.MVVM.Model
             }
         }
         // key is the phrase to replace, value is what it is being replaced with
-        private static Dictionary<string, string> _replacePhrases = [];
-        public static Dictionary<string, string> ReplacePhrases
+        private static Dictionary<string, string> _replacePhrasesDict = [];
+        public static Dictionary<string, string> ReplacePhrasesDict
         {
-            get { return _replacePhrases; }
+            get { return _replacePhrasesDict; }
             set
             {
                 if (DataValidation.AreReplacePhrasesValid(value))
                 {
-                    _replacePhrases = value;
+                    _replacePhrasesDict = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Replace phrases are not valid.");
+                }
+            }
+        }
+        // key is the phrase to replace, value is what it is being replaced with
+        private static List<(string, string)> _replacePhrasesList = [];
+        public static List<(string, string)> ReplacePhrasesList
+        {
+            get { return _replacePhrasesList; }
+            set
+            {
+                if (DataValidation.AreReplacePhrasesValid(value))
+                {
+                    _replacePhrasesList = value;
                 }
                 else
                 {
@@ -116,8 +133,10 @@ namespace TextReplace.MVVM.Model
                 }
                 // parse through phrases and attempt to save them. parser will return an
                 // empty dictionary if something was wrong, so setter will throw an error
-                ReplacePhrases = ParseReplacePhrases(dialog.FileName);
-                WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrases));
+                ReplacePhrasesDict = ParseReplacePhrases(dialog.FileName);
+                // put copy the dict into a list which gets used by the view models
+                ReplacePhrasesList = ReplacePhrasesDict.Select(x => (x.Key, x.Value)).ToList();
+                WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
                 // set file name directly rather than with the setter because we just ran the
                 // same validation as the setter anyways
                 _fileName = dialog.FileName;
@@ -191,7 +210,7 @@ namespace TextReplace.MVVM.Model
             // construct the automaton and fill it with the phrases to search for
             // also create a list of the replacement phrases to go alongside the 
             AhoCorasickStringSearcher matcher = new AhoCorasickStringSearcher(CaseSensitive);
-            foreach (var searchWord in ReplacePhrases)
+            foreach (var searchWord in ReplacePhrasesDict)
             {
                 matcher.AddItem(searchWord.Key);
             }
@@ -269,8 +288,8 @@ namespace TextReplace.MVVM.Model
                 foreach (var m in matches)
                 {
                     updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
-                                             .Insert(m.Position + offset, ReplacePhrases[m.Text]);
-                    offset += ReplacePhrases[m.Text].Length - m.Text.Length;
+                                             .Insert(m.Position + offset, ReplacePhrasesDict[m.Text]);
+                    offset += ReplacePhrasesDict[m.Text].Length - m.Text.Length;
                 }
                 sw.WriteLine(updatedLine);
             }
@@ -302,8 +321,8 @@ namespace TextReplace.MVVM.Model
                         continue;
                     }
                     updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
-                                             .Insert(m.Position + offset, ReplacePhrases[m.Text]);
-                    offset += ReplacePhrases[m.Text].Length - m.Text.Length;
+                                             .Insert(m.Position + offset, ReplacePhrasesDict[m.Text]);
+                    offset += ReplacePhrasesDict[m.Text].Length - m.Text.Length;
                 }
                 sw.WriteLine(updatedLine);
             }
@@ -376,6 +395,88 @@ namespace TextReplace.MVVM.Model
                     return false;
                 }
             }
+            return true;
+        }
+
+        /// <summary>
+        /// Adds a replace phrase to the ReplacePhrases dictionary and list at a specified
+        /// index. Sends a message that the replace phrases list was updated as well.
+        /// </summary>
+        /// <param name="item1"></param>
+        /// <param name="item2"></param>
+        /// <param name="index"></param>
+        /// <returns>False if the key for the phrase already exists</returns>
+        public static bool AddReplacePhrase(string item1, string item2, int index)
+        {
+            if (ReplacePhrasesDict.ContainsKey(item1))
+            {
+                Debug.WriteLine($"Key already exists, {item1} could not be added.");
+                return false;
+            }
+            if (ReplacePhrasesList.FindIndex(x => x.Item1 == item1) != -1)
+            {
+                Debug.WriteLine($"Key does not exist in list, {item1} could not be edited.");
+                return false;
+            }
+
+            ReplacePhrasesDict[item1] = item2;
+            ReplacePhrasesList.Insert(index, (item1, item2));
+            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
+            return true;
+        }
+
+        /// <summary>
+        /// Changes the value/Item2 of a replace phrase in the ReplacePhrases dictionary and list.
+        /// Sends a message that the replace phrases list was updated as well.
+        /// </summary>
+        /// <param name="item1"></param>
+        /// <param name="item2"></param>
+        /// <returns>False if the key for the phrase does not exist</returns>
+        public static bool EditReplacePhrase(string item1, string item2)
+        {
+            if (ReplacePhrasesDict.ContainsKey(item1) == false)
+            {
+                Debug.WriteLine($"Key does not exist in ReplacePhrasesDict, {item1} could not be edited.");
+                return false;
+            }
+            int index = ReplacePhrasesList.FindIndex(x => x.Item1 == item1);
+            if (index == -1)
+            {
+                Debug.WriteLine($"Key does not exist in ReplacePhrasesList, {item1} could not be edited.");
+                return false;
+            }
+
+            ReplacePhrasesDict[item1] = item2;
+            ReplacePhrasesList[index] = (item1, item2);
+            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
+            return true;
+        }
+
+        /// <summary>
+        /// Removes a value/Item2 from the ReplacePhrases dictionary and list
+        /// by searching for its key/Item1.
+        /// </summary>
+        /// <param name="item1"></param>
+        /// <param name="item2"></param>
+        /// <returns>False if the key for the phrase does not exist</returns>
+        public static bool RemoveReplacePhrase(string item1)
+        {
+            if (ReplacePhrasesDict.ContainsKey(item1) == false)
+            {
+                Debug.WriteLine($"Key was not found in ReplacePhrasesDict, {item1} could not be removed.");
+                return false;
+            }
+
+            int index = ReplacePhrasesList.FindIndex(x => x.Item1 == item1);
+            if (index == -1)
+            {
+                Debug.WriteLine($"Key does not exist in ReplacePhrasesList, {item1} could not be removed.");
+                return false;
+            }
+
+            ReplacePhrasesDict.Remove(item1);
+            ReplacePhrasesList.RemoveAt(index);
+            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
     }
