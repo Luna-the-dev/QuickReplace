@@ -51,7 +51,6 @@
             <AdornerDecorator Grid.Column="1" Grid.Row="3">
                 <Border Background="#353340" CornerRadius="10">
                     <TextBox Style="{DynamicResource InputBar}"
-                             Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
                              Name="InputTextBox"
                              KeyDown="InputTextBoxKeyDown">
                         <wm:WatermarkService.Watermark>
