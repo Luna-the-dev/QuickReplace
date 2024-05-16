@@ -2,7 +2,7 @@
 using System.Windows.Input;
 using TextReplace.MVVM.Model;
 
-namespace TextReplace.MVVM.ViewModel
+namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
     partial class DoubleInputViewModel : ObservableRecipient
     {

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 
-namespace TextReplace.MVVM.ViewModel
+namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
     partial class InputResetViewModel : ObservableRecipient
     {

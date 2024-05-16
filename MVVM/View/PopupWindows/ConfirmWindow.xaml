@@ -4,8 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextReplace.MVVM.View"
-        xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
-        xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
         mc:Ignorable="d"
         Title="ConfirmWindow"
         MinHeight="200" MinWidth="350"
@@ -15,10 +13,6 @@
         Background="Transparent"
         AllowsTransparency="True"
         WindowStartupLocation="CenterOwner">
-
-    <Window.DataContext>
-        <viewModel:InputViewModel/>
-    </Window.DataContext>
 
     <Border Background="{StaticResource BackgroundColor}"
             BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">

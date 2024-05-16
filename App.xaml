@@ -5,6 +5,7 @@
              xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
              xmlns:view="clr-namespace:TextReplace.MVVM.View"
              xmlns:popup="clr-namespace:TextReplace.MVVM.View.PopupWindows"
+             xmlns:popupvm="clr-namespace:TextReplace.MVVM.ViewModel.PopupWindows"
              StartupUri="MVVM/View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -46,15 +47,15 @@
                 <view:SideBarView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:InputViewModel}">
+            <DataTemplate DataType="{x:Type popupvm:InputViewModel}">
                 <popup:InputWindow/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:InputResetViewModel}">
+            <DataTemplate DataType="{x:Type popupvm:InputResetViewModel}">
                 <popup:InputResetWindow/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:DoubleInputViewModel}">
+            <DataTemplate DataType="{x:Type popupvm:DoubleInputViewModel}">
                 <popup:DoubleInputWindow/>
             </DataTemplate>
 

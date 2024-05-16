@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextReplace.MVVM.View"
-        xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
+        xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel.PopupWindows"
         xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
         mc:Ignorable="d"
         Title="InputResetWindow"
