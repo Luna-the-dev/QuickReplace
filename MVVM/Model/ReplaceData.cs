@@ -4,6 +4,7 @@ using System.IO;
 using TextReplace.Core.Validation;
 using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Replace;
+using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.Model
 {
@@ -88,6 +89,17 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new HasHeaderMsg(value));
             }
         }
+        private static bool _isPhraseSelected;
+        public static bool IsPhraseSelected
+        {
+            get { return _isPhraseSelected; }
+            set
+            {
+                _isPhraseSelected = value;
+                WeakReferenceMessenger.Default.Send(new IsPhraseSelectedMsg(value));
+            }
+        }
+
         // delimiters which decides what seperates whole words
         private const string WORD_DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
         private const string INVALID_DELIMITER_CHARS = "\n";

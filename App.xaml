@@ -59,6 +59,10 @@
                 <popup:DoubleInputWindow/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type popupvm:AddPhraseDoubleInputViewModel}">
+                <popup:AddPhraseDoubleInputWindow/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

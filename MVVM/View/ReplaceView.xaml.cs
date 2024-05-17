@@ -95,11 +95,11 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(editMenuOption.Text);
-            string body = "Edit the replacement phrase.";
+            string body = "Add a replacement phrase.";
             string topWatermark = "Original";
             string bottomWatermark = "Replace with";
 
-            var dialog = new PopupWindows.DoubleInputWindow(window, title, body, topWatermark, bottomWatermark);
+            var dialog = new PopupWindows.AddPhraseDoubleInputWindow(window, title, body, topWatermark, bottomWatermark);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)

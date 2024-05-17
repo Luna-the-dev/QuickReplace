@@ -1,0 +1,131 @@
+﻿<Window x:Class="TextReplace.MVVM.View.PopupWindows.AddPhraseDoubleInputWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TextReplace.MVVM.View"
+        xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel.PopupWindows"
+        xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
+        mc:Ignorable="d"
+        Title="AddPhraseDoubleInputWindow"
+        MinHeight="250" MinWidth="400"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.DataContext>
+        <viewModel:AddPhraseDoubleInputViewModel/>
+    </Window.DataContext>
+
+    <Border Background="{StaticResource BackgroundColor}"
+            BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition MinHeight="20" MaxHeight="30"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition MinHeight="45"/>
+            </Grid.RowDefinitions>
+
+            <local:TopBorderView Grid.ColumnSpan="3" x:Name="TopBorder"/>
+
+            <TextBlock Grid.Column="1" Grid.Row="2"
+                       IsEnabled="{Binding ConfirmIsClickable}"
+                       HorizontalAlignment="Stretch"
+                       TextAlignment="Center"
+                       Name="BodyTextBox"
+                       TextWrapping="Wrap"
+                       Foreground="{StaticResource TextLight}"
+                       FontFamily="/Fonts/#Poppins"
+                       Margin="0 0 0 10" />
+
+            <AdornerDecorator Grid.Column="1" Grid.Row="3" Margin="0 5 0 2.5">
+                <Border Background="#353340" CornerRadius="10">
+                    <TextBox Style="{DynamicResource InputBar}"
+                             Text="{Binding TopInputText, UpdateSourceTrigger=PropertyChanged}"
+                             Name="TopInputTextBox"
+                             KeyDown="TopInputTextBoxKeyDown"
+                             TextChanged="TopInputTextBoxTextChanged">
+                        <wm:WatermarkService.Watermark>
+                            <TextBlock x:Name="TopInputWatermark"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"
+                                       Foreground="LightGray"
+                                       Margin="4 0 0 0"
+                                       FontFamily="/Fonts/#Poppins"/>
+                        </wm:WatermarkService.Watermark>
+                    </TextBox>
+                </Border>
+            </AdornerDecorator>
+
+            <AdornerDecorator Grid.Column="1" Grid.Row="4" Margin="0 2.5 0 0">
+                <Border Background="#353340" CornerRadius="10">
+                    <TextBox Style="{DynamicResource InputBar}"
+                             Name="BottomInputTextBox"
+                             KeyDown="BottomInputTextBoxKeyDown">
+                        <wm:WatermarkService.Watermark>
+                            <TextBlock x:Name="BottomInputWatermark"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Left"
+                                       Foreground="LightGray"
+                                       Margin="4 0 0 0"
+                                       FontFamily="/Fonts/#Poppins"/>
+                        </wm:WatermarkService.Watermark>
+                    </TextBox>
+                </Border>
+            </AdornerDecorator>
+
+            <Grid Grid.Column="1" Grid.Row="5"
+                  Margin="0 10 0 0" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Margin="0 0 5 0"
+                           Text="Insert new phrase at:"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontSize="13"
+                           Foreground="{StaticResource TextLight}"
+                           FontFamily="/Fonts/#Poppins"/>
+
+                <ComboBox Grid.Column="1" Margin="12 0 7 0"
+                          SelectedIndex="{Binding InsertAt}"
+                          Style="{StaticResource CustomComboBoxTheme}">
+                    <ComboBoxItem Content="Top"/>
+                    <ComboBoxItem Content="Bottom"/>
+                    <ComboBoxItem Content="Above selection" IsEnabled="{Binding IsPhraseSelected}"/>
+                    <ComboBoxItem Content="Below selection" IsEnabled="{Binding IsPhraseSelected}"/>
+                </ComboBox>
+            </Grid>
+
+            <Grid Grid.Column="1" Grid.Row="6"
+                  Margin="0 10 0 0" Height="30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
+                              Margin="0 0 5 0" Padding="8" IsEnabled="{Binding ConfirmIsClickable}"
+                              Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
+                <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="2"
+                              Margin="5 0 0 0" Padding="8"
+                              Style="{StaticResource InputWindowCancelButtonTheme}" Click="BtnCancel_Click" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

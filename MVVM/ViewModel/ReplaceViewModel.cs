@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using TextReplace.Core.Enums;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
 
@@ -13,7 +13,9 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<FileNameMsg>,
         IRecipient<HasHeaderMsg>,
         IRecipient<DelimiterMsg>,
-        IRecipient<SetReplacePhrasesMsg>
+        IRecipient<SetReplacePhrasesMsg>,
+        IRecipient<IsPhraseSelectedMsg>,
+        IRecipient<InsertReplacePhraseAtMsg>
     {
         [ObservableProperty]
         private string _fileName = string.Empty;
@@ -44,22 +46,19 @@ namespace TextReplace.MVVM.ViewModel
         private ReplacePhrase _selectedPhrase = new ReplacePhrase();
         partial void OnSelectedPhraseChanged(ReplacePhrase value)
         {
-            if (Equals(value, default(ReplacePhrase)))
-            {
-                IsPhraseSelected = false;
-                return;
-            }
-            IsPhraseSelected = true;
-            WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg( (value.Item1, value.Item2) ));
+            ReplaceData.IsPhraseSelected = !Equals(value, default(ReplacePhrase));
         }
+
         [ObservableProperty]
-        private bool _isPhraseSelected = false;
+        private bool _isPhraseSelected = ReplaceData.IsPhraseSelected;
+
+        private InsertReplacePhraseAtEnum _insertReplacePhraseAt = InsertReplacePhraseAtEnum.Top;
 
         [ObservableProperty]
         private string _searchText = string.Empty;
         partial void OnSearchTextChanged(string value)
         {
-            UpdateReplacePhrases();
+            UpdateReplacePhrases(SelectedPhrase.Item1);
         }
 
 
@@ -87,7 +86,7 @@ namespace TextReplace.MVVM.ViewModel
         private void ToggleSort()
         {
             SortReplacePhrases = !SortReplacePhrases;
-            UpdateReplacePhrases();
+            UpdateReplacePhrases(SelectedPhrase.Item1);
         }
 
         /// <summary>
@@ -110,8 +109,11 @@ namespace TextReplace.MVVM.ViewModel
 
         public void AddNewPhrase(string item1, string item2)
         {
-            // TODO: let user specify index with combobox
-            int index = 0;
+            int index = InsertReplacePhraseIndex();
+            if (index == -1)
+            {
+                Debug.WriteLine("Selected phrase index could not be found, new phrase not added.");
+            }
 
             bool res = ReplaceData.AddReplacePhrase(item1, item2, index);
             if (res == false)
@@ -119,8 +121,7 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("New phrase could not be added.");
                 return;
             }
-            UpdateReplacePhrases();
-            SelectedPhrase = new ReplacePhrase(item1, item2);
+            UpdateReplacePhrases(item1);
         }
 
         /// <summary>
@@ -142,7 +143,6 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             UpdateReplacePhrases(SelectedPhrase.Item1);
-            SelectedPhrase = new ReplacePhrase(SelectedPhrase.Item1, item2, true);
         }
 
         public void RemoveSelectedPhrase()
@@ -159,16 +159,16 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Phrase could not be removed.");
                 return;
             }
-            UpdateReplacePhrases();
-            SelectedPhrase = new ReplacePhrase();
+            UpdateReplacePhrases("");
         }
 
         /// <summary>
         /// Updates the replace phrases view by whether or not it should be sorted or
-        /// if the user is searching for a specific phrase
+        /// if the user is searching for a specific phrase. Pass an empty or null
+        /// string to remove the selected phrase
         /// </summary>
         /// <param name="selectedPhrase"></param>
-        private void UpdateReplacePhrases(string selectedPhrase = "")
+        private void UpdateReplacePhrases(string selectedPhrase)
         {
             // if there is no search text, display the replace phrases like normal
             if (SearchText == string.Empty)
@@ -195,24 +195,45 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         /// <summary>
-        /// Utility function used by UpdatedReplacePhrases() to cut down on repeat code
+        /// Converts ReplacePhrasesList into an enumerable of ReplacePhrase objects, marks the
+        /// selected phrase if there is one, and updates SelectedPhrase.
         /// </summary>
         /// <returns>Returns ReplaceData.ReplacePhrases as an enumerable of ReplacePhrase objects</returns>
         private IEnumerable<ReplacePhrase> GetReplacePhrases(string selectedPhrase = "")
         {
             // simply get the replacement phrases if no selected phrase is specified
-            if (selectedPhrase == string.Empty)
+            if (string.IsNullOrEmpty(selectedPhrase))
             {
+                SelectedPhrase = new ReplacePhrase();
                 return ReplaceData.ReplacePhrasesList.Select(x => new ReplacePhrase(x.Item1, x.Item2));
             }
 
             // if a selected phrase is specified, mark that specific phrase as selected
             return ReplaceData.ReplacePhrasesList.Select(x => {
-
-                return (x.Item1 == selectedPhrase) ?
-                    new ReplacePhrase(x.Item1, x.Item2, true) :
-                    new ReplacePhrase(x.Item1, x.Item2, false);
+                if (x.Item1 == selectedPhrase)
+                {
+                    SelectedPhrase = new ReplacePhrase(x.Item1, x.Item2, true);
+                    return new ReplacePhrase(x.Item1, x.Item2, true);
+                }
+                return new ReplacePhrase(x.Item1, x.Item2, false);
             });
+        }
+        
+        private int InsertReplacePhraseIndex()
+        {
+            switch (_insertReplacePhraseAt)
+            {
+                case InsertReplacePhraseAtEnum.Top:
+                    return 0;
+                case InsertReplacePhraseAtEnum.Bottom:
+                    return ReplacePhrases.Count;
+                case InsertReplacePhraseAtEnum.AboveSelection:
+                    return ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault());
+                case InsertReplacePhraseAtEnum.BelowSelection:
+                    return ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault()) + 1;
+                default:
+                    return -1;
+            }
         }
 
         // Message receivers
@@ -235,6 +256,16 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(SetReplacePhrasesMsg message)
         {
             ReplacePhrases = new ObservableCollection<ReplacePhrase>(message.Value.Select(x => new ReplacePhrase(x.Item1, x.Item2)));
+        }
+
+        public void Receive(IsPhraseSelectedMsg message)
+        {
+            IsPhraseSelected = message.Value;
+        }
+
+        public void Receive(InsertReplacePhraseAtMsg message)
+        {
+            _insertReplacePhraseAt = message.Value;
         }
     }
 
