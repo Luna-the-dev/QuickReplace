@@ -2,10 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class DelimiterMsg : ValueChangedMessage<string>
+    class DelimiterMsg(string value) : ValueChangedMessage<string>(value)
     {
-        public DelimiterMsg(string value) : base(value)
-        {
-        }
     }
 }

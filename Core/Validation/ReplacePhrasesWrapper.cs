@@ -6,7 +6,7 @@
     /// </summary>
     public class ReplacePhrasesWrapper
     {
-        public string oldText { get; set; }
-        public string newText { get; set; }
+        public string OldText { get; set; } = "";
+        public string NewText { get; set; } = "";
     }
 }

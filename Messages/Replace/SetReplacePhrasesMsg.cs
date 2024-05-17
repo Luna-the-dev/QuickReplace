@@ -2,10 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class SetReplacePhrasesMsg : ValueChangedMessage<List<(string, string)>>
+    class SetReplacePhrasesMsg(List<(string, string)> value) : ValueChangedMessage<List<(string, string)>>(value)
     {
-        public SetReplacePhrasesMsg(List<(string, string)> value) : base(value)
-        {
-        }
     }
 }

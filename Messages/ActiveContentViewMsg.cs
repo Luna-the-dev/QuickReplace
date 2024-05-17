@@ -2,10 +2,7 @@
 
 namespace TextReplace.Messages
 {
-    class ActiveContentViewMsg : ValueChangedMessage<object>
+    class ActiveContentViewMsg(object value) : ValueChangedMessage<object>(value)
     {
-        public ActiveContentViewMsg(object value) : base(value)
-        {
-        }
     }
 }

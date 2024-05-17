@@ -84,13 +84,13 @@ namespace TextReplace.Core.Validation
 
             foreach (var record in records)
             {
-                if (record.oldText == string.Empty)
+                if (record.OldText == string.Empty)
                 {
                     Debug.WriteLine($"A field within the first column of the replace file is empty.");
                     continue;
                 }
 
-                phrases[record.oldText] = record.newText;
+                phrases[record.OldText] = record.NewText;
             }
 
             return phrases;

@@ -3,10 +3,7 @@ using TextReplace.Core.Enums;
 
 namespace TextReplace.Messages.Replace
 {
-    class InsertReplacePhraseAtMsg : ValueChangedMessage<InsertReplacePhraseAtEnum>
+    class InsertReplacePhraseAtMsg(InsertReplacePhraseAtEnum value) : ValueChangedMessage<InsertReplacePhraseAtEnum>(value)
     {
-        public InsertReplacePhraseAtMsg(InsertReplacePhraseAtEnum value) : base(value)
-        {
-        }
     }
 }

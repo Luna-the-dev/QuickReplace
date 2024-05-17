@@ -20,7 +20,7 @@ namespace TextReplace.Core.InputWatermark
            "Watermark",
            typeof(object),
            typeof(WatermarkService),
-           new FrameworkPropertyMetadata((object)null, new PropertyChangedCallback(OnWatermarkChanged)));
+           new FrameworkPropertyMetadata(null, new PropertyChangedCallback(OnWatermarkChanged)));
 
         #region Private Fields
 
@@ -73,7 +73,7 @@ namespace TextReplace.Core.InputWatermark
                 ((TextBox)control).TextChanged += Control_GotKeyboardFocus;
             }
 
-            if (d is ItemsControl && !(d is ComboBox))
+            if (d is ItemsControl && d is not ComboBox)
             {
                 ItemsControl i = (ItemsControl)d;
 
@@ -126,8 +126,13 @@ namespace TextReplace.Core.InputWatermark
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">A <see cref="EventArgs"/> that contains the event data.</param>
-        private static void ItemsSourceChanged(object sender, EventArgs e)
+        private static void ItemsSourceChanged(object? sender, EventArgs e)
         {
+            if (sender == null)
+            {
+                return;
+            }
+
             ItemsControl c = (ItemsControl)sender;
             if (c.ItemsSource != null)
             {
@@ -153,7 +158,7 @@ namespace TextReplace.Core.InputWatermark
         /// <param name="e">A <see cref="ItemsChangedEventArgs"/> that contains the event data.</param>
         private static void ItemsChanged(object sender, ItemsChangedEventArgs e)
         {
-            ItemsControl control;
+            ItemsControl? control;
             if (itemsControls.TryGetValue(sender, out control))
             {
                 if (ShouldShowWatermark(control))
@@ -223,15 +228,15 @@ namespace TextReplace.Core.InputWatermark
         {
             if (c is ComboBox)
             {
-                return (c as ComboBox).Text == string.Empty;
+                return ((ComboBox)c).Text == string.Empty;
             }
             else if (c is TextBoxBase)
             {
-                return (c as TextBox).Text == string.Empty;
+                return ((TextBox)c).Text == string.Empty;
             }
             else if (c is ItemsControl)
             {
-                return (c as ItemsControl).Items.Count == 0;
+                return ((ItemsControl)c).Items.Count == 0;
             }
             else
             {

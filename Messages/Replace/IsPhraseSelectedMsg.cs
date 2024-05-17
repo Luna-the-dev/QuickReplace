@@ -2,10 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class SelectedPhraseMsg : ValueChangedMessage<(string, string)>
+    class SelectedPhraseMsg((string, string) value) : ValueChangedMessage<(string, string)>(value)
     {
-        public SelectedPhraseMsg((string, string) value) : base(value)
-        {
-        }
     }
 }

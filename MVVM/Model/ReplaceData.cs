@@ -122,11 +122,13 @@ namespace TextReplace.MVVM.Model
         public static bool? SetNewReplaceFileFromUser()
         {
             // configure open file dialog box
-            var dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.Title = "Open Text File";
-            dialog.FileName = "Document"; // Default file name
-            dialog.DefaultExt = ".txt"; // Default file extension
-            dialog.Filter = "All files (*.*)|*.*"; // Filter files by extension
+            var dialog = new Microsoft.Win32.OpenFileDialog
+            {
+                Title = "Open Text File",
+                FileName = "Document", // Default file name
+                DefaultExt = ".txt", // Default file extension
+                Filter = "All files (*.*)|*.*" // Filter files by extension
+            };
 
             // open file dialog box
             if (dialog.ShowDialog() != true)
@@ -287,7 +289,7 @@ namespace TextReplace.MVVM.Model
         /// <param name="src"></param>
         /// <param name="sw"></param>
         /// <param name="matcher"></param>
-        private void MatchAndWrite(string src, StreamWriter sw, AhoCorasickStringSearcher matcher)
+        private static void MatchAndWrite(string src, StreamWriter sw, AhoCorasickStringSearcher matcher)
         {
             foreach (string line in File.ReadLines(src))
             {
@@ -316,7 +318,7 @@ namespace TextReplace.MVVM.Model
         /// <param name="src"></param>
         /// <param name="sw"></param>
         /// <param name="matcher"></param>
-        private void MatchAndWriteWholeWord(string src, StreamWriter sw, AhoCorasickStringSearcher matcher)
+        private static void MatchAndWriteWholeWord(string src, StreamWriter sw, AhoCorasickStringSearcher matcher)
         {
             foreach (string line in File.ReadLines(src))
             {
@@ -349,7 +351,7 @@ namespace TextReplace.MVVM.Model
         /// <param name="text"></param>
         /// <param name="pos"></param>
         /// <returns>False if the character before and after the match exists and isnt a delimiter.</returns>
-        private bool IsMatchWholeWord(string line, string text, int pos)
+        private static bool IsMatchWholeWord(string line, string text, int pos)
         {
             /*
              * yes, i know this is ugly. this can be boiled down to the following.

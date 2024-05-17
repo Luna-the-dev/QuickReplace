@@ -60,8 +60,8 @@ namespace TextReplace.MVVM.View
             string body = "Edit the replacement phrase.";
             string topWatermark = "Original";
             string bottomWatermark = "Replacement";
-            string topInputText = (viewModel.SelectedPhrase.Item1 != null) ? viewModel.SelectedPhrase.Item1 : string.Empty;
-            string bottomInputText = (viewModel.SelectedPhrase.Item2 != null) ? viewModel.SelectedPhrase.Item2 : string.Empty;
+            string topInputText = viewModel.SelectedPhrase.Item1 ?? string.Empty;
+            string bottomInputText = viewModel.SelectedPhrase.Item2 ?? string.Empty;
 
             var dialog = new PopupWindows.EditPhraseDoubleInputWindow(window, title, body,
                                                                       topWatermark, bottomWatermark,

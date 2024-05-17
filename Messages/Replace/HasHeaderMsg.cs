@@ -2,10 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class HasHeaderMsg : ValueChangedMessage<bool>
+    class HasHeaderMsg(bool value) : ValueChangedMessage<bool>(value)
     {
-        public HasHeaderMsg(bool value) : base(value)
-        {
-        }
     }
 }

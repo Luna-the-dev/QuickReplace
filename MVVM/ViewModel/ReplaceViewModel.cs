@@ -77,7 +77,7 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         /// <param name="delimiter"></param>
         /// <returns>Returns trie if delimiter was set, false otherwise.</returns>
-        public bool SetDelimiter(string delimiter)
+        public static bool SetDelimiter(string delimiter)
         {
             return ReplaceData.SetDelimiter(delimiter);
         }

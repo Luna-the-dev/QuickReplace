@@ -4,16 +4,16 @@
     {
         // GotoTransations:
         // For each state, we have a Dictionary<char, newState>
-        private Dictionary<int, Dictionary<string, int>> GotoTransitions =
+        private readonly Dictionary<int, Dictionary<string, int>> GotoTransitions =
             new Dictionary<int, Dictionary<string, int>>();
 
         // FailTransistions:
         // Dictionary<state, failState>
-        private Dictionary<int, int> FailTransitions = new Dictionary<int, int>();
+        private readonly Dictionary<int, int> FailTransitions = new Dictionary<int, int>();
 
         // Output:
         // Dictionary<state, (list of outputs)>
-        private Dictionary<int, HashSet<string>> Output = new Dictionary<int, HashSet<string>>();
+        private readonly Dictionary<int, HashSet<string>> Output = new Dictionary<int, HashSet<string>>();
 
         // Total number of states in automaton
         public int NumStates { get; private set; }
@@ -25,7 +25,7 @@
 
         private readonly int StartState;
 
-        private bool debugMode = false;
+        private readonly bool debugMode = false;
 
 
         public AhoCorasickStringSearcher(bool caseSensitive)
@@ -51,7 +51,7 @@
 
         private Dictionary<string, int> GetStateTransitions(int state)
         {
-            Dictionary<string, int> transitions = (CaseSensitive) ?
+            Dictionary<string, int>? transitions = (CaseSensitive) ?
                 new Dictionary<string, int>() :
                 new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
@@ -79,9 +79,9 @@
             transitions.Add(c, newState);
         }
 
-        private HashSet<string> GetStateOutputs(int state)
+        private HashSet<string>? GetStateOutputs(int state)
         {
-            HashSet<string> outputs;
+            HashSet<string>? outputs;
             if (Output.TryGetValue(state, out outputs))
             {
                 return outputs;
@@ -91,7 +91,7 @@
 
         private void AddOutput(int state, string outputKey)
         {
-            HashSet<string> outputs;
+            HashSet<string>? outputs;
             if (!Output.TryGetValue(state, out outputs))
             {
                 outputs = new HashSet<string>();
@@ -105,7 +105,7 @@
 
         private void AddOutputs(int state, HashSet<string> outputsToAdd)
         {
-            HashSet<string> outputs;
+            HashSet<string>? outputs;
             if (!Output.TryGetValue(state, out outputs))
             {
                 Output.Add(state, outputsToAdd);
