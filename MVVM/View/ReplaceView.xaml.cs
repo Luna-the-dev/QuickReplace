@@ -46,7 +46,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
             {
-                viewModel.SetDelimiter(dialog.InputText);
+                ReplaceViewModel.SetDelimiter(dialog.InputText);
             }
         }
 
