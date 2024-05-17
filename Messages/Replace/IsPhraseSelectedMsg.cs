@@ -2,9 +2,9 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class IsPhraseSelectedMsg : ValueChangedMessage<bool>
+    class SelectedPhraseMsg : ValueChangedMessage<(string, string)>
     {
-        public IsPhraseSelectedMsg(bool value) : base(value)
+        public SelectedPhraseMsg((string, string) value) : base(value)
         {
         }
     }

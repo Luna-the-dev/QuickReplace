@@ -14,7 +14,7 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<HasHeaderMsg>,
         IRecipient<DelimiterMsg>,
         IRecipient<SetReplacePhrasesMsg>,
-        IRecipient<IsPhraseSelectedMsg>,
+        IRecipient<SelectedPhraseMsg>,
         IRecipient<InsertReplacePhraseAtMsg>
     {
         [ObservableProperty]
@@ -46,11 +46,13 @@ namespace TextReplace.MVVM.ViewModel
         private ReplacePhrase _selectedPhrase = new ReplacePhrase();
         partial void OnSelectedPhraseChanged(ReplacePhrase value)
         {
-            ReplaceData.IsPhraseSelected = !Equals(value, default(ReplacePhrase));
+            ReplaceData.SelectedPhrase = !Equals(value, default(ReplacePhrase)) ?
+                (value.Item1, value.Item2) :
+                ("", "");
         }
 
         [ObservableProperty]
-        private bool _isPhraseSelected = ReplaceData.IsPhraseSelected;
+        private bool _isPhraseSelected = (ReplaceData.SelectedPhrase.Item1 != "");
 
         private InsertReplacePhraseAtEnum _insertReplacePhraseAt = InsertReplacePhraseAtEnum.Top;
 
@@ -113,6 +115,7 @@ namespace TextReplace.MVVM.ViewModel
             if (index == -1)
             {
                 Debug.WriteLine("Selected phrase index could not be found, new phrase not added.");
+                return;
             }
 
             bool res = ReplaceData.AddReplacePhrase(item1, item2, index);
@@ -127,22 +130,36 @@ namespace TextReplace.MVVM.ViewModel
         /// <summary>
         /// Updates the second item in the replacement phrases of the selected phrase
         /// </summary>
+        /// <param name="item1"></param>
         /// <param name="item2"></param>
-        public void EditSelectedPhrase(string item2)
+        public void EditSelectedPhrase(string item1, string item2)
         {
-            if (string.IsNullOrEmpty(SelectedPhrase.Item1))
+            if (item1 == string.Empty)
             {
-                Debug.WriteLine("Selected phrase is null");
+                Debug.WriteLine("Item1 from EditSelectedPhrase() is empty.");
                 return;
             }
 
-            bool res = ReplaceData.EditReplacePhrase(SelectedPhrase.Item1, item2);
+            bool res;
+            // if a new item1 was not specified, then swap out the old
+            // ReplacePhrases.Item2 with the new item2 value
+            if (item1 == SelectedPhrase.Item1)
+            {
+                res = ReplaceData.EditReplacePhrase(item1, item2);
+            }
+            // if a new item1 was specified, remove the old ReplacePhrases entry and
+            // replace it with a new one with the specified item1 and item2
+            else
+            {
+                res = ReplaceData.SwapReplacePhrase(SelectedPhrase.Item1, item1, item2);
+            }
+
             if (res == false)
             {
                 Debug.WriteLine("Phrase could not be edited.");
                 return;
             }
-            UpdateReplacePhrases(SelectedPhrase.Item1);
+            UpdateReplacePhrases(item1);
         }
 
         public void RemoveSelectedPhrase()
@@ -258,9 +275,9 @@ namespace TextReplace.MVVM.ViewModel
             ReplacePhrases = new ObservableCollection<ReplacePhrase>(message.Value.Select(x => new ReplacePhrase(x.Item1, x.Item2)));
         }
 
-        public void Receive(IsPhraseSelectedMsg message)
+        public void Receive(SelectedPhraseMsg message)
         {
-            IsPhraseSelected = message.Value;
+            IsPhraseSelected = (message.Value.Item1 != "");
         }
 
         public void Receive(InsertReplacePhraseAtMsg message)

@@ -58,15 +58,19 @@ namespace TextReplace.MVVM.View
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(editMenuOption.Text);
             string body = "Edit the replacement phrase.";
-            string watermark = "Replacement phrase";
-            string inputText = (viewModel.SelectedPhrase.Item2 != null) ? viewModel.SelectedPhrase.Item2 : string.Empty;
+            string topWatermark = "Original";
+            string bottomWatermark = "Replacement";
+            string topInputText = (viewModel.SelectedPhrase.Item1 != null) ? viewModel.SelectedPhrase.Item1 : string.Empty;
+            string bottomInputText = (viewModel.SelectedPhrase.Item2 != null) ? viewModel.SelectedPhrase.Item2 : string.Empty;
 
-            var dialog = new PopupWindows.InputWindow(window, title, body, watermark, inputText);
+            var dialog = new PopupWindows.EditPhraseDoubleInputWindow(window, title, body,
+                                                                      topWatermark, bottomWatermark,
+                                                                      topInputText, bottomInputText);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                viewModel.EditSelectedPhrase(dialog.InputText);
+                viewModel.EditSelectedPhrase(dialog.TopInputText, dialog.BottomInputText);
             }
         }
 

@@ -89,14 +89,15 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new HasHeaderMsg(value));
             }
         }
-        private static bool _isPhraseSelected;
-        public static bool IsPhraseSelected
+        // a flag to denote whether a phrase is selected in the replace view
+        private static (string, string) _selectedPhrase = ("", "");
+        public static (string, string) SelectedPhrase
         {
-            get { return _isPhraseSelected; }
+            get { return _selectedPhrase; }
             set
             {
-                _isPhraseSelected = value;
-                WeakReferenceMessenger.Default.Send(new IsPhraseSelectedMsg(value));
+                _selectedPhrase = value;
+                WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg(value));
             }
         }
 
@@ -458,6 +459,40 @@ namespace TextReplace.MVVM.Model
                 return false;
             }
 
+            ReplacePhrasesDict[item1] = item2;
+            ReplacePhrasesList[index] = (item1, item2);
+            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
+            return true;
+        }
+
+        /// <summary>
+        /// Removes a ReplacePhrases entry, and adds a new one with the specified key/value.
+        /// Inserts it into the same position as the removed one for ReplacePhrasesList.
+        /// </summary>
+        /// <param name="oldKey"></param>
+        /// <param name="item1"></param>
+        /// <param name="item2"></param>
+        /// <returns>False if the key for the phrase does not exist</returns>
+        public static bool SwapReplacePhrase(string oldItem1, string item1, string item2)
+        {
+            if (ReplacePhrasesDict.ContainsKey(oldItem1) == false)
+            {
+                Debug.WriteLine($"Key does not exist in ReplacePhrasesDict, {oldItem1} could not be swapped.");
+                return false;
+            }
+            if (ReplacePhrasesDict.ContainsKey(item1))
+            {
+                Debug.WriteLine($"{item1} already exists in ReplacePhrasesDict, aborting swap.");
+                return false;
+            }
+            int index = ReplacePhrasesList.FindIndex(x => x.Item1 == oldItem1);
+            if (index == -1)
+            {
+                Debug.WriteLine($"Key does not exist in ReplacePhrasesList, {oldItem1} could not be swapped.");
+                return false;
+            }
+
+            ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList[index] = (item1, item2);
             WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));

@@ -47,10 +47,6 @@
                 <view:SideBarView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type popupvm:InputViewModel}">
-                <popup:InputWindow/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type popupvm:InputResetViewModel}">
                 <popup:InputResetWindow/>
             </DataTemplate>
@@ -61,6 +57,10 @@
 
             <DataTemplate DataType="{x:Type popupvm:AddPhraseDoubleInputViewModel}">
                 <popup:AddPhraseDoubleInputWindow/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type popupvm:EditPhraseDoubleInputViewModel}">
+                <popup:EditPhraseDoubleInputWindow/>
             </DataTemplate>
 
         </ResourceDictionary>
