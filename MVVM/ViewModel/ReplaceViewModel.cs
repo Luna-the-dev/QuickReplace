@@ -184,30 +184,36 @@ namespace TextReplace.MVVM.ViewModel
         /// if the user is searching for a specific phrase. Pass an empty or null
         /// string to remove the selected phrase
         /// </summary>
-        /// <param name="selectedPhrase"></param>
-        private void UpdateReplacePhrases(string selectedPhrase)
+        /// <param name="selectedItem1"></param>
+        private void UpdateReplacePhrases(string selectedItem1)
         {
             // if there is no search text, display the replace phrases like normal
             if (SearchText == string.Empty)
             {
                 ReplacePhrases = (SortReplacePhrases) ?
-                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase).OrderBy(x => x.Item1)) :
-                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase));
+                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1).OrderBy(x => x.Item1)) :
+                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1));
             }
             else
             {
                 ReplacePhrases = (SortReplacePhrases) ?
-                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase)
+                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1)
                         .Where(x => {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
                         })
                         .OrderBy(x => x.Item1)) :
-                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedPhrase)
+                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1)
                         .Where(x => {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
                         }));
+
+                // if the selected phrase is not in the search, clear the selected phrase
+                if (ReplacePhrases.Any(x => x.Item1 == selectedItem1) == false)
+                {
+                    SelectedPhrase = new ReplacePhrase();
+                }
             }
         }
 
@@ -216,10 +222,10 @@ namespace TextReplace.MVVM.ViewModel
         /// selected phrase if there is one, and updates SelectedPhrase.
         /// </summary>
         /// <returns>Returns ReplaceData.ReplacePhrases as an enumerable of ReplacePhrase objects</returns>
-        private IEnumerable<ReplacePhrase> GetReplacePhrases(string selectedPhrase = "")
+        private IEnumerable<ReplacePhrase> GetReplacePhrases(string selectedItem1 = "")
         {
             // simply get the replacement phrases if no selected phrase is specified
-            if (string.IsNullOrEmpty(selectedPhrase))
+            if (string.IsNullOrEmpty(selectedItem1))
             {
                 SelectedPhrase = new ReplacePhrase();
                 return ReplaceData.ReplacePhrasesList.Select(x => new ReplacePhrase(x.Item1, x.Item2));
@@ -227,7 +233,7 @@ namespace TextReplace.MVVM.ViewModel
 
             // if a selected phrase is specified, mark that specific phrase as selected
             return ReplaceData.ReplacePhrasesList.Select(x => {
-                if (x.Item1 == selectedPhrase)
+                if (x.Item1 == selectedItem1)
                 {
                     SelectedPhrase = new ReplacePhrase(x.Item1, x.Item2, true);
                     return new ReplacePhrase(x.Item1, x.Item2, true);
