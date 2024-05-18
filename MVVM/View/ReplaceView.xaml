@@ -41,7 +41,7 @@
                    Style="{DynamicResource FileNameTheme}"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Left"
-                   FontSize="15"
+                   FontSize="18"
                    FontFamily="/Fonts/#Poppins"/>
 
         <!-- Left side options -->
