@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.MVVM.ViewModel;
@@ -80,10 +81,46 @@ namespace TextReplace.MVVM.View
 
         private void OpenSaveAsWindow_OnClick(object sender, RoutedEventArgs e)
         {
+            var viewModel = (ReplaceViewModel)DataContext;
+            string extension = Path.GetExtension(viewModel.FileName);
 
+            string csv = "csv files (*.csv)|*.csv|";
+            string tsv = "tsv files (*.tsv)|*.tsv|";
+            string xls = "xls files (*.xls)|*.xls|";
+            string xlsx = "xlsx files (*.xlsx)|*.xlsx|";
+            string txt = "txt files (*.txt)|*.txt|";
+            string all = "All files (*.*)|*.*|";
+
+            string filter = extension switch
+            {
+                ".csv" => csv + tsv + xls + xlsx + txt + all,
+                ".tsv" => tsv + csv + xls + xlsx + txt + all,
+                ".xls" => xls + csv + tsv + xlsx + txt + all,
+                ".xlsx" => xlsx + csv + tsv + xls + txt + all,
+                ".txt" => txt + xlsx + csv + tsv + xls + all,
+                _ => all + csv + tsv + xls + xlsx + txt
+            };
+
+            filter = filter.Remove(filter.Length - 1);
+
+            var dialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Title = "Save FIle As",
+                FileName = viewModel.FileName, // Default file name
+                DefaultExt = extension, // Default file extension
+                Filter = filter // Filter files by extension
+            };
+
+            // open file dialog box
+            if (dialog.ShowDialog() != true)
+            {
+                Debug.WriteLine("New file window was closed.");
+                return;
+            }
+
+            // save the replace phrases to the new file name
+            viewModel.SavePhrasesToFile(dialog.FileName);
         }
-
-
 
         /// <summary>
         /// This function exists to make scroll wheel work for a scroll viewer with a list box

@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Enums;
+using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
 
@@ -18,11 +19,14 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<InsertReplacePhraseAtMsg>
     {
         [ObservableProperty]
-        private string _fileName = Path.GetFileName(ReplaceData.FileName);
-        partial void OnFileNameChanged(string value)
+        private string _fullFileName = ReplaceData.FileName;
+        partial void OnFullFileNameChanged(string value)
         {
+            FileName = Path.GetFileName(value);
             IsFileSelected = (value != string.Empty);
         }
+        [ObservableProperty]
+        private string _fileName = Path.GetFileName(ReplaceData.FileName);
         [ObservableProperty]
         private bool _isFileSelected = (ReplaceData.FileName != string.Empty);
 
@@ -59,7 +63,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
-        public RelayCommand SavePhrasesToFileCommand => new RelayCommand(SavePhrasesToFile);
+        public RelayCommand SavePhrasesToFileCommand => new RelayCommand(() => SavePhrasesToFile());
 
         public ReplaceViewModel()
         {
@@ -88,16 +92,40 @@ namespace TextReplace.MVVM.ViewModel
         /// <summary>
         /// Saves the replace phrases list to the file system.
         /// </summary>
-        private void SavePhrasesToFile()
+        public bool SavePhrasesToFile(string newFileName = "")
         {
+            string fileName = (newFileName != string.Empty) ? newFileName : FullFileName;
+
+            // check if the file type is suppoerted
+            if (FileValidation.IsFileTypeValid(fileName) == false)
+            {
+                Debug.WriteLine("File type is not supported, file not saved.");
+                return false;
+            }
+            // check if the user has write perms to the directory
+            if (FileValidation.IsDirectoryWritable(Path.GetDirectoryName(fileName) ?? "") == false)
+            {
+                Debug.WriteLine("Cannot write to directory, file not saved.");
+                return false;
+            }
+            // if a new file is not being created, check if the user has write perms
+            if (newFileName == string.Empty && FileValidation.IsInputFileReadWriteable(fileName) == false)
+            {
+                Debug.WriteLine("Cannot write to directory, file not saved.");
+                return false;
+            }
+
             try
             {
-                ReplaceData.SavePhrasesToFile(SortReplacePhrases);
+                ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases);
+                ReplaceData.FileName = fileName;
+                return true;
             }
             // exception thrown if the file type is invalid
             catch (NotSupportedException e)
             {
                 Debug.WriteLine(e);
+                return false;
             }
         }
 
@@ -273,7 +301,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(FileNameMsg message)
         {
-            FileName = Path.GetFileName(message.Value);
+            FullFileName = message.Value;
         }
 
         public void Receive(DelimiterMsg message)

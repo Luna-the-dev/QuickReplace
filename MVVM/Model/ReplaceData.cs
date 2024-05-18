@@ -19,14 +19,8 @@ namespace TextReplace.MVVM.Model
             get { return _fileName; }
             set
             {
-                if (FileValidation.IsInputFileReadable(value))
-                {
-                    _fileName = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Input file is not readable. ReplaceFile was not updated.");
-                }
+                _fileName = value;
+                WeakReferenceMessenger.Default.Send(new FileNameMsg(value));
             }
         }
         // key is the phrase to replace, value is what it is being replaced with
@@ -144,8 +138,7 @@ namespace TextReplace.MVVM.Model
                 // put copy the dict into a list which gets used by the view models
                 ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrasesWrapper(x.Key, x.Value)).ToList();
                 WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
-                // set file name directly rather than with the setter because we just ran the
-                // same validation as the setter anyways
+
                 FileName = dialog.FileName;
             }
             catch (IOException e)
@@ -317,12 +310,13 @@ namespace TextReplace.MVVM.Model
         /// <summary>
         /// Saves the replace phrases list to the file system, performing a sort if requested.
         /// </summary>
+        /// <param name="fileName"></param>
         /// <param name="shouldSort"></param>
-        public static void SavePhrasesToFile(bool shouldSort)
+        public static void SavePhrasesToFile(string fileName, bool shouldSort)
         {
-            string delimiter = DetermineDelemiter(FileName);
+            string delimiter = DetermineDelemiter(fileName);
 
-            using var writer = new StreamWriter(FileName);
+            using var writer = new StreamWriter(fileName);
             var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
                 Delimiter = delimiter,
@@ -411,6 +405,12 @@ namespace TextReplace.MVVM.Model
             return true;
         }
 
+        /// <summary>
+        /// Determines what the delimiter should be based off of the file type
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>Returns the delimiter used by the fiven file type</returns>
+        /// <exception cref="NotSupportedException"></exception>
         private static string DetermineDelemiter(string fileName)
         {
             string extension = Path.GetExtension(fileName).ToLower();
