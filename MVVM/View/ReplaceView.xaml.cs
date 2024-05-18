@@ -16,7 +16,7 @@ namespace TextReplace.MVVM.View
             InitializeComponent();
         }
 
-        private void OpenEditInputWindow(object sender, RoutedEventArgs e)
+        private void OpenEditWindow_OnClick(object sender, RoutedEventArgs e)
         {
             var viewModel = (ReplaceViewModel)DataContext;
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -40,7 +40,7 @@ namespace TextReplace.MVVM.View
             }
         }
 
-        private void OpenRemoveWindow(object sender, RoutedEventArgs e)
+        private void OpenRemoveWindow_OnClick(object sender, RoutedEventArgs e)
         {
             var viewModel = (ReplaceViewModel)DataContext;
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -58,7 +58,7 @@ namespace TextReplace.MVVM.View
             }
         }
 
-        private void OpenAddWindow(object sender, RoutedEventArgs e)
+        private void OpenAddWindow_OnClick(object sender, RoutedEventArgs e)
         {
             var viewModel = (ReplaceViewModel)DataContext;
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
@@ -77,6 +77,13 @@ namespace TextReplace.MVVM.View
                 viewModel.AddNewPhrase(dialog.TopInputText, dialog.BottomInputText);
             }
         }
+
+        private void OpenSaveAsWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
 
         /// <summary>
         /// This function exists to make scroll wheel work for a scroll viewer with a list box

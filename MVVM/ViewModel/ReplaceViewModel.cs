@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using TextReplace.Core.Enums;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
@@ -17,7 +18,7 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<InsertReplacePhraseAtMsg>
     {
         [ObservableProperty]
-        private string _fileName = string.Empty;
+        private string _fileName = Path.GetFileName(ReplaceData.FileName);
         partial void OnFileNameChanged(string value)
         {
             IsFileSelected = (value != string.Empty);
@@ -58,6 +59,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
+        public RelayCommand SavePhrasesToFileCommand => new RelayCommand(SavePhrasesToFile);
 
         public ReplaceViewModel()
         {
@@ -81,6 +83,22 @@ namespace TextReplace.MVVM.ViewModel
         {
             SortReplacePhrases = !SortReplacePhrases;
             UpdateReplacePhrases(SelectedPhrase.Item1);
+        }
+
+        /// <summary>
+        /// Saves the replace phrases list to the file system.
+        /// </summary>
+        private void SavePhrasesToFile()
+        {
+            try
+            {
+                ReplaceData.SavePhrasesToFile(SortReplacePhrases);
+            }
+            // exception thrown if the file type is invalid
+            catch (NotSupportedException e)
+            {
+                Debug.WriteLine(e);
+            }
         }
 
         /// <summary>
@@ -255,7 +273,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(FileNameMsg message)
         {
-            FileName = message.Value;
+            FileName = Path.GetFileName(message.Value);
         }
 
         public void Receive(DelimiterMsg message)

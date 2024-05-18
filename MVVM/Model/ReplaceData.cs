@@ -4,7 +4,10 @@ using System.IO;
 using TextReplace.Core.Validation;
 using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Replace;
-using TextReplace.MVVM.ViewModel;
+using CsvHelper.Configuration;
+using CsvHelper;
+using System.Globalization;
+using System.Text;
 
 namespace TextReplace.MVVM.Model
 {
@@ -44,8 +47,8 @@ namespace TextReplace.MVVM.Model
             }
         }
         // key is the phrase to replace, value is what it is being replaced with
-        private static List<(string, string)> _replacePhrasesList = [];
-        public static List<(string, string)> ReplacePhrasesList
+        private static List<ReplacePhrasesWrapper> _replacePhrasesList = [];
+        public static List<ReplacePhrasesWrapper> ReplacePhrasesList
         {
             get { return _replacePhrasesList; }
             set
@@ -139,11 +142,11 @@ namespace TextReplace.MVVM.Model
                 // empty dictionary if something was wrong, so setter will throw an error
                 ReplacePhrasesDict = ParseReplacePhrases(dialog.FileName);
                 // put copy the dict into a list which gets used by the view models
-                ReplacePhrasesList = ReplacePhrasesDict.Select(x => (x.Key, x.Value)).ToList();
+                ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrasesWrapper(x.Key, x.Value)).ToList();
                 WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
                 // set file name directly rather than with the setter because we just ran the
                 // same validation as the setter anyways
-                _fileName = dialog.FileName;
+                FileName = dialog.FileName;
             }
             catch (IOException e)
             {
@@ -166,14 +169,7 @@ namespace TextReplace.MVVM.Model
 
         public static Dictionary<string, string> ParseReplacePhrases(string fileName)
         {
-            string extension = Path.GetExtension(fileName).ToLower();
-            string delimiter = extension switch
-            {
-                ".csv" => ",",
-                ".tsv" => "\t",
-                ".xls" or ".xlsx" or ".txt" => Delimiter,
-                _ => throw new NotSupportedException($"The {extension} file type is not supported.")
-            };
+            string delimiter = DetermineDelemiter(fileName);
 
             return DataValidation.ParseDSV(fileName, delimiter);
         }
@@ -319,6 +315,33 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
+        /// Saves the replace phrases list to the file system, performing a sort if requested.
+        /// </summary>
+        /// <param name="shouldSort"></param>
+        public static void SavePhrasesToFile(bool shouldSort)
+        {
+            string delimiter = DetermineDelemiter(FileName);
+
+            using var writer = new StreamWriter(FileName);
+            var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
+            {
+                Delimiter = delimiter,
+                HasHeaderRecord = false,
+                Encoding = Encoding.UTF8
+            };
+
+            using var csvWriter = new CsvWriter(writer, csvConfig);
+            if (shouldSort)
+            {
+                csvWriter.WriteRecords(ReplacePhrasesList.OrderBy(x => x.Item1).ToList());
+            }
+            else
+            {
+                csvWriter.WriteRecords(ReplacePhrasesList);
+            }
+        }
+
+        /// <summary>
         /// Checks to see if a match found by the AhoCorasickStringSearcher
         /// Search() method is a whole word.
         /// </summary>
@@ -388,6 +411,18 @@ namespace TextReplace.MVVM.Model
             return true;
         }
 
+        private static string DetermineDelemiter(string fileName)
+        {
+            string extension = Path.GetExtension(fileName).ToLower();
+            return extension switch
+            {
+                ".csv" => ",",
+                ".tsv" => "\t",
+                ".xls" or ".xlsx" or ".txt" => Delimiter,
+                _ => throw new NotSupportedException($"The {extension} file type is not supported.")
+            };
+        }
+
         /// <summary>
         /// Adds a replace phrase to the ReplacePhrases dictionary and list at a specified
         /// index. Sends a message that the replace phrases list was updated as well.
@@ -410,7 +445,7 @@ namespace TextReplace.MVVM.Model
             }
 
             ReplacePhrasesDict[item1] = item2;
-            ReplacePhrasesList.Insert(index, (item1, item2));
+            ReplacePhrasesList.Insert(index, new ReplacePhrasesWrapper(item1, item2));
             WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
@@ -437,7 +472,7 @@ namespace TextReplace.MVVM.Model
             }
 
             ReplacePhrasesDict[item1] = item2;
-            ReplacePhrasesList[index] = (item1, item2);
+            ReplacePhrasesList[index] = new ReplacePhrasesWrapper(item1, item2);
             WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
@@ -471,7 +506,7 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesDict[item1] = item2;
-            ReplacePhrasesList[index] = (item1, item2);
+            ReplacePhrasesList[index] = new ReplacePhrasesWrapper(item1, item2);
             WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }

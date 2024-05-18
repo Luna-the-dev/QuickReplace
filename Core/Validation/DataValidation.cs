@@ -38,7 +38,7 @@ namespace TextReplace.Core.Validation
         /// </summary>
         /// <param name="phrases"></param>
         /// <returns>True if valid, false otherwise.</returns>
-        public static bool AreReplacePhrasesValid(List<(string, string)> phrases)
+        public static bool AreReplacePhrasesValid(List<ReplacePhrasesWrapper> phrases)
         {
             if (phrases.Count == 0)
             {
@@ -83,26 +83,16 @@ namespace TextReplace.Core.Validation
 
             foreach (var record in records)
             {
-                if (record.OldText == string.Empty)
+                if (record.Item1 == string.Empty)
                 {
                     Debug.WriteLine($"A field within the first column of the replace file is empty.");
                     continue;
                 }
 
-                phrases[record.OldText] = record.NewText;
+                phrases[record.Item1] = record.Item2;
             }
 
             return phrases;
         }
     }
-
-    /// <summary>
-    /// Wrapper class for the replace phrases dictionary.
-    /// This wrapper exists only to read in data with CsvHelper.
-    /// </summary>
-    public class ReplacePhrasesWrapper
-    {
-        public string OldText { get; set; } = "";
-        public string NewText { get; set; } = "";
-    }
-}
+ }
