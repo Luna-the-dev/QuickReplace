@@ -66,7 +66,6 @@ namespace TextReplace.Core.Validation
         /// </returns>
         public static Dictionary<string, string> ParseDSV(string fileName,
                                                           string delimiter = ",",
-                                                          bool hasHeader = false,
                                                           TrimOptions trimOptions = TrimOptions.None)
         {
             var phrases = new Dictionary<string, string>();
@@ -75,7 +74,7 @@ namespace TextReplace.Core.Validation
             var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 Delimiter = delimiter,
-                HasHeaderRecord = hasHeader,
+                HasHeaderRecord = false,
                 TrimOptions = trimOptions
             };
             using var csv = new CsvReader(reader, csvConfig);
@@ -95,5 +94,15 @@ namespace TextReplace.Core.Validation
 
             return phrases;
         }
+    }
+
+    /// <summary>
+    /// Wrapper class for the replace phrases dictionary.
+    /// This wrapper exists only to read in data with CsvHelper.
+    /// </summary>
+    public class ReplacePhrasesWrapper
+    {
+        public string OldText { get; set; } = "";
+        public string NewText { get; set; } = "";
     }
 }

@@ -78,17 +78,6 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new DelimiterMsg(value));
             }
         }
-        // a flag used by the replace file parser to determine if there is a header line or not
-        private static bool _hasHeader = false;
-        public static bool HasHeader
-        {
-            get { return _hasHeader; }
-            set
-            {
-                _hasHeader = value;
-                WeakReferenceMessenger.Default.Send(new HasHeaderMsg(value));
-            }
-        }
         // a flag to denote whether a phrase is selected in the replace view
         private static (string, string) _selectedPhrase = ("", "");
         public static (string, string) SelectedPhrase
@@ -177,30 +166,16 @@ namespace TextReplace.MVVM.Model
 
         public static Dictionary<string, string> ParseReplacePhrases(string fileName)
         {
-            try
+            string extension = Path.GetExtension(fileName).ToLower();
+            string delimiter = extension switch
             {
-                string extension = Path.GetExtension(fileName).ToLower();
-                switch (extension)
-                {
-                    case ".csv":
-                        return DataValidation.ParseDSV(fileName, ",", HasHeader);
-                    case ".tsv":
-                        return DataValidation.ParseDSV(fileName, "\t", HasHeader);
-                    case ".xls":
-                    case ".xlsx":
-                        // TODO: add excel file support
-                    case ".txt":
-                        return DataValidation.ParseDSV(fileName, Delimiter, HasHeader);
-                    default:
-                        Debug.WriteLine($"{extension} is not a supported file type.");
-                        return new Dictionary<string, string>();
-                }
-            }
-            catch
-            {
-                Debug.WriteLine("Something went wrong in ParseReplacePhrases()");
-                return new Dictionary<string, string>();
-            }
+                ".csv" => ",",
+                ".tsv" => "\t",
+                ".xls" or ".xlsx" or ".txt" => Delimiter,
+                _ => throw new NotSupportedException($"The {extension} file type is not supported.")
+            };
+
+            return DataValidation.ParseDSV(fileName, delimiter);
         }
 
         /// <summary>

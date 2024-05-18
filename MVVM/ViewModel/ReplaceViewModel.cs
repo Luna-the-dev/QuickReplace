@@ -11,7 +11,6 @@ namespace TextReplace.MVVM.ViewModel
 {
     partial class ReplaceViewModel : ObservableRecipient,
         IRecipient<FileNameMsg>,
-        IRecipient<HasHeaderMsg>,
         IRecipient<DelimiterMsg>,
         IRecipient<SetReplacePhrasesMsg>,
         IRecipient<SelectedPhraseMsg>,
@@ -25,13 +24,6 @@ namespace TextReplace.MVVM.ViewModel
         }
         [ObservableProperty]
         private bool _isFileSelected = (ReplaceData.FileName != string.Empty);
-
-        [ObservableProperty]
-        private bool _hasHeader = ReplaceData.HasHeader;
-        partial void OnHasHeaderChanged(bool value)
-        {
-            ReplaceData.HasHeader = HasHeader;
-        }
 
         [ObservableProperty]
         private string _delimiter = ReplaceData.Delimiter;
@@ -264,11 +256,6 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(FileNameMsg message)
         {
             FileName = message.Value;
-        }
-
-        public void Receive(HasHeaderMsg message)
-        {
-            HasHeader = message.Value;
         }
 
         public void Receive(DelimiterMsg message)

@@ -11,11 +11,8 @@ using System.IO;
 namespace TextReplace.MVVM.ViewModel
 {
     partial class TopBarViewModel : ObservableObject,
-        IRecipient<HasHeaderMsg>,
         IRecipient<DelimiterMsg>
     {
-        [ObservableProperty]
-        private Visibility _hasHeader = (ReplaceData.HasHeader) ? Visibility.Visible : Visibility.Hidden;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ToggleCaseSensitiveCommand))]
@@ -53,7 +50,6 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ReplaceFile => new RelayCommand(ReplaceFileCmd);
         public RelayCommand SourceFiles => new RelayCommand(SourceFilesCmd);
         public RelayCommand Replace => new RelayCommand(ReplaceCmd);
-        public RelayCommand ToggleHasHeaderCommand => new RelayCommand(() => { ReplaceData.HasHeader = !ReplaceData.HasHeader; });
         public RelayCommand ChangeOutputDirectory => new RelayCommand(ChangeOutputDirectoryCmd);
 
         public TopBarViewModel()
@@ -217,11 +213,6 @@ namespace TextReplace.MVVM.ViewModel
         {
             ReplaceIsClickable = (ReplaceFileReadSuccess == Visibility.Visible &&
                                   SourceFileReadSuccess == Visibility.Visible);
-        }
-
-        public void Receive(HasHeaderMsg message)
-        {
-            HasHeader = (message.Value) ? Visibility.Visible : Visibility.Hidden;
         }
 
         public void Receive(DelimiterMsg message)

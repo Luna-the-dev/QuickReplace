@@ -46,25 +46,6 @@
                                    Style="{StaticResource DropdownMenuTheme}">
             <Border BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
-                    <!--Contains header option-->
-                    <Button Command="{Binding ToggleHasHeaderCommand}">
-                        <Button.Content>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="20"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Contains header" Padding="0 0 15 0"
-                                           FontFamily="/Fonts/#Poppins" FontSize="12"
-                                           FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
-                                <TextBlock Grid.Column="1" HorizontalAlignment="Right"
-                                           Text="✓" Visibility="{Binding HasHeader}"
-                                           FontFamily="/Fonts/#Poppins" FontSize="12"
-                                           FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
-                            </Grid>
-                        </Button.Content>
-                    </Button>
-
                     <!--Custom delimiter option-->
                     <Button Click="OpenDelimiterInputWindow">
                         <Button.Content>

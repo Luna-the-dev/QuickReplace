@@ -54,33 +54,10 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            
+
             <ToggleButton Grid.Column="1" Grid.Row="0"
-                          IsChecked="{Binding HasHeader}"
-                          Style="{StaticResource OptionToggleButtonTheme}">
-                <ToggleButton.Content>
-                    <TextBlock Text="Has header" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </ToggleButton.Content>
-            </ToggleButton>
-
-            <Button Grid.Column="1" Grid.Row="1"
-                    Click="OpenDelimiterInputWindow"
-                    Style="{StaticResource OptionButtonTheme}">
-                <Button.Content>
-                    <TextBlock Text="Delimiter"
-                               x:Name="delimiterMenuOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
-
-            <ToggleButton Grid.Column="1" Grid.Row="2"
                           Command="{Binding ToggleSortCommand}"
                           IsEnabled="{Binding IsFileSelected}"
                           Style="{StaticResource OptionToggleButtonTheme}">
