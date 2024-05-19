@@ -54,19 +54,55 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
                 <RowDefinition />
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <ToggleButton Grid.Column="1" Grid.Row="0"
-                          Command="{Binding ToggleSortCommand}"
-                          IsEnabled="{Binding IsFileSelected}"
-                          Style="{StaticResource OptionToggleButtonTheme}">
-                <ToggleButton.Content>
-                    <TextBlock Text="Sort" HorizontalAlignment="Center"
+            <Button Grid.Column="1" Grid.Row="0" Width="140" Height="40"
+                    Style="{StaticResource OptionButtonTheme}">
+                <Button.Content>
+                    <TextBlock Text="Upload"
+                               x:Name="uploadOption" HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
-                </ToggleButton.Content>
-            </ToggleButton>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="1" Width="140" Height="40"
+                    Style="{StaticResource OptionButtonTheme}">
+                <Button.Content>
+                    <TextBlock Text="Create new"
+                               x:Name="createNewOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
+                    Command="{Binding SavePhrasesToFileCommand}"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsUnsaved}">
+                <Button.Content>
+                    <TextBlock Text="Save"
+                               x:Name="saveOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
+                    Click="OpenSaveAsWindow_OnClick"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsFileSelected}">
+                <Button.Content>
+                    <TextBlock Text="Save as"
+                               x:Name="saveAsOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
         </Grid>
 
         <!-- Replace phrases view -->
@@ -131,14 +167,38 @@
 
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition />
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Button Grid.Column="1" Grid.Row="0" Width="140" Height="40"
+            <ToggleButton Grid.Column="1" Grid.Row="0"
+                          Command="{Binding ToggleSortCommand}"
+                          IsEnabled="{Binding IsFileSelected}"
+                          Style="{StaticResource OptionToggleButtonTheme}">
+                <ToggleButton.Content>
+                    <TextBlock Text="Sort" HorizontalAlignment="Center"
+                   FontFamily="/Fonts/#Poppins"
+                   Foreground="{StaticResource TextLight}"/>
+                </ToggleButton.Content>
+            </ToggleButton>
+
+            <TextBlock Grid.Column="1" Grid.Row="1"
+                       Margin="0 0 0 6"
+                       Text="Modify"
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       Foreground="{StaticResource TextLight}"
+                       FontSize="14"
+                       FontFamily="/Fonts/#Poppins"/>
+            <Border Grid.Column="1" Grid.Row="1"
+                    Margin="0 0 0 4" Width="120"
+                    BorderBrush="{StaticResource TextUnclickable}"
+                    BorderThickness="0 0 0 1"/>
+
+            <Button Grid.Column="1" Grid.Row="2" Width="140" Height="40"
                     Click="OpenEditWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsPhraseSelected}">
@@ -150,7 +210,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="1" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
                     Click="OpenRemoveWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsPhraseSelected}">
@@ -162,7 +222,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="2" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
                     Click="OpenAddWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsFileSelected}">
@@ -174,29 +234,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
-                    Command="{Binding SavePhrasesToFileCommand}"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsUnsaved}">
-                <Button.Content>
-                    <TextBlock Text="Save"
-                               x:Name="saveOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
-
-            <Button Grid.Column="1" Grid.Row="5" Width="140" Height="40"
-                    Click="OpenSaveAsWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}">
-                <Button.Content>
-                    <TextBlock Text="Save as"
-                               x:Name="saveAsOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
+            
         </Grid>
 
     </Grid>
