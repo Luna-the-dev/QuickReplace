@@ -29,6 +29,8 @@ namespace TextReplace.MVVM.ViewModel
         private string _fileName = Path.GetFileName(ReplaceData.FileName);
         [ObservableProperty]
         private bool _isFileSelected = (ReplaceData.FileName != string.Empty);
+        [ObservableProperty]
+        private bool _isUnsaved = false;
 
         [ObservableProperty]
         private string _delimiter = ReplaceData.Delimiter;
@@ -71,22 +73,31 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         /// <summary>
-        /// Wrapper function for ReplaceData.SetDelimiter
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns>Returns trie if delimiter was set, false otherwise.</returns>
-        public static bool SetDelimiter(string delimiter)
-        {
-            return ReplaceData.SetDelimiter(delimiter);
-        }
-
-        /// <summary>
         /// Toggle whether the phrases should be sorted and then update the replace phrases view
         /// </summary>
         private void ToggleSort()
         {
             SortReplacePhrases = !SortReplacePhrases;
             UpdateReplacePhrases(SelectedPhrase.Item1);
+            IsUnsaved = true;
+        }
+
+        /// <summary>
+        /// Sets the selected phrase
+        /// </summary>
+        /// <param name="phrase"></param>
+        private void SetSelectedPhrase(object? phrase)
+        {
+            // for some reason if i pass in the ReplacePhrase, this doesn't fire
+            // on the first click, however if i pass it as a generic obect and
+            // cast it to ReplacePhrase, it works. probably some MVVM community toolkit quirk
+            if (phrase == null)
+            {
+                return;
+            }
+            ReplacePhrase p = (ReplacePhrase)phrase;
+            p.IsSelected = true;
+            SelectedPhrase = p;
         }
 
         /// <summary>
@@ -129,24 +140,6 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
-        /// <summary>
-        /// Sets the selected phrase
-        /// </summary>
-        /// <param name="phrase"></param>
-        private void SetSelectedPhrase(object? phrase)
-        {
-            // for some reason if i pass in the ReplacePhrase, this doesn't fire
-            // on the first click, however if i pass it as a generic obect and
-            // cast it to ReplacePhrase, it works. probably some MVVM community toolkit quirk
-            if (phrase == null)
-            {
-                return;
-            }
-            ReplacePhrase p = (ReplacePhrase)phrase;
-            p.IsSelected = true;
-            SelectedPhrase = p;
-        }
-
         public void AddNewPhrase(string item1, string item2)
         {
             int index = InsertReplacePhraseIndex();
@@ -163,6 +156,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             UpdateReplacePhrases(item1);
+            IsUnsaved = true;
         }
 
         /// <summary>
@@ -198,6 +192,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             UpdateReplacePhrases(item1);
+            IsUnsaved = true;
         }
 
         public void RemoveSelectedPhrase()
@@ -215,6 +210,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             UpdateReplacePhrases("");
+            IsUnsaved = true;
         }
 
         /// <summary>
@@ -279,22 +275,27 @@ namespace TextReplace.MVVM.ViewModel
                 return new ReplacePhrase(x.Item1, x.Item2, false);
             });
         }
-        
+
+        /// <summary>
+        /// Used to determine the index where a new phrase should be inserted into the list of
+        /// replace phrases based off of the InsertReplacePhraseAtEnum value
+        /// </summary>
+        /// <returns>
+        /// The where the phrase should be inserted,
+        /// -1 if a wrong value is assigned to InsertReplacePhraseAt
+        /// </returns>
         private int InsertReplacePhraseIndex()
         {
-            switch (_insertReplacePhraseAt)
+            return _insertReplacePhraseAt switch
             {
-                case InsertReplacePhraseAtEnum.Top:
-                    return 0;
-                case InsertReplacePhraseAtEnum.Bottom:
-                    return ReplacePhrases.Count;
-                case InsertReplacePhraseAtEnum.AboveSelection:
-                    return ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault());
-                case InsertReplacePhraseAtEnum.BelowSelection:
-                    return ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault()) + 1;
-                default:
-                    return -1;
-            }
+                InsertReplacePhraseAtEnum.Top => 0,
+                InsertReplacePhraseAtEnum.Bottom => ReplacePhrases.Count,
+                InsertReplacePhraseAtEnum.AboveSelection =>
+                    ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault()),
+                InsertReplacePhraseAtEnum.BelowSelection =>
+                    ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault()) + 1,
+                _ => -1,
+            };
         }
 
         // Message receivers

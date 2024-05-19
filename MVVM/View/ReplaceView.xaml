@@ -177,7 +177,7 @@
             <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
                     Command="{Binding SavePhrasesToFileCommand}"
                     Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}">
+                    IsEnabled="{Binding IsUnsaved}">
                 <Button.Content>
                     <TextBlock Text="Save"
                                x:Name="saveOption" HorizontalAlignment="Center"
