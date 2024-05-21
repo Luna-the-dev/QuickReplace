@@ -61,30 +61,7 @@ namespace TextReplace.MVVM.View
 
         private void OpenDelimiterInputWindow(object sender, RoutedEventArgs e)
         {
-            var viewModel = (TopBarViewModel)(DataContext);
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-
-            var window = Window.GetWindow(sender as DependencyObject);
-            string title = textInfo.ToTitleCase(delimiterMenuOption.Text);
-            string body;
-            if (viewModel.Delimiter != string.Empty)
-            {
-                body = $"<u>Current delimiter:</u> {viewModel.Delimiter}";
-            }
-            else
-            {
-                body = "Enter the delimiter used to seperate the original and replacement words.\n" +
-                "<u>Note:</u> This defaults to a comma for .csv files and a tab character for .tsv files.";
-            }
-            string defaultInputTest = "Ex. :, -, or ;";
-
-            var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
-            dialog.ShowDialog();
-
-            if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
-            {
-                viewModel.SetDelimiter(dialog.InputText);
-            }
+            
         }
 
         private void OpenFileSuffixInputWindow(object sender, RoutedEventArgs e)

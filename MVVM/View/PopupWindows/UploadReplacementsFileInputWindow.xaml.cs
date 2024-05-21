@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.MVVM.View.PopupWindows
@@ -38,6 +40,45 @@ namespace TextReplace.MVVM.View.PopupWindows
         }
         public string DefaultBodyText { get; set; } = string.Empty;
 
+        public string DelimiterBodyText
+        {
+            get { return DelimiterBodyTextBox.Text; }
+            set
+            {
+                DelimiterBodyTextBox.Text = "";
+                string[] separator = ["<u>", "</u>"];
+                var parts = value.Split(separator, StringSplitOptions.None);
+                bool isUnderline = false; // Start in normal mode
+                foreach (var part in parts)
+                {
+                    if (isUnderline)
+                        DelimiterBodyTextBox.Inlines.Add(new Underline(new Run(part)));
+                    else
+                        DelimiterBodyTextBox.Inlines.Add(new Run(part));
+
+                    isUnderline = !isUnderline; // toggle between bold and not bold
+                }
+            }
+        }
+        public string DefaultDelimiterBodyText { get; set; } = string.Empty;
+
+        public string DelimiterInputWatermarkText
+        {
+            get { return DelimiterInputWatermark.Text.ToString() ?? string.Empty; }
+            set
+            {
+                DelimiterInputWatermark.Text = value;
+            }
+        }
+        public string DelimiterInputText
+        {
+            get { return DelimiterInputTextBox.Text.ToString() ?? string.Empty; }
+            set
+            {
+                DelimiterInputTextBox.Text = value;
+            }
+        }
+
         public string FullFileName
         {
             get { return ((UploadReplacementsInputViewModel)DataContext).FullFileName; }
@@ -54,8 +95,11 @@ namespace TextReplace.MVVM.View.PopupWindows
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            BodyText = body;
             DefaultBodyText = body;
+            BodyText = body;
+            DefaultDelimiterBodyText = "Please enter the character used to seperate values in the .txt file:";
+            DelimiterBodyText = DefaultDelimiterBodyText;
+            DelimiterInputWatermarkText = "Ex. :, -, or ;";
         }
 
         private void BtnUpload_OnClick(object sender, RoutedEventArgs e)
@@ -76,7 +120,31 @@ namespace TextReplace.MVVM.View.PopupWindows
                 return;
             }
 
-            ((UploadReplacementsInputViewModel)DataContext).ValidateFile(dialog.FileName);
+            // reset the delimiter body and input text every time a new file is uploaded
+            DelimiterBodyText = DefaultDelimiterBodyText;
+            DelimiterInputText = string.Empty;
+
+            var viewModel = (UploadReplacementsInputViewModel)DataContext;
+
+            // show the delimiter input section if it is a text file
+            if (Path.GetExtension(dialog.FileName).Equals(".txt", StringComparison.CurrentCultureIgnoreCase) ||
+                Path.GetExtension(dialog.FileName).Equals(".text", StringComparison.CurrentCultureIgnoreCase))
+            {
+                viewModel.ShowDelimiter(dialog.FileName);
+            }
+            // else hide the delimiter input section and validate the uploaded file
+            else
+            {
+                viewModel.HideDelimiter();
+                viewModel.ValidateFile(dialog.FileName);
+            }
+        }
+
+        private void BtnEnterDelimiter_OnClick(object sender, RoutedEventArgs e)
+        {
+            DelimiterBodyText = ((UploadReplacementsInputViewModel)DataContext).ValidateDelimiter() ?
+                "<u>File parsed successfully.</u>" :
+                "<u>File could not be parsed with this string.</u>";
         }
 
         private void BtnOk_OnClick(object sender, RoutedEventArgs e)
@@ -89,6 +157,25 @@ namespace TextReplace.MVVM.View.PopupWindows
         {
             BtnCancel.IsChecked = true;
             Close();
+        }
+
+        private void DelimiterInputTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            // if the user presses enter and has typed something in, trigger
+            // BtnEnterDelimiter_OnClick. if nothing is typed, do nothing
+            if (e.Key == Key.Return && DelimiterInputText != string.Empty)
+            {
+                BtnEnterDelimiter_OnClick(sender, e);
+            }
+            else if (e.Key == Key.Escape)
+            {
+                Keyboard.ClearFocus();
+            }
+        }
+
+        private void DelimiterInputTextBox_TextChanged(object sender, EventArgs e)
+        {
+            DelimiterBodyText = DefaultDelimiterBodyText;
         }
     }
 }

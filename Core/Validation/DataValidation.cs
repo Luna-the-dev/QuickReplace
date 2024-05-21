@@ -8,6 +8,8 @@ namespace TextReplace.Core.Validation
 {
     class DataValidation
     {
+        private const string INVALID_DELIMITER_CHARS = "\n";
+
         /// <summary>
         /// Verifies that the replace phrases are valid by checking if the
         /// dictionary has entries and that all keys are non-empty.
@@ -57,6 +59,28 @@ namespace TextReplace.Core.Validation
         }
 
         /// <summary>
+        /// Checks if the delimiter string is empty or contains any invalid characters.
+        /// </summary>
+        /// <param name="delimiter"></param>
+        /// <returns>True if the string is empty or does not contain any invalid characters.</returns>
+        public static bool IsDelimiterValid(string delimiter)
+        {
+            if (delimiter == string.Empty)
+            {
+                return false;
+            }
+
+            foreach (char c in delimiter)
+            {
+                if (INVALID_DELIMITER_CHARS.Contains(c))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Parses "delimiter seperated value" files such as .csv or .tsv. Defaults to .csv files.
         /// </summary>
         /// <param name="delimiter"></param>
@@ -85,7 +109,7 @@ namespace TextReplace.Core.Validation
             {
                 if (record.Item1 == string.Empty)
                 {
-                    Debug.WriteLine($"A field within the first column of the replace file is empty.");
+                    Debug.WriteLine("A field within the first column of the replace file is empty.");
                     continue;
                 }
 

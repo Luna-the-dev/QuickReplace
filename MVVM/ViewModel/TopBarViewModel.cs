@@ -10,16 +10,12 @@ using System.IO;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class TopBarViewModel : ObservableObject,
-        IRecipient<DelimiterMsg>
+    partial class TopBarViewModel : ObservableObject
     {
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ToggleCaseSensitiveCommand))]
         private Visibility _caseSensitive = Visibility.Hidden;
-
-        [ObservableProperty]
-        private string _delimiter = ReplaceData.Delimiter;
 
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ToggleWholeWordCommand))]
@@ -162,9 +158,18 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         /// <param name="delimiter"></param>
         /// <returns></returns>
-        public bool SetDelimiter(string delimiter)
+        public static bool SetDelimiter(string delimiter)
         {
-            return ReplaceData.SetDelimiter(delimiter);
+            try
+            {
+                ReplaceData.Delimiter = delimiter;
+                return true;
+            }
+            catch (ArgumentException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
         }
 
         /// <summary>
@@ -209,11 +214,6 @@ namespace TextReplace.MVVM.ViewModel
         {
             ReplaceIsClickable = (ReplaceFileReadSuccess == Visibility.Visible &&
                                   SourceFileReadSuccess == Visibility.Visible);
-        }
-
-        public void Receive(DelimiterMsg message)
-        {
-            Delimiter = message.Value;
         }
     }
 }

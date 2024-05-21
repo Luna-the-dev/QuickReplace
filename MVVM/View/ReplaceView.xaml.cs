@@ -19,7 +19,6 @@ namespace TextReplace.MVVM.View
 
         private void OpenUploadWindow_OnClick(object sender, RoutedEventArgs e)
         {
-            var viewModel = (ReplaceViewModel)DataContext;
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             var window = Window.GetWindow(sender as DependencyObject);
@@ -32,7 +31,15 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName);
+                string extension = Path.GetExtension(dialog.FullFileName).ToLower();
+                if (extension == ".txt" || extension == ".text")
+                {
+                    ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName, dialog.DelimiterInputText);
+                }
+                else
+                {
+                    ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName);
+                }
             }
         }
 

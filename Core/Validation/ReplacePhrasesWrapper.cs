@@ -1,4 +1,6 @@
-﻿namespace TextReplace.Core.Validation
+﻿using CsvHelper.Configuration.Attributes;
+
+namespace TextReplace.Core.Validation
 {
     /// <summary>
     /// Wrapper class for the replace phrases dictionary.
@@ -8,7 +10,10 @@
     /// </summary>
     public class ReplacePhrasesWrapper(string item1, string item2)
     {
+        [Index(0)]
         public string Item1 { get; set; } = item1;
+
+        [Index(1)]
         public string Item2 { get; set; } = item2;
     }
 }

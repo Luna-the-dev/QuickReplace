@@ -13,7 +13,6 @@ namespace TextReplace.MVVM.ViewModel
 {
     partial class ReplaceViewModel : ObservableRecipient,
         IRecipient<FileNameMsg>,
-        IRecipient<DelimiterMsg>,
         IRecipient<SetReplacePhrasesMsg>,
         IRecipient<SelectedPhraseMsg>,
         IRecipient<InsertReplacePhraseAtMsg>
@@ -31,9 +30,6 @@ namespace TextReplace.MVVM.ViewModel
         private bool _isFileSelected = (ReplaceData.FileName != string.Empty);
         [ObservableProperty]
         private bool _isUnsaved = false;
-
-        [ObservableProperty]
-        private string _delimiter = ReplaceData.Delimiter;
 
         [ObservableProperty]
         private ObservableCollection<ReplacePhrase> _replacePhrases =
@@ -66,7 +62,7 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
         public RelayCommand SavePhrasesToFileCommand => new RelayCommand(() => SavePhrasesToFile());
-
+        
         public ReplaceViewModel()
         {
             WeakReferenceMessenger.Default.RegisterAll(this);
@@ -302,10 +298,11 @@ namespace TextReplace.MVVM.ViewModel
         /// Wrapper for ReplaceData.SetNewReplaceFile.
         /// </summary>
         /// <param name="fileName"></param>
+        /// <param name="newDelimiter"></param>
         /// <returns>False if new replace file was not set.</returns>
-        public static bool SetNewReplaceFile(string fileName)
+        public static bool SetNewReplaceFile(string fileName, string? newDelimiter = null)
         {
-            return ReplaceData.SetNewReplaceFile(fileName);
+            return ReplaceData.SetNewReplaceFile(fileName, newDelimiter);
         }
 
         // Message receivers
@@ -313,11 +310,6 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(FileNameMsg message)
         {
             FullFileName = message.Value;
-        }
-
-        public void Receive(DelimiterMsg message)
-        {
-            Delimiter = message.Value;
         }
 
         public void Receive(SetReplacePhrasesMsg message)

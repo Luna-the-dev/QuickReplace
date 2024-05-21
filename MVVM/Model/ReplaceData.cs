@@ -36,7 +36,7 @@ namespace TextReplace.MVVM.Model
                 }
                 else
                 {
-                    throw new ArgumentException("Replace phrases are not valid.");
+                    throw new ArgumentException("Replace phrases are not valid and were not set.");
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace TextReplace.MVVM.Model
                 }
                 else
                 {
-                    throw new ArgumentException("Replace phrases are not valid.");
+                    throw new ArgumentException("Replace phrases are not valid and were not set.");
                 }
             }
         }
@@ -69,10 +69,16 @@ namespace TextReplace.MVVM.Model
         public static string Delimiter
         {
             get { return _delimiter; }
-            set
+            set 
             {
-                _delimiter = value;
-                WeakReferenceMessenger.Default.Send(new DelimiterMsg(value));
+                if (DataValidation.IsDelimiterValid(value))
+                {
+                    _delimiter = value;
+                }
+                else
+                {
+                    throw new ArgumentException("Delimiter is not valid and was not set.");
+                }
             }
         }
         // a flag to denote whether a phrase is selected in the replace view
@@ -87,9 +93,8 @@ namespace TextReplace.MVVM.Model
             }
         }
 
-        // delimiters which decides what seperates whole words
+        // delimiters that decide what seperates whole words
         private const string WORD_DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
-        private const string INVALID_DELIMITER_CHARS = "\n";
 
         /*
          * Constructor
@@ -100,14 +105,16 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
-        /// Opens a file dialogue and replaces the ReplaceFile with whatever the user selects (if valid)
+        /// Opens a file dialogue and replaces the ReplaceFile with whatever the user selects (if valid).
+        /// Note: the newDelimiter parameter must be supplied if the fileName is a .txt or .text file.
         /// </summary>
         /// <param name="fileName"></param>
+        /// <param name="newDelimiter"></param>
         /// <param name="dryRun"></param>
         /// <returns>
         /// False if one of the files was invalid, null user closed the window without selecting a file.
         /// </returns>
-        public static bool SetNewReplaceFile(string fileName, bool dryRun = false)
+        public static bool SetNewReplaceFile(string fileName, string? newDelimiter = null, bool dryRun = false)
         {
             // set the ReplaceFile name
             try
@@ -119,23 +126,48 @@ namespace TextReplace.MVVM.Model
                     throw new IOException("Input file is not readable in SetNewReplaceFileFromUser().");
                 }
 
-                // is caller specified that this should be a dry run,
+                // if the supplied file is a text file, check if there is a delimiter and if it is valid
+                string extension = Path.GetExtension(fileName).ToLower();
+                if (extension == ".txt" || extension == ".text")
+                {
+                    if (newDelimiter == null)
+                    {
+                        Debug.WriteLine("Please supply a delimiter to use for a text file.");
+                        return false;
+                    }
+                    
+                    if (DataValidation.IsDelimiterValid(newDelimiter) == false)
+                    {
+                        Debug.WriteLine("Delimiter is invalid.");
+                        return false;
+                    }
+                }
+
+                // determine which delimiter should be used
+                string delimiter = DetermineDelemiter(fileName, newDelimiter);
+
+                // if caller specified that this should be a dry run,
                 // then dont actually assign the parsed data to the dict
                 if (dryRun)
                 {
-                    ParseReplacePhrases(fileName);
+                    if (DataValidation.AreReplacePhrasesValid(DataValidation.ParseDSV(fileName, delimiter)) == false)
+                    {
+                        Debug.WriteLine("Replace Phrases could not be parsed or were not valid.");
+                        return false;
+                    }
+                    
                     return true;
                 }
 
-                // parse through phrases and attempt to save them. parser will return an
-                // empty dictionary if something was wrong, so setter will throw an ArgumentException
-                ReplacePhrasesDict = ParseReplacePhrases(fileName);
+                // parse through phrases and attempt to save them
+                ReplacePhrasesDict = DataValidation.ParseDSV(fileName, delimiter);
 
                 // put copy the dict into a list which gets used by the view models
                 ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrasesWrapper(x.Key, x.Value)).ToList();
                 WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
 
                 FileName = fileName;
+                Delimiter = delimiter;
 
                 return true;
             }
@@ -149,18 +181,16 @@ namespace TextReplace.MVVM.Model
                 Debug.WriteLine(e);
                 return false;
             }
+            catch (CsvHelper.MissingFieldException e)
+            {
+                Debug.WriteLine("CsvHelper could not parse the file with the given delimiter.");
+                return false;
+            }
             catch
             {
                 Debug.WriteLine("Something unexpected happened in SetNewReplaceFileFromUser().");
                 return false;
             }
-        }
-
-        public static Dictionary<string, string> ParseReplacePhrases(string fileName)
-        {
-            string delimiter = DetermineDelemiter(fileName);
-
-            return DataValidation.ParseDSV(fileName, delimiter);
         }
 
         /// <summary>
@@ -215,7 +245,7 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
         /// <returns>False is some exception was thrown.</returns>
-        private bool WriteReplacementsToFile(string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+        private static bool WriteReplacementsToFile(string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
         {
             try
             {
@@ -310,12 +340,10 @@ namespace TextReplace.MVVM.Model
         /// <param name="shouldSort"></param>
         public static void SavePhrasesToFile(string fileName, bool shouldSort)
         {
-            string delimiter = DetermineDelemiter(fileName);
-
             using var writer = new StreamWriter(fileName);
             var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
-                Delimiter = delimiter,
+                Delimiter = Delimiter,
                 HasHeaderRecord = false,
                 Encoding = Encoding.UTF8
             };
@@ -365,56 +393,21 @@ namespace TextReplace.MVVM.Model
             }
             return true;
         }
-
-        /// <summary>
-        /// Checks to see if the delimiter is valid, and then sets the delimiter
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns>Returns trie if delimiter was set, false otherwise</returns>
-        public static bool SetDelimiter(string delimiter)
-        {
-            if (IsDelimiterValid(delimiter))
-            {
-                Delimiter = delimiter;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Checks if the delimiter string contains any invalid characters.
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns>True if the string is empty or does not contain any invalid characters.</returns>
-        private static bool IsDelimiterValid(string delimiter)
-        {
-            foreach (char c in delimiter)
-            {
-                if (INVALID_DELIMITER_CHARS.Contains(c))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
+        
         /// <summary>
         /// Determines what the delimiter should be based off of the file type
         /// </summary>
         /// <param name="fileName"></param>
-        /// <returns>Returns the delimiter used by the fiven file type</returns>
+        /// <returns>Returns the delimiter used by the given file type.</returns>
         /// <exception cref="NotSupportedException"></exception>
-        private static string DetermineDelemiter(string fileName)
+        private static string DetermineDelemiter(string fileName, string? newDelimiter = null)
         {
             string extension = Path.GetExtension(fileName).ToLower();
             return extension switch
             {
                 ".csv" => ",",
                 ".tsv" => "\t",
-                ".xls" or ".xlsx" or ".txt" => Delimiter,
+                ".xls" or ".xlsx" or ".txt" => newDelimiter ?? Delimiter,
                 _ => throw new NotSupportedException($"The {extension} file type is not supported.")
             };
         }

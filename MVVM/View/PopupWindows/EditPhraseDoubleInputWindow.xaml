@@ -20,86 +20,96 @@
         <viewModel:EditPhraseDoubleInputViewModel/>
     </Window.DataContext>
 
-    <Border Background="{StaticResource BackgroundColor}"
-            BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition MinHeight="20" MaxHeight="30"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition MinHeight="40"/>
-            </Grid.RowDefinitions>
+        <local:TopBorderView x:Name="TopBorder"/>
 
-            <local:TopBorderView Grid.ColumnSpan="3" x:Name="TopBorder"/>
-
-            <TextBlock Grid.Column="1" Grid.Row="2"
-                       IsEnabled="{Binding ConfirmIsClickable}"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"
-                       Name="BodyTextBox"
-                       TextWrapping="Wrap"
-                       Foreground="{StaticResource TextLight}"
-                       FontFamily="/Fonts/#Poppins"
-                       Margin="0 0 0 10" />
-
-            <AdornerDecorator Grid.Column="1" Grid.Row="3" Margin="0 5 0 2.5">
-                <Border Background="#353340" CornerRadius="10">
-                    <TextBox Style="{DynamicResource InputBar}"
-                             Text="{Binding TopInputText, UpdateSourceTrigger=PropertyChanged}"
-                             Name="TopInputTextBox"
-                             KeyDown="TopInputTextBoxKeyDown"
-                             TextChanged="TopInputTextBoxTextChanged">
-                        <wm:WatermarkService.Watermark>
-                            <TextBlock x:Name="TopInputWatermark"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Left"
-                                       Foreground="LightGray"
-                                       Margin="4 0 0 0"
-                                       FontFamily="/Fonts/#Poppins"/>
-                        </wm:WatermarkService.Watermark>
-                    </TextBox>
-                </Border>
-            </AdornerDecorator>
-
-            <AdornerDecorator Grid.Column="1" Grid.Row="4" Margin="0 2.5 0 0">
-                <Border Background="#353340" CornerRadius="10">
-                    <TextBox Style="{DynamicResource InputBar}"
-                             Name="BottomInputTextBox"
-                             KeyDown="BottomInputTextBoxKeyDown">
-                        <wm:WatermarkService.Watermark>
-                            <TextBlock x:Name="BottomInputWatermark"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Left"
-                                       Foreground="LightGray"
-                                       Margin="4 0 0 0"
-                                       FontFamily="/Fonts/#Poppins"/>
-                        </wm:WatermarkService.Watermark>
-                    </TextBox>
-                </Border>
-            </AdornerDecorator>
-
-            <Grid Grid.Column="1" Grid.Row="5"
-                  Margin="0 10 0 0" Height="30">
+        <Border Grid.Row="1"
+                Background="{StaticResource BackgroundColor}"
+                BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
+                    <ColumnDefinition Width="250"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
-                              Margin="0 0 5 0" Padding="8" IsEnabled="{Binding ConfirmIsClickable}"
-                              Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
-                <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
-                              Margin="5 0 0 0" Padding="8"
-                              Style="{StaticResource InputWindowCancelButtonTheme}" Click="BtnCancel_Click" />
+
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="20" MaxHeight="30"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="40"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           IsEnabled="{Binding ConfirmIsClickable}"
+                           HorizontalAlignment="Stretch"
+                           TextAlignment="Center"
+                           Name="BodyTextBox"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource TextLight}"
+                           FontFamily="/Fonts/#Poppins"
+                           Margin="0 0 0 10" />
+
+                <AdornerDecorator Grid.Column="1" Grid.Row="2" Margin="0 5 0 2.5">
+                    <Border Background="#353340" CornerRadius="10">
+                        <TextBox Style="{DynamicResource InputBar}"
+                                 Text="{Binding TopInputText, UpdateSourceTrigger=PropertyChanged}"
+                                 Name="TopInputTextBox"
+                                 KeyDown="TopInputTextBoxKeyDown"
+                                 TextChanged="TopInputTextBoxTextChanged">
+                            <wm:WatermarkService.Watermark>
+                                <TextBlock x:Name="TopInputWatermark"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Foreground="LightGray"
+                                           Margin="4 0 0 0"
+                                           FontFamily="/Fonts/#Poppins"/>
+                            </wm:WatermarkService.Watermark>
+                        </TextBox>
+                    </Border>
+                </AdornerDecorator>
+
+                <AdornerDecorator Grid.Column="1" Grid.Row="3" Margin="0 2.5 0 0">
+                    <Border Background="#353340" CornerRadius="10">
+                        <TextBox Style="{DynamicResource InputBar}"
+                                 Name="BottomInputTextBox"
+                                 KeyDown="BottomInputTextBoxKeyDown">
+                            <wm:WatermarkService.Watermark>
+                                <TextBlock x:Name="BottomInputWatermark"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Left"
+                                           Foreground="LightGray"
+                                           Margin="4 0 0 0"
+                                           FontFamily="/Fonts/#Poppins"/>
+                            </wm:WatermarkService.Watermark>
+                        </TextBox>
+                    </Border>
+                </AdornerDecorator>
+
+                <Grid Grid.Column="1" Grid.Row="4"
+                      Margin="0 10 0 0" Height="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
+                                  Margin="0 0 5 0" Padding="8"
+                                  IsEnabled="{Binding ConfirmIsClickable}"
+                                  Style="{StaticResource InputWindowConfirmButtonTheme}"
+                                  Click="BtnOk_Click" />
+                    <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
+                                  Margin="5 0 0 0" Padding="8"
+                                  Style="{StaticResource InputWindowCancelButtonTheme}"
+                                  Click="BtnCancel_Click" />
+                </Grid>
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </Window>

@@ -20,87 +20,144 @@
         <viewModel:UploadReplacementsInputViewModel/>
     </Window.DataContext>
 
-    <Border Background="{StaticResource BackgroundColor}"
-            BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-                <ColumnDefinition Width="250"/>
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25"/>
-                <RowDefinition MinHeight="20" MaxHeight="30"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition MinHeight="40"/>
-            </Grid.RowDefinitions>
+        <local:TopBorderView x:Name="TopBorder"/>
 
-            <local:TopBorderView Grid.ColumnSpan="3" x:Name="TopBorder"/>
-
-            <TextBlock Grid.Column="1" Grid.Row="2"
-                       Name="BodyTextBox"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"
-                       TextWrapping="Wrap"
-                       Foreground="{StaticResource TextLight}"
-                       FontFamily="/Fonts/#Poppins"
-                       Margin="0 0 0 15"/>
-
-            <TextBlock Grid.Column="1" Grid.Row="3"
-                       Name="FileNameTextBox"
-                       Text="{Binding FileName}"
-                       HorizontalAlignment="Stretch"
-                       TextAlignment="Center"
-                       TextTrimming="CharacterEllipsis"
-                       Foreground="{StaticResource TextLight}"
-                       FontSize="13"
-                       FontFamily="/Fonts/#Poppins"
-                       Margin="3 10 36 15"/>
-
-            <Border Grid.Column="1" Grid.Row="3"
-                    Width="19" Height="19"
-                    Margin="0 0 5 10"
-                    HorizontalAlignment="Right">
-                <Path Stretch="Uniform" Visibility="{Binding FileIsValid}"
-                      Fill="{StaticResource TextLight}"
-                      Data="M382,720L154,492L211,435L382,606L749,239L806,296L382,720Z"/>
-            </Border>
-
-            <Border Grid.Column="1" Grid.Row="3"
-                    Width="14" Height="14"
-                    Margin="0 0 13 0"
-                    HorizontalAlignment="Right">
-                <Path Stretch="Uniform" Visibility="{Binding FileIsInvalid}"
-                      Fill="{StaticResource TextLight}"
-                      Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
-            </Border>
-
-            <ToggleButton Grid.Column="1" Grid.Row="4" Height="35"
-                          Name="BtnUpload" Content="Upload new file"
-                          Margin="0" Padding="8"
-                          Style="{StaticResource InputWindowConfirmButtonTheme}"
-                          Click="BtnUpload_OnClick"/>
-
-            <Grid Grid.Column="1" Grid.Row="5"
-                  Margin="0 10 0 0" Height="30">
+        <Border Grid.Row="1"
+                Background="{StaticResource BackgroundColor}"
+                BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
+                    <ColumnDefinition Width="250"/>
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
-                              Margin="0 0 5 0" Padding="8"
-                              IsEnabled="{Binding ConfirmIsClickable}"
+
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="20" MaxHeight="30"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="40"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           Name="BodyTextBox"
+                           HorizontalAlignment="Stretch"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource TextLight}"
+                           FontFamily="/Fonts/#Poppins"
+                           Margin="0 0 0 15"/>
+
+                <Grid Grid.Column="1" Grid.Row="2">
+                    <TextBlock Name="FileNameTextBox"
+                               Text="{Binding FileName}"
+                               HorizontalAlignment="Stretch"
+                               TextTrimming="CharacterEllipsis"
+                               Foreground="{StaticResource TextLight}"
+                               FontSize="13"
+                               FontFamily="/Fonts/#Poppins"
+                               Margin="3 10 36 15"/>
+
+                    <Border Width="19" Height="19"
+                            Margin="0 0 5 10"
+                            HorizontalAlignment="Right">
+                        <Path Stretch="Uniform" Visibility="{Binding FileIsValid}"
+                              Fill="{StaticResource TextLight}"
+                              Data="M382,720L154,492L211,435L382,606L749,239L806,296L382,720Z"/>
+                    </Border>
+
+                    <Border Width="14" Height="14"
+                            Margin="0 0 13 10"
+                            HorizontalAlignment="Right">
+                        <Path Stretch="Uniform" Visibility="{Binding FileIsInvalid}"
+                              Fill="{StaticResource TextLight}"
+                              Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
+                    </Border>
+                </Grid>
+                
+                <!-- Txt file delimiter input -->
+                <Border Grid.Column="1" Grid.Row="3"
+                        Visibility="{Binding DelimiterVisibility}"
+                        BorderBrush="{StaticResource TextUnclickable}"
+                        BorderThickness="0 1 0 1"
+                        Margin="0 0 0 15"
+                        Padding="0 15">
+                    <StackPanel>
+                        <TextBlock x:Name="DelimiterBodyTextBox"
+                                   d:Text="Please enter the character used to seperate values in the .txt file:"
+                                   HorizontalAlignment="Stretch"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   Foreground="{StaticResource TextLight}"
+                                   FontFamily="/Fonts/#Poppins"
+                                   Margin="0 0 0 15"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="70*"/>
+                                <ColumnDefinition Width="30*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <AdornerDecorator Margin="0 0 5 0">
+                                <Border Background="#353340" CornerRadius="10">
+                                    <TextBox Style="{DynamicResource InputBar}"
+                                             Text="{Binding DelimiterInputText, UpdateSourceTrigger=PropertyChanged}"
+                                             Name="DelimiterInputTextBox"
+                                             KeyDown="DelimiterInputTextBox_KeyDown"
+                                             TextChanged="DelimiterInputTextBox_TextChanged">
+                                        <wm:WatermarkService.Watermark>
+                                            <TextBlock x:Name="DelimiterInputWatermark"
+                                                       VerticalAlignment="Center"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="LightGray"
+                                                       Margin="4 0 0 0"
+                                                       FontFamily="/Fonts/#Poppins"/>
+                                        </wm:WatermarkService.Watermark>
+                                    </TextBox>
+                                </Border>
+                            </AdornerDecorator>
+
+                            <ToggleButton Content="Enter" Grid.Column="1"
+                                          Margin="5 0 0 0" Padding="8"
+                                          Name="BtnEnterDelimiter"
+                                          IsEnabled="{Binding EnterDelimiterIsClickable}"
+                                          Style="{StaticResource InputWindowConfirmButtonTheme}"
+                                          Click="BtnEnterDelimiter_OnClick"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <ToggleButton Grid.Column="1" Grid.Row="4" Height="35"
+                              Name="BtnUpload" Content="Upload new file"
+                              Margin="0" Padding="8"
                               Style="{StaticResource InputWindowConfirmButtonTheme}"
-                              Click="BtnOk_OnClick" />
-                <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
-                              Margin="5 0 0 0" Padding="8"
-                              Style="{StaticResource InputWindowCancelButtonTheme}"
-                              Click="BtnCancel_OnClick" />
+                              Click="BtnUpload_OnClick"/>
+
+                <Grid Grid.Column="1" Grid.Row="5"
+                      Margin="0 10 0 0" Height="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
+                                  Margin="0 0 5 0" Padding="8"
+                                  IsEnabled="{Binding ConfirmIsClickable}"
+                                  Style="{StaticResource InputWindowConfirmButtonTheme}"
+                                  Click="BtnOk_OnClick" />
+                    <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
+                                  Margin="5 0 0 0" Padding="8"
+                                  Style="{StaticResource InputWindowCancelButtonTheme}"
+                                  Click="BtnCancel_OnClick" />
+                </Grid>
             </Grid>
-        </Grid>
-    </Border>
+        </Border>
+    </Grid>
 </Window>
