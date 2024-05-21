@@ -47,8 +47,6 @@ namespace TextReplace.MVVM.ViewModel
         private const string INVALID_SUFFIX_CHARS = "<>:\"/\\|?*\n\t";
 
         // commands
-        public RelayCommand ReplaceFile => new RelayCommand(ReplaceFileCmd);
-        public RelayCommand SourceFiles => new RelayCommand(SourceFilesCmd);
         public RelayCommand Replace => new RelayCommand(ReplaceCmd);
         public RelayCommand ChangeOutputDirectory => new RelayCommand(ChangeOutputDirectoryCmd);
 
@@ -58,10 +56,10 @@ namespace TextReplace.MVVM.ViewModel
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
-        private void ReplaceFileCmd()
+        public void ReplaceFile(string fileName)
         {
             // open a file dialogue for the user and update the replace file
-            bool? result = ReplaceData.SetNewReplaceFileFromUser();
+            bool result = ReplaceData.SetNewReplaceFile(fileName);
 
             if (result == true)
             {
@@ -70,22 +68,20 @@ namespace TextReplace.MVVM.ViewModel
                 ReplaceFileReadSuccess = Visibility.Visible;
                 ReplaceFileReadFail = Visibility.Hidden;
             }
-            else if (result == false) 
+            else
             {
                 Debug.WriteLine("ReplaceFile either could not be read or parsed.");
                 ReplaceFileReadSuccess = Visibility.Hidden;
                 ReplaceFileReadFail = Visibility.Visible;
             }
 
-            WeakReferenceMessenger.Default.Send(new FileNameMsg(Path.GetFileName(ReplaceData.FileName)));
-
             SetReplaceButtonClickability();
         }
 
-        private void SourceFilesCmd()
+        public void SourceFiles(string[] fileNames)
         {
             // open a file dialogue for the user and update the source files
-            bool? result = SourceFilesData.SetNewSourceFilesFromUser();
+            bool result = SourceFilesData.SetNewSourceFilesFromUser(fileNames);
 
             if (result == true)
             {
@@ -94,7 +90,7 @@ namespace TextReplace.MVVM.ViewModel
                 SourceFileReadSuccess = Visibility.Visible;
                 SourceFileReadFail = Visibility.Hidden;
             }
-            else if (result == false)
+            else
             {
                 Debug.WriteLine("SourceFile could not be read.");
                 SourceFileReadSuccess = Visibility.Hidden;

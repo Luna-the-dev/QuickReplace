@@ -17,6 +17,25 @@ namespace TextReplace.MVVM.View
             InitializeComponent();
         }
 
+        private void OpenUploadWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (ReplaceViewModel)DataContext;
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = textInfo.ToTitleCase(editMenuOption.Text);
+            string body = "Upload a file for the replacement phrases";
+
+            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body);
+
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName);
+            }
+        }
+
         private void OpenEditWindow_OnClick(object sender, RoutedEventArgs e)
         {
             var viewModel = (ReplaceViewModel)DataContext;

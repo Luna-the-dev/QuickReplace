@@ -39,7 +39,7 @@
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
                 FontWeight="Medium"
-                Command="{Binding ReplaceFile}"/>
+                Click="UploadReplaceFile_OnClick"/>
 
         <dropdownmenu:DropdownMenu Width="25" Height="15"
                                    Grid.Column="1" HorizontalAlignment="Left"
@@ -84,7 +84,7 @@
                 Style="{StaticResource UploadButtonTheme}"
                 FontSize="14"
                 FontWeight="Medium"
-                Command="{Binding SourceFiles}"/>
+                Click="UploadSourceFile_OnClick"/>
 
         <Viewbox Width="25" Height="25" Grid.Column="4"
                  HorizontalAlignment="Left" Margin="0 0 0 3"

@@ -298,6 +298,16 @@ namespace TextReplace.MVVM.ViewModel
             };
         }
 
+        /// <summary>
+        /// Wrapper for ReplaceData.SetNewReplaceFile.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>False if new replace file was not set.</returns>
+        public static bool SetNewReplaceFile(string fileName)
+        {
+            return ReplaceData.SetNewReplaceFile(fileName);
+        }
+
         // Message receivers
 
         public void Receive(FileNameMsg message)

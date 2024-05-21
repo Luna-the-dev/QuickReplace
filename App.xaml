@@ -22,7 +22,6 @@
 
                 <!-- Button themes -->
                 <ResourceDictionary Source="Themes/Buttons/UploadButtonTheme.xaml"/>
-                <ResourceDictionary Source="Themes/Buttons/InputWindowUnclickableButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/InputWindowConfirmButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/InputWindowResetButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/InputWindowCancelButtonTheme.xaml"/>
@@ -51,8 +50,8 @@
                 <popup:InputResetWindow/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type popupvm:DoubleInputViewModel}">
-                <popup:DoubleInputWindow/>
+            <DataTemplate DataType="{x:Type popupvm:UploadReplacementsInputViewModel}">
+                <popup:UploadReplacementsInputWindow/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type popupvm:AddPhraseDoubleInputViewModel}">

@@ -40,37 +40,22 @@ namespace TextReplace.MVVM.Model
         /// <summary>
         /// Opens a file dialogue and replaces the SourceFilesData list with whatever the user selects (if valid)
         /// </summary>
+        /// <param name="fileNames"></param>
         /// <returns>
         /// False if one of the files was invalid, null user closed the window without selecting a file.
         /// </returns>
-        public static bool? SetNewSourceFilesFromUser()
+        public static bool SetNewSourceFilesFromUser(string[] fileNames)
         {
-            // configure open file dialog box
-            var dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.Title = "Open Text Files";
-            dialog.FileName = "Document"; // Default file name
-            dialog.DefaultExt = ".txt"; // Default file extension
-            dialog.Filter = "Text documents (.txt)|*.txt"; // Filter files by extension
-            dialog.Multiselect = true;
-
-            // open file dialog box
-            if (dialog.ShowDialog() != true)
-            {
-                Debug.WriteLine("Replace file upload window was closed.");
-                return null;
-            }
-
             // set the SourceFilesData names
             try
             {
-                FileNames = dialog.FileNames.ToList();
+                FileNames = fileNames.ToList();
+                return true;
             }
             catch
             {
                 return false;
             }
-
-            return true;
         }
 
         /// <summary>

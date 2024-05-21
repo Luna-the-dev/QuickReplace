@@ -102,44 +102,42 @@ namespace TextReplace.MVVM.Model
         /// <summary>
         /// Opens a file dialogue and replaces the ReplaceFile with whatever the user selects (if valid)
         /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="dryRun"></param>
         /// <returns>
         /// False if one of the files was invalid, null user closed the window without selecting a file.
         /// </returns>
-        public static bool? SetNewReplaceFileFromUser()
+        public static bool SetNewReplaceFile(string fileName, bool dryRun = false)
         {
-            // configure open file dialog box
-            var dialog = new Microsoft.Win32.OpenFileDialog
-            {
-                Title = "Open Text File",
-                FileName = "Document", // Default file name
-                DefaultExt = ".txt", // Default file extension
-                Filter = "All files (*.*)|*.*" // Filter files by extension
-            };
-
-            // open file dialog box
-            if (dialog.ShowDialog() != true)
-            {
-                Debug.WriteLine("Replace file upload window was closed.");
-                return null;
-            }
-
             // set the ReplaceFile name
             try
             {
                 // check to see if file name is valid so that the phrases can be parsed
                 // before setting the file name
-                if (FileValidation.IsInputFileReadable(dialog.FileName) == false)
+                if (FileValidation.IsInputFileReadable(fileName) == false)
                 {
                     throw new IOException("Input file is not readable in SetNewReplaceFileFromUser().");
                 }
+
+                // is caller specified that this should be a dry run,
+                // then dont actually assign the parsed data to the dict
+                if (dryRun)
+                {
+                    ParseReplacePhrases(fileName);
+                    return true;
+                }
+
                 // parse through phrases and attempt to save them. parser will return an
-                // empty dictionary if something was wrong, so setter will throw an error
-                ReplacePhrasesDict = ParseReplacePhrases(dialog.FileName);
+                // empty dictionary if something was wrong, so setter will throw an ArgumentException
+                ReplacePhrasesDict = ParseReplacePhrases(fileName);
+
                 // put copy the dict into a list which gets used by the view models
                 ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrasesWrapper(x.Key, x.Value)).ToList();
                 WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
 
-                FileName = dialog.FileName;
+                FileName = fileName;
+
+                return true;
             }
             catch (IOException e)
             {
@@ -153,11 +151,9 @@ namespace TextReplace.MVVM.Model
             }
             catch
             {
-                Debug.WriteLine("Somewthing unexpected happened in SetNewReplaceFileFromUser().");
+                Debug.WriteLine("Something unexpected happened in SetNewReplaceFileFromUser().");
                 return false;
             }
-
-            return true;
         }
 
         public static Dictionary<string, string> ParseReplacePhrases(string fileName)

@@ -57,7 +57,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             InitializeComponent();
         }
 
-        public InputResetWindow(Window owner, string title, string body, string watermark, string inputText = "", int windowHeight = 200, int windowWidth = 300)
+        public InputResetWindow(Window owner, string title, string body, string watermark, string inputText = "")
         {
             InitializeComponent();
             Owner = owner;
@@ -65,8 +65,6 @@ namespace TextReplace.MVVM.View.PopupWindows
             BodyText = body;
             InputWatermarkText = watermark;
             InputText = inputText;
-            Height = windowHeight;
-            Width = windowWidth;
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
