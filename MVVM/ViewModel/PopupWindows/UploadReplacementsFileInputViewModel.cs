@@ -69,6 +69,7 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             DelimiterVisibility = Visibility.Visible;
             FullFileName = fileName;
             FileIsValid = Visibility.Visible;
+            FileIsInvalid = Visibility.Hidden;
             ConfirmIsClickable = false;
         }
 

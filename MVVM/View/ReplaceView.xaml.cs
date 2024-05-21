@@ -22,7 +22,7 @@ namespace TextReplace.MVVM.View
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = textInfo.ToTitleCase(editMenuOption.Text);
+            string title = textInfo.ToTitleCase(uploadOption.Text);
             string body = "Upload a file for the replacement phrases";
 
             var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body);

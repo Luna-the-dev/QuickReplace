@@ -16,7 +16,6 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="160"/>
-            <ColumnDefinition Width="35"/>
             <ColumnDefinition />
             <ColumnDefinition Width="160"/>
             <ColumnDefinition />
@@ -41,36 +40,13 @@
                 FontWeight="Medium"
                 Click="UploadReplaceFile_OnClick"/>
 
-        <dropdownmenu:DropdownMenu Width="25" Height="15"
-                                   Grid.Column="1" HorizontalAlignment="Left"
-                                   Style="{StaticResource DropdownMenuTheme}">
-            <Border BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
-                <StackPanel>
-                    <!--Custom delimiter option-->
-                    <Button Click="OpenDelimiterInputWindow">
-                        <Button.Content>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="20"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="delimiterMenuOption" Text="Custom delimiter"
-                                           Padding="0 0 15 0" FontFamily="/Fonts/#Poppins"
-                                           Foreground="{StaticResource TextLight}"/>
-                            </Grid>
-                        </Button.Content>
-                    </Button>
-                </StackPanel>
-            </Border>
-        </dropdownmenu:DropdownMenu>
-
-        <Viewbox Width="25" Height="25" Grid.Column="2"
+        <Viewbox Width="25" Height="25" Grid.Column="1"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
                  Visibility="{Binding ReplaceFileReadSuccess}">
             <Path Fill="#4EFF91" Data="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM9.29,16.29L5.7,12.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L10,14.17l6.88,-6.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-7.59,7.59c-0.38,0.39 -1.02,0.39 -1.41,0z"/>
         </Viewbox>
 
-        <Viewbox Width="25" Height="25" Grid.Column="2"
+        <Viewbox Width="25" Height="25" Grid.Column="1"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
                  Visibility="{Binding ReplaceFileReadFail}">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
@@ -78,7 +54,7 @@
 
         <!--Upload sources button-->
         <Button Width="140" Height="40"
-                Grid.Column="3"
+                Grid.Column="2"
                 HorizontalAlignment="Left"
                 Content="Sources"
                 Style="{StaticResource UploadButtonTheme}"
@@ -86,13 +62,13 @@
                 FontWeight="Medium"
                 Click="UploadSourceFile_OnClick"/>
 
-        <Viewbox Width="25" Height="25" Grid.Column="4"
+        <Viewbox Width="25" Height="25" Grid.Column="3"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
                  Visibility="{Binding SourceFileReadSuccess}">
             <Path Fill="#4EFF91" Data="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM9.29,16.29L5.7,12.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L10,14.17l6.88,-6.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-7.59,7.59c-0.38,0.39 -1.02,0.39 -1.41,0z"/>
         </Viewbox>
 
-        <Viewbox Width="25" Height="25" Grid.Column="4"
+        <Viewbox Width="25" Height="25" Grid.Column="3"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
                  Visibility="{Binding SourceFileReadFail}">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
@@ -100,7 +76,7 @@
         
         <!--Replacify button-->
         <Button Width="140" Height="40"
-                Grid.Column="5"
+                Grid.Column="4"
                 HorizontalAlignment="Left"
                 Content="Replacify"
                 Style="{StaticResource UploadButtonTheme}"
@@ -110,7 +86,7 @@
                 Command="{Binding Replace}"/>
 
         <dropdownmenu:DropdownMenu Width="25" Height="15"
-                                   Grid.Column="6" HorizontalAlignment="Left"
+                                   Grid.Column="5" HorizontalAlignment="Left"
                                    Style="{StaticResource DropdownMenuRightOffsetTheme}">
             <Border BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>

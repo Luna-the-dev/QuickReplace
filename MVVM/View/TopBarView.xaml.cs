@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.MVVM.ViewModel;
@@ -18,23 +19,26 @@ namespace TextReplace.MVVM.View
 
         private void UploadReplaceFile_OnClick(object sender, RoutedEventArgs e)
         {
-            // configure open file dialog box
-            var dialog = new Microsoft.Win32.OpenFileDialog
-            {
-                Title = "Open Text File",
-                FileName = "Document", // Default file name
-                DefaultExt = ".txt", // Default file extension
-                Filter = "All files (*.*)|*.*" // Filter files by extension
-            };
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Upload";
+            string body = "Upload a file for the replacement phrases";
 
-            // open file dialog box
-            if (dialog.ShowDialog() != true)
+            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body);
+
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
             {
-                Debug.WriteLine("Replace file upload window was closed.");
-                return;
+                string extension = Path.GetExtension(dialog.FullFileName).ToLower();
+                if (extension == ".txt" || extension == ".text")
+                {
+                    ((TopBarViewModel)DataContext).SetNewReplaceFile(dialog.FullFileName, dialog.DelimiterInputText);
+                }
+                else
+                {
+                    ((TopBarViewModel)DataContext).SetNewReplaceFile(dialog.FullFileName);
+                }
             }
-
-            ((TopBarViewModel)DataContext).ReplaceFile(dialog.FileName);
         }
 
         private void UploadSourceFile_OnClick(object sender, RoutedEventArgs e)
@@ -57,11 +61,6 @@ namespace TextReplace.MVVM.View
             }
 
             ((TopBarViewModel)DataContext).SourceFiles(dialog.FileNames);
-        }
-
-        private void OpenDelimiterInputWindow(object sender, RoutedEventArgs e)
-        {
-            
         }
 
         private void OpenFileSuffixInputWindow(object sender, RoutedEventArgs e)

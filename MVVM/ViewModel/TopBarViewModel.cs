@@ -52,15 +52,19 @@ namespace TextReplace.MVVM.ViewModel
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
-        public void ReplaceFile(string fileName)
+        /// <summary>
+        /// Wrapper for ReplaceData.SetNewReplaceFile and updates the replace button clickability.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="newDelimiter"></param>
+        /// <returns>False if new replace file was not set.</returns>
+        public bool SetNewReplaceFile(string fileName, string? newDelimiter = null)
         {
             // open a file dialogue for the user and update the replace file
-            bool result = ReplaceData.SetNewReplaceFile(fileName);
+            bool result = ReplaceData.SetNewReplaceFile(fileName, newDelimiter);
 
-            if (result == true)
+            if (result)
             {
-                Debug.Write("Replace file name:\t");
-                Debug.WriteLine(ReplaceData.FileName);
                 ReplaceFileReadSuccess = Visibility.Visible;
                 ReplaceFileReadFail = Visibility.Hidden;
             }
@@ -72,6 +76,8 @@ namespace TextReplace.MVVM.ViewModel
             }
 
             SetReplaceButtonClickability();
+
+            return result;
         }
 
         public void SourceFiles(string[] fileNames)
