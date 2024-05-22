@@ -8,7 +8,7 @@
         xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
         mc:Ignorable="d"
         Title="UploadReplacementsInputWindow"
-        MinHeight="250" MinWidth="350"
+        MinHeight="225" MinWidth="350"
         SizeToContent="WidthAndHeight"
         WindowStyle="None"
         ResizeMode="NoResize"
@@ -45,7 +45,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition MinHeight="40"/>
+                    <RowDefinition MinHeight="35"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Grid.Column="1" Grid.Row="1"
@@ -60,6 +60,7 @@
                 <Grid Grid.Column="1" Grid.Row="2">
                     <TextBlock Name="FileNameTextBox"
                                Text="{Binding FileName}"
+                               Visibility="{Binding ShowFileName}"
                                HorizontalAlignment="Stretch"
                                TextTrimming="CharacterEllipsis"
                                Foreground="{StaticResource TextLight}"
@@ -69,16 +70,18 @@
 
                     <Border Width="19" Height="19"
                             Margin="0 0 5 10"
+                            Visibility="{Binding FileIsValid}"
                             HorizontalAlignment="Right">
-                        <Path Stretch="Uniform" Visibility="{Binding FileIsValid}"
+                        <Path Stretch="Uniform"
                               Fill="{StaticResource TextLight}"
                               Data="M382,720L154,492L211,435L382,606L749,239L806,296L382,720Z"/>
                     </Border>
 
                     <Border Width="14" Height="14"
                             Margin="0 0 5 10"
+                            Visibility="{Binding FileIsInvalid}"
                             HorizontalAlignment="Right">
-                        <Path Stretch="Uniform" Visibility="{Binding FileIsInvalid}"
+                        <Path Stretch="Uniform"
                               Fill="{StaticResource TextLight}"
                               Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
                     </Border>

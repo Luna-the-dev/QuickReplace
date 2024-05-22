@@ -171,5 +171,17 @@ namespace TextReplace.MVVM.View.PopupWindows
         {
             DelimiterBodyText = DefaultDelimiterBodyText;
         }
+
+        protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
+        {
+            base.OnRenderSizeChanged(sizeInfo);
+
+            //Calculate half of the offset to move the form
+            if (sizeInfo.HeightChanged)
+                Top += (sizeInfo.PreviousSize.Height - sizeInfo.NewSize.Height) / 2;
+
+            if (sizeInfo.WidthChanged)
+                Left += (sizeInfo.PreviousSize.Width - sizeInfo.NewSize.Width) / 2;
+        }
     }
 }

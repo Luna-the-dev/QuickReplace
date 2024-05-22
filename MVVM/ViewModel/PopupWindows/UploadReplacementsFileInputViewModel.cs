@@ -20,9 +20,11 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
         private string _fileName = string.Empty;
 
         [ObservableProperty]
-        private Visibility _fileIsValid = Visibility.Hidden;
+        private Visibility _showFileName = Visibility.Collapsed;
         [ObservableProperty]
-        private Visibility _fileIsInvalid = Visibility.Hidden;
+        private Visibility _fileIsValid = Visibility.Collapsed;
+        [ObservableProperty]
+        private Visibility _fileIsInvalid = Visibility.Collapsed;
 
         [ObservableProperty]
         private string _delimiterInputText = string.Empty;
@@ -48,13 +50,15 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             FullFileName = fileName;
             if (result)
             {
+                ShowFileName = Visibility.Visible;
                 FileIsValid = Visibility.Visible;
-                FileIsInvalid = Visibility.Hidden;
+                FileIsInvalid = Visibility.Collapsed;
                 ConfirmIsClickable = true;
             }
             else
             {
-                FileIsValid = Visibility.Hidden;
+                ShowFileName = Visibility.Visible;
+                FileIsValid = Visibility.Collapsed;
                 FileIsInvalid = Visibility.Visible;
                 ConfirmIsClickable = false;
             }
@@ -69,6 +73,7 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
         {
             DelimiterVisibility = Visibility.Visible;
             FullFileName = fileName;
+            ShowFileName = Visibility.Visible;
             FileIsValid = Visibility.Visible;
             FileIsInvalid = Visibility.Hidden;
             ConfirmIsClickable = false;
