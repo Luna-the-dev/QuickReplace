@@ -3,7 +3,9 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace TextReplace.MVVM.View
 {
@@ -31,8 +33,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                string extension = Path.GetExtension(dialog.FullFileName).ToLower();
-                if (extension == ".txt" || extension == ".text")
+                if (DataValidation.IsTextFile(dialog.FullFileName))
                 {
                     ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName, dialog.DelimiterInputText);
                 }
@@ -113,23 +114,21 @@ namespace TextReplace.MVVM.View
         private void OpenSaveAsWindow_OnClick(object sender, RoutedEventArgs e)
         {
             var viewModel = (ReplaceViewModel)DataContext;
-            string extension = Path.GetExtension(viewModel.FileName);
+            string extension = Path.GetExtension(viewModel.FileName).ToLower();
 
-            string csv = "csv files (*.csv)|*.csv|";
-            string tsv = "tsv files (*.tsv)|*.tsv|";
-            string xls = "xls files (*.xls)|*.xls|";
-            string xlsx = "xlsx files (*.xlsx)|*.xlsx|";
-            string txt = "txt files (*.txt)|*.txt|";
+            string csv = "CSV File (*.csv)|*.csv|";
+            string tsv = "TSV File (*.tsv)|*.tsv|";
+            string xls = "Excel File (*.xlsx)|*.xls;*.xlsx|";
+            string txt = "Text Document (*.txt)|*.txt|";
             string all = "All files (*.*)|*.*|";
 
             string filter = extension switch
             {
-                ".csv" => csv + tsv + xls + xlsx + txt + all,
-                ".tsv" => tsv + csv + xls + xlsx + txt + all,
-                ".xls" => xls + csv + tsv + xlsx + txt + all,
-                ".xlsx" => xlsx + csv + tsv + xls + txt + all,
-                ".txt" => txt + xlsx + csv + tsv + xls + all,
-                _ => all + csv + tsv + xls + xlsx + txt
+                ".csv" =>            csv + tsv + xls + txt + all,
+                ".tsv" =>            tsv + csv + xls + txt + all,
+                ".xls" or ".xlsx" => xls + csv + tsv + txt + all,
+                ".txt" =>            txt + csv + tsv + xls + all,
+                _ =>                 all + csv + tsv + xls + txt
             };
 
             filter = filter.Remove(filter.Length - 1);
@@ -149,8 +148,28 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
+            string? delimiter = null;
+
+            if (DataValidation.IsTextFile(dialog.FileName))
+            {
+                // get a new delimiter
+                var window = Window.GetWindow(sender as DependencyObject);
+                string title = "Text File Delimiter";
+
+                var delimiterDialog = new PopupWindows.SetDelimiterInputWindow(window, title);
+                delimiterDialog.ShowDialog();
+
+                if (delimiterDialog.BtnOk.IsChecked == false)
+                {
+                    Debug.WriteLine("No delimiter was set, save aborted.");
+                    return;
+                }
+
+                delimiter = delimiterDialog.InputText;
+            }
+
             // save the replace phrases to the new file name
-            viewModel.SavePhrasesToFile(dialog.FileName);
+            viewModel.SavePhrasesToFile(dialog.FileName, delimiter);
         }
 
         /// <summary>

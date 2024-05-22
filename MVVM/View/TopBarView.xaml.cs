@@ -3,6 +3,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
+using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
@@ -29,8 +30,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                string extension = Path.GetExtension(dialog.FullFileName).ToLower();
-                if (extension == ".txt" || extension == ".text")
+                if (DataValidation.IsTextFile(dialog.FullFileName))
                 {
                     ((TopBarViewModel)DataContext).SetNewReplaceFile(dialog.FullFileName, dialog.DelimiterInputText);
                 }

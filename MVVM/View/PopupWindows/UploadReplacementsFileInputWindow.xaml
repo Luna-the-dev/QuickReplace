@@ -135,7 +135,7 @@
                     </StackPanel>
                 </Border>
 
-                <ToggleButton Grid.Column="1" Grid.Row="4" Height="35"
+                <ToggleButton Grid.Column="1" Grid.Row="4" Height="30"
                               Name="BtnUpload" Content="Upload new file"
                               Margin="0" Padding="8"
                               Style="{StaticResource InputWindowConfirmButtonTheme}"

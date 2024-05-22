@@ -62,6 +62,10 @@
                 <popup:EditPhraseDoubleInputWindow/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type popupvm:SetDelimiterInputViewModel}">
+                <popup:SetDelimiterInputWindow/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

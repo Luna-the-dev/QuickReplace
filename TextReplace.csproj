@@ -44,7 +44,7 @@
     <Compile Update="MVVM\View\PopupWindows\EditPhraseDoubleInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MVVM\View\PopupWindows\NewReplacementsFileInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\SetDelimiterInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="MVVM\View\PopupWindows\UploadReplacementsFileInputWindow.xaml.cs">

@@ -3,6 +3,7 @@ using System.IO;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.MVVM.View.PopupWindows
@@ -97,7 +98,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             WindowName = title;
             DefaultBodyText = body;
             BodyText = body;
-            DefaultDelimiterBodyText = "Please enter the character used to seperate values in the text file:";
+            DefaultDelimiterBodyText = "Enter the character used to seperate the original phrases from the replacements:";
             DelimiterBodyText = DefaultDelimiterBodyText;
             DelimiterInputWatermarkText = "Ex. :, -, or ;";
         }
@@ -127,8 +128,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             var viewModel = (UploadReplacementsInputViewModel)DataContext;
 
             // show the delimiter input section if it is a text file
-            if (Path.GetExtension(dialog.FileName).Equals(".txt", StringComparison.CurrentCultureIgnoreCase) ||
-                Path.GetExtension(dialog.FileName).Equals(".text", StringComparison.CurrentCultureIgnoreCase))
+            if (DataValidation.IsTextFile(dialog.FileName))
             {
                 viewModel.ShowDelimiter(dialog.FileName);
             }

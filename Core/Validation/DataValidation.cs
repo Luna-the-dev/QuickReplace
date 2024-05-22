@@ -3,6 +3,7 @@ using CsvHelper;
 using System.IO;
 using System.Globalization;
 using CsvHelper.Configuration;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.Core.Validation
 {
@@ -78,6 +79,16 @@ namespace TextReplace.Core.Validation
                 }
             }
             return true;
+        }
+
+        public static bool IsTextFile(string fileName)
+        {
+            if (Path.GetExtension(fileName).Equals(".txt", StringComparison.CurrentCultureIgnoreCase) ||
+                Path.GetExtension(fileName).Equals(".text", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+            return false;
         }
 
         /// <summary>

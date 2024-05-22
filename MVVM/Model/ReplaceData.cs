@@ -127,8 +127,7 @@ namespace TextReplace.MVVM.Model
                 }
 
                 // if the supplied file is a text file, check if there is a delimiter and if it is valid
-                string extension = Path.GetExtension(fileName).ToLower();
-                if (extension == ".txt" || extension == ".text")
+                if (DataValidation.IsTextFile(fileName))
                 {
                     if (newDelimiter == null)
                     {
@@ -338,12 +337,15 @@ namespace TextReplace.MVVM.Model
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="shouldSort"></param>
-        public static void SavePhrasesToFile(string fileName, bool shouldSort)
+        /// <param name="delimiter"></param>
+        public static void SavePhrasesToFile(string fileName, bool shouldSort, string? newDelimiter = null)
         {
+            string delimiter = newDelimiter ?? Delimiter;
+
             using var writer = new StreamWriter(fileName);
             var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
-                Delimiter = Delimiter,
+                Delimiter = delimiter,
                 HasHeaderRecord = false,
                 Encoding = Encoding.UTF8
             };
@@ -407,7 +409,7 @@ namespace TextReplace.MVVM.Model
             {
                 ".csv" => ",",
                 ".tsv" => "\t",
-                ".xls" or ".xlsx" or ".txt" or ".text" => newDelimiter ?? Delimiter,
+                ".xlsx" or ".xls" or ".txt" or ".text" => newDelimiter ?? Delimiter,
                 _ => throw new NotSupportedException($"The {extension} file type is not supported.")
             };
         }

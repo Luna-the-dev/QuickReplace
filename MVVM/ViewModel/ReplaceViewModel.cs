@@ -8,6 +8,7 @@ using TextReplace.Core.Enums;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -99,7 +100,10 @@ namespace TextReplace.MVVM.ViewModel
         /// <summary>
         /// Saves the replace phrases list to the file system.
         /// </summary>
-        public bool SavePhrasesToFile(string? newFileName = null)
+        /// <param name="newFileName"></param>
+        /// <param name="newDelimiter"></param>
+        /// <returns></returns>
+        public bool SavePhrasesToFile(string? newFileName = null, string? newDelimiter = null)
         {
             string fileName = newFileName ?? FullFileName;
 
@@ -121,11 +125,16 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Cannot write to directory, file not saved.");
                 return false;
             }
-
             try
             {
-                ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases);
+                ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases, newDelimiter);
                 ReplaceData.FileName = fileName;
+                if (newDelimiter != null)
+                {
+                    ReplaceData.Delimiter = newDelimiter;
+                }
+
+                IsUnsaved = false;
                 return true;
             }
             // exception thrown if the file type is invalid
