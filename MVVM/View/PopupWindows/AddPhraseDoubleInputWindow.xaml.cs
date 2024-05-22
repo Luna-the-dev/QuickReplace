@@ -72,24 +72,15 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
-        public AddPhraseDoubleInputWindow()
-        {
-            InitializeComponent();
-        }
-
-        public AddPhraseDoubleInputWindow(Window owner, string title, string body,
-                                          string topWatermark, string bottomWatermark,
-                                          string topInputText = "", string bottomInputText = "")
+        public AddPhraseDoubleInputWindow(Window owner, string title)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            BodyText = body;
-            DefaultBodyText = body;
-            TopInputWatermarkText = topWatermark;
-            BottomInputWatermarkText = bottomWatermark;
-            TopInputText = topInputText;
-            BottomInputText = bottomInputText;
+            DefaultBodyText = "Add a replacement phrase.";
+            BodyText = DefaultBodyText;
+            TopInputWatermarkText = "Original";
+            BottomInputWatermarkText = "Replace with";
         }
 
         // please ignore this MVVM violation, breaking MVVM keeps this from getting too complicated.

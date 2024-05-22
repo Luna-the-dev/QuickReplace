@@ -52,11 +52,6 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
-        public InputResetWindow()
-        {
-            InitializeComponent();
-        }
-
         public InputResetWindow(Window owner, string title, string body, string watermark, string inputText = "")
         {
             InitializeComponent();

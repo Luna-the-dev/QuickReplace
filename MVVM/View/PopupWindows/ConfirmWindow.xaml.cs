@@ -36,19 +36,12 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
-        public ConfirmWindow()
-        {
-            InitializeComponent();
-        }
-
-        public ConfirmWindow(Window owner, string title, string body, int windowHeight = 600, int windowWidth = 300)
+        public ConfirmWindow(Window owner, string title, string body)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
             BodyText = body;
-            Height = windowHeight;
-            Width = windowWidth;
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)

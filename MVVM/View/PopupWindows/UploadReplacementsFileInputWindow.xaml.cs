@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.IO;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -86,18 +85,13 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { ((UploadReplacementsInputViewModel)DataContext).FullFileName = value; }
         }
 
-        public UploadReplacementsInputWindow()
-        {
-            InitializeComponent();
-        }
-
-        public UploadReplacementsInputWindow(Window owner, string title, string body)
+        public UploadReplacementsInputWindow(Window owner, string title)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            DefaultBodyText = body;
-            BodyText = body;
+            DefaultBodyText = "Upload a file for the replacement phrases.";
+            BodyText = DefaultBodyText;
             DefaultDelimiterBodyText = "Enter the character used to seperate the original phrases from the replacements:";
             DelimiterBodyText = DefaultDelimiterBodyText;
             DelimiterInputWatermarkText = "Ex. :, -, or ;";

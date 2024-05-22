@@ -25,9 +25,8 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(uploadOption.Text);
-            string body = "Upload a file for the replacement phrases.";
 
-            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body);
+            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title);
 
             dialog.ShowDialog();
 
@@ -56,15 +55,10 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(editMenuOption.Text);
-            string body = "Edit the replacement phrase.";
-            string topWatermark = "Original";
-            string bottomWatermark = "Replacement";
             string topInputText = viewModel.SelectedPhrase.Item1 ?? string.Empty;
             string bottomInputText = viewModel.SelectedPhrase.Item2 ?? string.Empty;
 
-            var dialog = new PopupWindows.EditPhraseDoubleInputWindow(window, title, body,
-                                                                      topWatermark, bottomWatermark,
-                                                                      topInputText, bottomInputText);
+            var dialog = new PopupWindows.EditPhraseDoubleInputWindow(window, title, topInputText, bottomInputText);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
@@ -98,11 +92,8 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(editMenuOption.Text);
-            string body = "Add a replacement phrase.";
-            string topWatermark = "Original";
-            string bottomWatermark = "Replace with";
 
-            var dialog = new PopupWindows.AddPhraseDoubleInputWindow(window, title, body, topWatermark, bottomWatermark);
+            var dialog = new PopupWindows.AddPhraseDoubleInputWindow(window, title);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)

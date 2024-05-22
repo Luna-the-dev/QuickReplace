@@ -22,9 +22,8 @@ namespace TextReplace.MVVM.View
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Upload";
-            string body = "Upload a file for the replacement phrases";
-
-            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body);
+            
+            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title);
 
             dialog.ShowDialog();
 
