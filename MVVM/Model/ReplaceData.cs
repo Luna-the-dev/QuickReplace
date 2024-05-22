@@ -181,7 +181,7 @@ namespace TextReplace.MVVM.Model
                 Debug.WriteLine(e);
                 return false;
             }
-            catch (CsvHelper.MissingFieldException e)
+            catch (CsvHelper.MissingFieldException)
             {
                 Debug.WriteLine("CsvHelper could not parse the file with the given delimiter.");
                 return false;
@@ -407,7 +407,7 @@ namespace TextReplace.MVVM.Model
             {
                 ".csv" => ",",
                 ".tsv" => "\t",
-                ".xls" or ".xlsx" or ".txt" => newDelimiter ?? Delimiter,
+                ".xls" or ".xlsx" or ".txt" or ".text" => newDelimiter ?? Delimiter,
                 _ => throw new NotSupportedException($"The {extension} file type is not supported.")
             };
         }

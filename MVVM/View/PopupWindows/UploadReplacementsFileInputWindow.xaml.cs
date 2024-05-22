@@ -97,7 +97,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             WindowName = title;
             DefaultBodyText = body;
             BodyText = body;
-            DefaultDelimiterBodyText = "Please enter the character used to seperate values in the .txt file:";
+            DefaultDelimiterBodyText = "Please enter the character used to seperate values in the text file:";
             DelimiterBodyText = DefaultDelimiterBodyText;
             DelimiterInputWatermarkText = "Ex. :, -, or ;";
         }

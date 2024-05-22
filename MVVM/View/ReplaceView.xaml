@@ -73,6 +73,7 @@
             </Button>
 
             <Button Grid.Column="1" Grid.Row="1" Width="140" Height="40"
+                    Click="OpenCreateWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="Create new"

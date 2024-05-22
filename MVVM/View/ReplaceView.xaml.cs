@@ -23,7 +23,7 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(uploadOption.Text);
-            string body = "Upload a file for the replacement phrases";
+            string body = "Upload a file for the replacement phrases.";
 
             var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body);
 
@@ -41,6 +41,11 @@ namespace TextReplace.MVVM.View
                     ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName);
                 }
             }
+        }
+
+        private void OpenCreateWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            ReplaceViewModel.CreateNewReplaceFile();
         }
 
         private void OpenEditWindow_OnClick(object sender, RoutedEventArgs e)

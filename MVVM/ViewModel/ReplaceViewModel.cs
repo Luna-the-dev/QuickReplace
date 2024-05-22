@@ -99,9 +99,9 @@ namespace TextReplace.MVVM.ViewModel
         /// <summary>
         /// Saves the replace phrases list to the file system.
         /// </summary>
-        public bool SavePhrasesToFile(string newFileName = "")
+        public bool SavePhrasesToFile(string? newFileName = null)
         {
-            string fileName = (newFileName != string.Empty) ? newFileName : FullFileName;
+            string fileName = newFileName ?? FullFileName;
 
             // check if the file type is suppoerted
             if (FileValidation.IsFileTypeValid(fileName) == false)
@@ -115,8 +115,8 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Cannot write to directory, file not saved.");
                 return false;
             }
-            // if a new file is not being created, check if the user has write perms
-            if (newFileName == string.Empty && FileValidation.IsInputFileReadWriteable(fileName) == false)
+            // if a new file is *not* being created, check if the user has write perms
+            if (newFileName == null && FileValidation.IsInputFileReadWriteable(fileName) == false)
             {
                 Debug.WriteLine("Cannot write to directory, file not saved.");
                 return false;
@@ -303,6 +303,11 @@ namespace TextReplace.MVVM.ViewModel
         public static bool SetNewReplaceFile(string fileName, string? newDelimiter = null)
         {
             return ReplaceData.SetNewReplaceFile(fileName, newDelimiter);
+        }
+
+        public static void CreateNewReplaceFile()
+        {
+
         }
 
         // Message receivers
