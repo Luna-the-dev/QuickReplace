@@ -108,8 +108,8 @@
 
     <SolidColorBrush x:Key="CancelBtn">
         <SolidColorBrush.Color>
-            <!--#E55050-->
-            <Color A="255" R="229" G="80" B="80"/>
+            <!--#D84B4B-->
+            <Color A="255" R="216" G="75" B="75"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
     

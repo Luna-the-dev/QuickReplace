@@ -3,61 +3,12 @@ using CsvHelper;
 using System.IO;
 using System.Globalization;
 using CsvHelper.Configuration;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.Core.Validation
 {
     class DataValidation
     {
         private const string INVALID_DELIMITER_CHARS = "\n";
-
-        /// <summary>
-        /// Verifies that the replace phrases are valid by checking if the
-        /// dictionary has entries and that all keys are non-empty.
-        /// </summary>
-        /// <param name="phrases"></param>
-        /// <returns>True if valid, false otherwise.</returns>
-        public static bool AreReplacePhrasesValid(Dictionary<string, string> phrases)
-        {
-            if (phrases.Count == 0)
-            {
-                return false;
-            }
-
-            foreach (var phrase in phrases)
-            {
-                // if the thing to replace is empty, its invalid
-                if (phrase.Key == string.Empty)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        /// <summary>
-        /// Verifies that the replace phrases are valid by checking if the
-        /// dictionary has entries and that all keys are non-empty.
-        /// </summary>
-        /// <param name="phrases"></param>
-        /// <returns>True if valid, false otherwise.</returns>
-        public static bool AreReplacePhrasesValid(List<ReplacePhrasesWrapper> phrases)
-        {
-            if (phrases.Count == 0)
-            {
-                return false;
-            }
-
-            foreach (var phrase in phrases)
-            {
-                // if the thing to replace is empty, its invalid
-                if (phrase.Item1 == string.Empty)
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
 
         /// <summary>
         /// Checks if the delimiter string is empty or contains any invalid characters.
@@ -79,16 +30,6 @@ namespace TextReplace.Core.Validation
                 }
             }
             return true;
-        }
-
-        public static bool IsTextFile(string fileName)
-        {
-            if (Path.GetExtension(fileName).Equals(".txt", StringComparison.CurrentCultureIgnoreCase) ||
-                Path.GetExtension(fileName).Equals(".text", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return true;
-            }
-            return false;
         }
 
         /// <summary>
@@ -125,6 +66,11 @@ namespace TextReplace.Core.Validation
                 }
 
                 phrases[record.Item1] = record.Item2;
+            }
+
+            if (phrases.Count == 0)
+            {
+                throw new InvalidOperationException("The dictionary returned by ParseDSV is empty.");
             }
 
             return phrases;

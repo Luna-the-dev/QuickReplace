@@ -27,12 +27,11 @@ namespace TextReplace.MVVM.View
             string title = textInfo.ToTitleCase(uploadOption.Text);
 
             var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title);
-
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                if (DataValidation.IsTextFile(dialog.FullFileName))
+                if (FileValidation.IsTextFile(dialog.FullFileName))
                 {
                     ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName, dialog.DelimiterInputText);
                 }
@@ -45,7 +44,34 @@ namespace TextReplace.MVVM.View
 
         private void OpenCreateWindow_OnClick(object sender, RoutedEventArgs e)
         {
-            ReplaceViewModel.CreateNewReplaceFile();
+            var viewModel = (ReplaceViewModel)DataContext;
+
+            if (viewModel.IsUnsaved)
+            {
+                var window = Window.GetWindow(sender as DependencyObject);
+                string title = "Save Changes";
+                string body = "There are unsaved changes to the replace phrases. Would you " +
+                    "like to save them before creating a new file or discard the unsaved changes?";
+
+                var dialog = new PopupWindows.UnsavedChangesConfirmWindow(window, title, body);
+                dialog.ShowDialog();
+
+                if (dialog.BtnSave.IsChecked == true)
+                {
+                    // if this was a new file, open "save as" dialog
+                    if (viewModel.IsNewFile)
+                    {
+                        OpenSaveAsWindow_OnClick(sender, e);
+                    }
+                    // else save the phrases to the file
+                    else
+                    {
+                        viewModel.SavePhrasesToFile();
+                    }
+                }
+            }
+
+            viewModel.CreateNewReplaceFile();
         }
 
         private void OpenEditWindow_OnClick(object sender, RoutedEventArgs e)
@@ -102,6 +128,20 @@ namespace TextReplace.MVVM.View
             }
         }
 
+        private void OpenSaveWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            // if the user created a new file
+            var viewModel = (ReplaceViewModel)DataContext;
+            if (viewModel.IsNewFile)
+            {
+                OpenSaveAsWindow_OnClick(sender, e);
+            }
+            else
+            {
+                viewModel.SavePhrasesToFile();
+            }
+        }
+
         private void OpenSaveAsWindow_OnClick(object sender, RoutedEventArgs e)
         {
             var viewModel = (ReplaceViewModel)DataContext;
@@ -139,9 +179,20 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
-            string? delimiter = null;
+            if (FileValidation.IsFileTypeValid(dialog.FileName) == false)
+            {
+                Debug.WriteLine("File type not supported, replace phrases not saved.");
+                return;
+            }
 
-            if (DataValidation.IsTextFile(dialog.FileName))
+            string delimiter = Path.GetExtension(dialog.FileName).ToLower() switch
+            {
+                ".csv" => ",",
+                ".tsv" => "\t",
+                _ => ""
+            };
+
+            if (FileValidation.IsTextFile(dialog.FileName))
             {
                 // get a new delimiter
                 var window = Window.GetWindow(sender as DependencyObject);
@@ -157,6 +208,11 @@ namespace TextReplace.MVVM.View
                 }
 
                 delimiter = delimiterDialog.InputText;
+            }
+
+            if (FileValidation.IsExcelFile(dialog.FileName))
+            {
+                // TODO handle setting the delimiter for an excel file
             }
 
             // save the replace phrases to the new file name

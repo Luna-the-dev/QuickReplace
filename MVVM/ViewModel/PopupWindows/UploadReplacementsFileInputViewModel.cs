@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
+using TextReplace.Core.Validation;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
@@ -75,13 +76,19 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
 
         public bool ValidateDelimiter()
         {
-            if (ReplaceData.SetNewReplaceFile(FullFileName, newDelimiter: DelimiterInputText, dryRun: true))
+            if (DataValidation.IsDelimiterValid(DelimiterInputText) == false)
             {
-                ConfirmIsClickable = true;
-                return true;
+                return false;
             }
-            ConfirmIsClickable = false;
-            return false;
+
+            if (ReplaceData.SetNewReplaceFile(FullFileName, newDelimiter: DelimiterInputText, dryRun: true) == false)
+            {
+                ConfirmIsClickable = false;
+                return false;
+            }
+
+            ConfirmIsClickable = true;
+            return true;
         }
     }
 }

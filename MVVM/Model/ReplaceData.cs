@@ -23,22 +23,24 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new FileNameMsg(value));
             }
         }
+        private static bool _isNewFile;
+        public static bool IsNewFile
+        {
+            get { return _isNewFile; }
+            set
+            {
+                _isNewFile = value;
+                WeakReferenceMessenger.Default.Send(new IsNewReplacementsFileMsg(value));
+            }
+        }
+
+
         // key is the phrase to replace, value is what it is being replaced with
         private static Dictionary<string, string> _replacePhrasesDict = [];
         public static Dictionary<string, string> ReplacePhrasesDict
         {
             get { return _replacePhrasesDict; }
-            set
-            {
-                if (DataValidation.AreReplacePhrasesValid(value))
-                {
-                    _replacePhrasesDict = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Replace phrases are not valid and were not set.");
-                }
-            }
+            set { _replacePhrasesDict = value; }
         }
         // key is the phrase to replace, value is what it is being replaced with
         private static List<ReplacePhrasesWrapper> _replacePhrasesList = [];
@@ -47,14 +49,8 @@ namespace TextReplace.MVVM.Model
             get { return _replacePhrasesList; }
             set
             {
-                if (DataValidation.AreReplacePhrasesValid(value))
-                {
-                    _replacePhrasesList = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Replace phrases are not valid and were not set.");
-                }
+                _replacePhrasesList = value;
+                WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(value));
             }
         }
         // flag for whether the search should be case sensitive
@@ -69,17 +65,7 @@ namespace TextReplace.MVVM.Model
         public static string Delimiter
         {
             get { return _delimiter; }
-            set 
-            {
-                if (DataValidation.IsDelimiterValid(value))
-                {
-                    _delimiter = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Delimiter is not valid and was not set.");
-                }
-            }
+            set { _delimiter = value; }
         }
         // a flag to denote whether a phrase is selected in the replace view
         private static (string, string) _selectedPhrase = ("", "");
@@ -127,7 +113,7 @@ namespace TextReplace.MVVM.Model
                 }
 
                 // if the supplied file is a text file, check if there is a delimiter and if it is valid
-                if (DataValidation.IsTextFile(fileName))
+                if (FileValidation.IsTextFile(fileName))
                 {
                     if (newDelimiter == null)
                     {
@@ -149,12 +135,8 @@ namespace TextReplace.MVVM.Model
                 // then dont actually assign the parsed data to the dict
                 if (dryRun)
                 {
-                    if (DataValidation.AreReplacePhrasesValid(DataValidation.ParseDSV(fileName, delimiter)) == false)
-                    {
-                        Debug.WriteLine("Replace Phrases could not be parsed or were not valid.");
-                        return false;
-                    }
-                    
+                    // will throw InvalidOperationException if it returns a dict of count == 0
+                    DataValidation.ParseDSV(fileName, delimiter);
                     return true;
                 }
 
@@ -163,10 +145,10 @@ namespace TextReplace.MVVM.Model
 
                 // put copy the dict into a list which gets used by the view models
                 ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrasesWrapper(x.Key, x.Value)).ToList();
-                WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
 
                 FileName = fileName;
                 Delimiter = delimiter;
+                IsNewFile = false;
 
                 return true;
             }
@@ -175,7 +157,7 @@ namespace TextReplace.MVVM.Model
                 Debug.WriteLine(e);
                 return false;
             }
-            catch (ArgumentException e)
+            catch (InvalidOperationException e)
             {
                 Debug.WriteLine(e);
                 return false;
@@ -359,6 +341,21 @@ namespace TextReplace.MVVM.Model
             {
                 csvWriter.WriteRecords(ReplacePhrasesList);
             }
+
+            FileName = fileName;
+            if (newDelimiter != null)
+            {
+                Delimiter = delimiter;
+            }
+        }
+
+        public static void CreateNewReplaceFile()
+        {
+            IsNewFile = true;
+            ReplacePhrasesDict = [];
+            ReplacePhrasesList = [];
+            FileName = "Untitled";
+            Delimiter = "";
         }
 
         /// <summary>

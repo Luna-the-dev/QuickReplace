@@ -122,7 +122,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             var viewModel = (UploadReplacementsInputViewModel)DataContext;
 
             // show the delimiter input section if it is a text file
-            if (DataValidation.IsTextFile(dialog.FileName))
+            if (FileValidation.IsTextFile(dialog.FileName))
             {
                 viewModel.ShowDelimiter(dialog.FileName);
             }

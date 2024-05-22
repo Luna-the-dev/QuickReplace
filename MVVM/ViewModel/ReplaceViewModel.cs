@@ -8,12 +8,12 @@ using TextReplace.Core.Enums;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.ViewModel
 {
     partial class ReplaceViewModel : ObservableRecipient,
         IRecipient<FileNameMsg>,
+        IRecipient<IsNewReplacementsFileMsg>,
         IRecipient<SetReplacePhrasesMsg>,
         IRecipient<SelectedPhraseMsg>,
         IRecipient<InsertReplacePhraseAtMsg>
@@ -31,6 +31,7 @@ namespace TextReplace.MVVM.ViewModel
         private bool _isFileSelected = (ReplaceData.FileName != string.Empty);
         [ObservableProperty]
         private bool _isUnsaved = false;
+        public bool IsNewFile = ReplaceData.IsNewFile;
 
         [ObservableProperty]
         private ObservableCollection<ReplacePhrase> _replacePhrases =
@@ -62,7 +63,6 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
-        public RelayCommand SavePhrasesToFileCommand => new RelayCommand(() => SavePhrasesToFile());
         
         public ReplaceViewModel()
         {
@@ -125,14 +125,10 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Cannot write to directory, file not saved.");
                 return false;
             }
+
             try
             {
                 ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases, newDelimiter);
-                ReplaceData.FileName = fileName;
-                if (newDelimiter != null)
-                {
-                    ReplaceData.Delimiter = newDelimiter;
-                }
 
                 IsUnsaved = false;
                 return true;
@@ -314,9 +310,13 @@ namespace TextReplace.MVVM.ViewModel
             return ReplaceData.SetNewReplaceFile(fileName, newDelimiter);
         }
 
-        public static void CreateNewReplaceFile()
+        /// <summary>
+        /// Wrapper for ReplaceData.CreateNewReplaceFile.
+        /// </summary>
+        public void CreateNewReplaceFile()
         {
-
+            IsUnsaved = false;
+            ReplaceData.CreateNewReplaceFile();
         }
 
         // Message receivers
@@ -324,6 +324,11 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(FileNameMsg message)
         {
             FullFileName = message.Value;
+        }
+
+        public void Receive(IsNewReplacementsFileMsg message)
+        {
+            IsNewFile = message.Value;
         }
 
         public void Receive(SetReplacePhrasesMsg message)

@@ -29,7 +29,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                if (DataValidation.IsTextFile(dialog.FullFileName))
+                if (FileValidation.IsTextFile(dialog.FullFileName))
                 {
                     ((TopBarViewModel)DataContext).SetNewReplaceFile(dialog.FullFileName, dialog.DelimiterInputText);
                 }

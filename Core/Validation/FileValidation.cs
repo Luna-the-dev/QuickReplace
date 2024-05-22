@@ -117,5 +117,25 @@ namespace TextReplace.Core.Validation
                 _ => false
             };
         }
+
+        public static bool IsTextFile(string fileName)
+        {
+            if (Path.GetExtension(fileName).Equals(".txt", StringComparison.CurrentCultureIgnoreCase) ||
+                Path.GetExtension(fileName).Equals(".text", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public static bool IsExcelFile(string fileName)
+        {
+            if (Path.GetExtension(fileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase) ||
+                Path.GetExtension(fileName).Equals(".xlsx", StringComparison.CurrentCultureIgnoreCase))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
