@@ -16,20 +16,20 @@
     <Border Padding="4 8 4 0"
             Background="{StaticResource SideBarBackground}">
         <StackPanel>
-            <RadioButton Content="Home"
-                         Height="50"
-                         Foreground="White"
-                         FontSize="14"
-                         Style="{StaticResource MenuButtonTheme}"
+            <RadioButton Content="Replacements"
                          IsChecked="True"
-                         Command="{Binding HomeViewCommand}"/>
-
-            <RadioButton Content="Replace"
                          Height="50"
-                         Foreground="White"
+                         Foreground="{StaticResource TextLight}"
                          FontSize="14"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding ReplaceViewCommand}"/>
+
+            <RadioButton Content="Sources"
+                         Height="50"
+                         Foreground="{StaticResource TextLight}"
+                         FontSize="14"
+                         Style="{StaticResource MenuButtonTheme}"
+                         Command="{Binding SourcesViewCommand}"/>
         </StackPanel>
     </Border>
 </UserControl>

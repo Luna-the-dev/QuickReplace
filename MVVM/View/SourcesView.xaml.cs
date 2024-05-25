@@ -3,11 +3,11 @@
 namespace TextReplace.MVVM.View
 {
     /// <summary>
-    /// Interaction logic for HomeView.xaml
+    /// Interaction logic for SourcesView.xaml
     /// </summary>
-    public partial class HomeView : UserControl
+    public partial class SourcesView : UserControl
     {
-        public HomeView()
+        public SourcesView()
         {
             InitializeComponent();
         }

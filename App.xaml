@@ -30,12 +30,12 @@
                 <ResourceDictionary Source="Themes/Buttons/OptionToggleButtonTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-            <DataTemplate DataType="{x:Type viewModel:HomeViewModel}">
-                <view:HomeView/>
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type viewModel:ReplaceViewModel}">
                 <view:ReplaceView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type viewModel:SourcesViewModel}">
+                <view:SourcesView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewModel:TopBarViewModel}">

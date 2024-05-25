@@ -5,33 +5,38 @@ using TextReplace.Messages;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class SideBarViewModel : ObservableRecipient
+    partial class SideBarViewModel : ObservableRecipient,
+        IRecipient<ActiveContentViewMsg>
     {
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(HomeViewCommand))]
         [NotifyCanExecuteChangedFor(nameof(ReplaceViewCommand))]
+        [NotifyCanExecuteChangedFor(nameof(SourcesViewCommand))]
         private object _selectedView;
 
-        public HomeViewModel HomeVm = new HomeViewModel();
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
+        public SourcesViewModel SourcesVm = new SourcesViewModel();
 
         public SideBarViewModel()
         {
-            _selectedView = HomeVm;
-        }
-
-        [RelayCommand]
-        private void HomeView()
-        {
-            SelectedView = HomeVm;
-            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(SelectedView));
+            SelectedView = ReplaceVm;
+            WeakReferenceMessenger.Default.Register(this);
         }
 
         [RelayCommand]
         private void ReplaceView()
         {
-            SelectedView = ReplaceVm;
-            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(SelectedView));
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(ReplaceVm));
+        }
+
+        [RelayCommand]
+        private void SourcesView()
+        {
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(SourcesVm));
+        }
+
+        public void Receive(ActiveContentViewMsg message)
+        {
+            SelectedView = message.Value;
         }
     }
 }

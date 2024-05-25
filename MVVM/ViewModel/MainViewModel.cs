@@ -16,7 +16,6 @@ namespace TextReplace.MVVM.ViewModel
         private object _sideBarView;
 
 
-        public HomeViewModel HomeVm = new HomeViewModel();
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
         public TopBarViewModel TopBarVm = new TopBarViewModel();
         public SideBarViewModel SideBarVm = new SideBarViewModel();
@@ -24,7 +23,7 @@ namespace TextReplace.MVVM.ViewModel
         public MainViewModel()
         {
             // set the home view as default
-            _currentView = HomeVm;
+            _currentView = ReplaceVm;
 
             _topBarView = TopBarVm;
             _sideBarView = SideBarVm;
