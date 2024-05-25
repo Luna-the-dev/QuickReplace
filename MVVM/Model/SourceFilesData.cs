@@ -1,6 +1,9 @@
-﻿using System.Diagnostics;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Validation;
+using TextReplace.Messages.Replace;
+using TextReplace.Messages.Sources;
 
 namespace TextReplace.MVVM.Model
 {
@@ -10,17 +13,7 @@ namespace TextReplace.MVVM.Model
         public static List<string> FileNames
         {
             get { return _fileNames; }
-            set
-            {
-                if (FileValidation.AreFileNamesValid(value))
-                {
-                    _fileNames = value;
-                }
-                else
-                {
-                    throw new Exception("An input file is not readable. SourceFilesData was not updated.");
-                }
-            }
+            set { _fileNames = value; }
         }
         // optional user specified file path for the output files
         private static string _outputDirectory = string.Empty;
@@ -34,7 +27,11 @@ namespace TextReplace.MVVM.Model
         public static string Suffix
         {
             get { return _suffix; }
-            set { _suffix = value; }
+            set
+            {
+                _suffix = value;
+                WeakReferenceMessenger.Default.Send(new SuffixMsg(value));
+            }
         }
 
         /// <summary>
@@ -47,15 +44,14 @@ namespace TextReplace.MVVM.Model
         public static bool SetNewSourceFilesFromUser(string[] fileNames)
         {
             // set the SourceFilesData names
-            try
+            if (FileValidation.AreFileNamesValid(fileNames.ToList()))
             {
-                FileNames = fileNames.ToList();
-                return true;
-            }
-            catch
-            {
+                Debug.WriteLine("An input file is not readable. SourceFilesData was not updated.");
                 return false;
             }
+
+            FileNames = fileNames.ToList();
+            return true;
         }
 
         /// <summary>
@@ -73,7 +69,7 @@ namespace TextReplace.MVVM.Model
                 destFileNames.Add(string.Format(@"{0}\{1}{2}{3}",
                                                 directory,
                                                 Path.GetFileNameWithoutExtension(name),
-                                                Suffix,
+                                                suffix,
                                                 Path.GetExtension(name)
                                                 ));
             }

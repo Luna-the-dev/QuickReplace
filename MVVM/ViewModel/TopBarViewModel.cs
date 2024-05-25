@@ -5,12 +5,12 @@ using TextReplace.MVVM.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using TextReplace.Messages.Replace;
-using System.IO;
+using TextReplace.Messages.Sources;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class TopBarViewModel : ObservableObject
+    partial class TopBarViewModel : ObservableObject,
+        IRecipient<SuffixMsg>
     {
 
         [ObservableProperty]
@@ -22,7 +22,7 @@ namespace TextReplace.MVVM.ViewModel
         private Visibility _wholeWord = Visibility.Hidden;
 
         [ObservableProperty]
-        private string _suffix = string.Empty;
+        private string _suffix = SourceFilesData.Suffix;
         partial void OnSuffixChanging(string value)
         {
             SourceFilesData.Suffix = value;
@@ -48,7 +48,6 @@ namespace TextReplace.MVVM.ViewModel
 
         public TopBarViewModel()
         {
-            Suffix = "-replacify";
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -220,6 +219,11 @@ namespace TextReplace.MVVM.ViewModel
         {
             ReplaceIsClickable = (ReplaceFileReadSuccess == Visibility.Visible &&
                                   SourceFileReadSuccess == Visibility.Visible);
+        }
+
+        public void Receive(SuffixMsg message)
+        {
+            Suffix = message.Value;
         }
     }
 }
