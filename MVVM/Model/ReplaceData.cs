@@ -20,7 +20,7 @@ namespace TextReplace.MVVM.Model
             set
             {
                 _fileName = value;
-                WeakReferenceMessenger.Default.Send(new FileNameMsg(value));
+                WeakReferenceMessenger.Default.Send(new ReplaceFileNameMsg(value));
             }
         }
         private static bool _isNewFile;

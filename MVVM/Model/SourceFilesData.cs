@@ -13,7 +13,11 @@ namespace TextReplace.MVVM.Model
         public static List<string> FileNames
         {
             get { return _fileNames; }
-            set { _fileNames = value; }
+            set
+            {
+                _fileNames = value;
+                WeakReferenceMessenger.Default.Send(new SourceFileNamesMsg(value));
+            }
         }
         // optional user specified file path for the output files
         private static string _outputDirectory = string.Empty;

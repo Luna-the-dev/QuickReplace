@@ -18,16 +18,14 @@
         <StackPanel>
             <RadioButton Content="Replacements"
                          IsChecked="True"
-                         Height="50"
-                         Foreground="{StaticResource TextLight}"
-                         FontSize="14"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding ReplaceViewCommand}"/>
 
             <RadioButton Content="Sources"
-                         Height="50"
-                         Foreground="{StaticResource TextLight}"
-                         FontSize="14"
+                         Style="{StaticResource MenuButtonTheme}"
+                         Command="{Binding SourcesViewCommand}"/>
+
+            <RadioButton Content="Replacify"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding SourcesViewCommand}"/>
         </StackPanel>

@@ -12,7 +12,7 @@ using TextReplace.MVVM.Model;
 namespace TextReplace.MVVM.ViewModel
 {
     partial class ReplaceViewModel : ObservableRecipient,
-        IRecipient<FileNameMsg>,
+        IRecipient<ReplaceFileNameMsg>,
         IRecipient<IsNewReplacementsFileMsg>,
         IRecipient<SetReplacePhrasesMsg>,
         IRecipient<SelectedPhraseMsg>,
@@ -321,7 +321,7 @@ namespace TextReplace.MVVM.ViewModel
 
         // Message receivers
 
-        public void Receive(FileNameMsg message)
+        public void Receive(ReplaceFileNameMsg message)
         {
             FullFileName = message.Value;
         }

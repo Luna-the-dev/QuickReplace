@@ -11,10 +11,12 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         [NotifyCanExecuteChangedFor(nameof(ReplaceViewCommand))]
         [NotifyCanExecuteChangedFor(nameof(SourcesViewCommand))]
+        [NotifyCanExecuteChangedFor(nameof(PerformReplaceViewCommand))]
         private object _selectedView;
 
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
         public SourcesViewModel SourcesVm = new SourcesViewModel();
+        public PerformReplaceViewModel PerformReplaceVm = new PerformReplaceViewModel();
 
         public SideBarViewModel()
         {
@@ -32,6 +34,12 @@ namespace TextReplace.MVVM.ViewModel
         private void SourcesView()
         {
             WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(SourcesVm));
+        }
+
+        [RelayCommand]
+        private void PerformReplaceView()
+        {
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(PerformReplaceVm));
         }
 
         public void Receive(ActiveContentViewMsg message)
