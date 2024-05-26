@@ -114,7 +114,8 @@
                       Background="{StaticResource BackgroundColor}"
                       PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
             <ListBox x:Name="listBox" Margin="0 4" Background="Transparent"
-                     BorderThickness="0" ItemsSource="{Binding ReplacePhrases}">
+                     BorderThickness="0" ItemsSource="{Binding ReplacePhrases}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
@@ -202,30 +203,6 @@
                     BorderThickness="0 0 0 1"/>
 
             <Button Grid.Column="1" Grid.Row="2" Width="140" Height="40"
-                    Click="OpenEditWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
-                <Button.Content>
-                    <TextBlock Text="Edit"
-                               x:Name="editMenuOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
-
-            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
-                    Click="OpenRemoveWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
-                <Button.Content>
-                    <TextBlock Text="Remove"
-                               x:Name="removeMenuOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
-
-            <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
                     Click="OpenAddWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsFileSelected}">
@@ -237,7 +214,29 @@
                 </Button.Content>
             </Button>
 
-            
+            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
+                    Click="OpenEditWindow_OnClick"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsPhraseSelected}">
+                <Button.Content>
+                    <TextBlock Text="Edit"
+                               x:Name="editMenuOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
+                    Click="OpenRemoveWindow_OnClick"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsPhraseSelected}">
+                <Button.Content>
+                    <TextBlock Text="Remove"
+                               x:Name="removeMenuOption" HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
         </Grid>
 
     </Grid>
@@ -301,10 +300,14 @@
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Grid.Column="0" Text="{Binding Item1}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
                                            FontFamily="/Fonts/#Poppins" FontSize="14"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Item2}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
                                            FontFamily="/Fonts/#Poppins" FontSize="14"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
