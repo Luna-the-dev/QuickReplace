@@ -1,37 +1,27 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using System.Diagnostics;
 using System.IO;
+using System.Xml.Linq;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.Model
 {
     class SourceFilesData
     {
-        private static List<string> _fileNames = [];
-        public static List<string> FileNames
+        private static List<SourceFile> _sourceFiles = [];
+        public static List<SourceFile> SourceFiles
         {
-            get { return _fileNames; }
+            get { return _sourceFiles; }
             set
             {
-                _fileNames = value;
-                WeakReferenceMessenger.Default.Send(new SourceFileNamesMsg(value));
+                _sourceFiles = value;
+                WeakReferenceMessenger.Default.Send(new SourceFilesMsg(value));
             }
         }
-        private static Dictionary<string, SourceFileOptions> _sourceFileOptionsDict = [];
-        public static Dictionary<string, SourceFileOptions> SourceFileOptionsDict
-        {
-            get { return _sourceFileOptionsDict; }
-            set
-            {
-                _sourceFileOptionsDict = value;
-                WeakReferenceMessenger.Default.Send(new SourceFileOptionsMsg(value));
-            }
-        }
-        private static SourceFileOptions _defaultSourceFileOptions = new SourceFileOptions("", "");
-        public static SourceFileOptions DefaultSourceFileOptions
+        private static SourceFile _defaultSourceFileOptions = new SourceFile("", "", "");
+        public static SourceFile DefaultSourceFileOptions
         {
             get { return _defaultSourceFileOptions; }
             set
@@ -61,10 +51,12 @@ namespace TextReplace.MVVM.Model
             {
                 // only add the file to the list/dict if it wasnt already
                 // in there to prevefnt duplicates/overwrites
-                if (SourceFileOptionsDict.ContainsKey(fileName) == false)
+                if (SourceFiles.Any(x => x.FileName == fileName) == false)
                 {
-                    FileNames.Add(fileName);
-                    SourceFileOptionsDict.Add(fileName, DefaultSourceFileOptions);
+                    SourceFiles.Add(new SourceFile(
+                        fileName,
+                        DefaultSourceFileOptions.OutputDirectory,
+                        DefaultSourceFileOptions.Suffix));
                 }
             }
             return true;
@@ -78,21 +70,22 @@ namespace TextReplace.MVVM.Model
         public static List<string> GenerateDestFileNames()
         {
             List<string> destFileNames = new List<string>();
-            foreach (var name in FileNames)
-            {
-                string? directory = (SourceFileOptionsDict[name].OutputDirectory == string.Empty) ?
-                    Path.GetDirectoryName(name) :
-                    SourceFileOptionsDict[name].OutputDirectory;
 
-                string suffix = (SourceFileOptionsDict[name].Suffix == string.Empty) ?
+            foreach (var file in SourceFiles)
+            {
+                string? directory = (file.OutputDirectory == string.Empty) ?
+                    Path.GetDirectoryName(file.FileName) :
+                    file.OutputDirectory;
+
+                string suffix = (file.Suffix == string.Empty) ?
                     "-replacify" :
-                    SourceFileOptionsDict[name].Suffix;
+                    file.Suffix;
 
                 destFileNames.Add(string.Format(@"{0}\{1}{2}{3}",
                                                 directory,
-                                                Path.GetFileNameWithoutExtension(name),
+                                                Path.GetFileNameWithoutExtension(file.FileName),
                                                 suffix,
-                                                Path.GetExtension(name)
+                                                Path.GetExtension(file.FileName)
                                                 ));
             }
 
@@ -111,7 +104,7 @@ namespace TextReplace.MVVM.Model
             string? suffix = null)
         {
             // create a local variable so that you only have to change the default options one time
-            SourceFileOptions newDefaultOptions = DefaultSourceFileOptions;
+            SourceFile newDefaultOptions = DefaultSourceFileOptions;
 
             if (outputDirectory != null)
             {
@@ -130,36 +123,39 @@ namespace TextReplace.MVVM.Model
         /// </summary>
         /// <param name="outputDirectory"></param>
         /// <param name="suffix"></param>
-        public static void UpdateSourceFileOptions(string? outputDirectory = null, string? suffix = null)
+        public static void UpdateAllSourceFileOptions(string? outputDirectory = null, string? suffix = null)
         {
+            var newSourceFiles = SourceFiles;
+            var newDefaultSfo = DefaultSourceFileOptions;
+
             if (outputDirectory != null)
             {
-                var newSfoDict = SourceFileOptionsDict;
-                foreach (var sfo in newSfoDict.Values)
+                foreach (var file in SourceFiles)
                 {
-                    sfo.OutputDirectory = outputDirectory;
+                    file.OutputDirectory = outputDirectory;
                 }
-                SourceFileOptionsDict = newSfoDict;
 
-                DefaultSourceFileOptions.OutputDirectory = outputDirectory;
+                newDefaultSfo.OutputDirectory = outputDirectory;
             }
 
             if (suffix != null)
             {
-                var newSfoDict = SourceFileOptionsDict;
-                foreach (var sfo in newSfoDict.Values)
+                foreach (var file in SourceFiles)
                 {
-                    sfo.Suffix = suffix;
+                    file.Suffix = suffix;
                 }
-                SourceFileOptionsDict = newSfoDict;
 
-                DefaultSourceFileOptions.Suffix = suffix;
+                newDefaultSfo.Suffix = suffix;
             }
+
+            SourceFiles = newSourceFiles;
+            DefaultSourceFileOptions = newDefaultSfo;
         }
     }
 
-    class SourceFileOptions(string outputDirectory, string suffix)
+    class SourceFile(string fileName, string outputDirectory, string suffix)
     {
+        public string FileName { get; set; } = fileName;
         public string OutputDirectory { get; set; } = outputDirectory;
         public string Suffix { get; set; } = suffix;
     }

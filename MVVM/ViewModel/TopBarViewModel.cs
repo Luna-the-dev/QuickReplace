@@ -7,11 +7,11 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Sources;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using TextReplace.Messages.Replace;
 
 namespace TextReplace.MVVM.ViewModel
 {
     partial class TopBarViewModel : ObservableObject,
-        IRecipient<SourceFileOptionsMsg>,
         IRecipient<DefaultSourceFileOptionsMsg>
     {
 
@@ -27,7 +27,7 @@ namespace TextReplace.MVVM.ViewModel
         private string _suffix = SourceFilesData.DefaultSourceFileOptions.Suffix ?? "";
         partial void OnSuffixChanged(string value)
         {
-            SourceFilesData.UpdateSourceFileOptions(suffix: value);
+            SourceFilesData.UpdateAllSourceFileOptions(suffix: value);
         }
 
         // visibility flags for top bar components
@@ -89,7 +89,7 @@ namespace TextReplace.MVVM.ViewModel
             if (result == true)
             {
                 Debug.Write("Source file name(s):");
-                SourceFilesData.FileNames.ForEach(i => Debug.WriteLine($"\t{i}"));
+                SourceFilesData.SourceFiles.ForEach(i => Debug.WriteLine($"\t{i.FileName}"));
                 SourceFileReadSuccess = Visibility.Visible;
                 SourceFileReadFail = Visibility.Hidden;
             }
@@ -105,7 +105,7 @@ namespace TextReplace.MVVM.ViewModel
 
         private void ReplaceCmd()
         {
-            if (ReplaceData.FileName == string.Empty || SourceFilesData.FileNames.Count == 0)
+            if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
             {
                 Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
                 return;
@@ -119,7 +119,10 @@ namespace TextReplace.MVVM.ViewModel
 
             // perform the text replacements
             bool wholeWord = (WholeWord == Visibility.Visible) ? true : false;
-            bool result = replaceData.PerformReplacements(SourceFilesData.FileNames, destFileNames, wholeWord);
+            bool result = replaceData.PerformReplacements(
+                SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
+                destFileNames,
+                wholeWord);
             Debug.WriteLine("Output file names:");
             destFileNames.ForEach(o => Debug.WriteLine($"\t{o}"));
 
@@ -157,7 +160,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
 
-            SourceFilesData.UpdateSourceFileOptions(outputDirectory: dialog.FileName);
+            SourceFilesData.UpdateAllSourceFileOptions(outputDirectory: dialog.FileName);
         }
 
         /// <summary>
@@ -221,11 +224,6 @@ namespace TextReplace.MVVM.ViewModel
         {
             ReplaceIsClickable = (ReplaceFileReadSuccess == Visibility.Visible &&
                                   SourceFileReadSuccess == Visibility.Visible);
-        }
-
-        public void Receive(SourceFileOptionsMsg message)
-        {
-            throw new NotImplementedException();
         }
 
         public void Receive(DefaultSourceFileOptionsMsg message)

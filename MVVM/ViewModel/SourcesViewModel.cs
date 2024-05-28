@@ -7,11 +7,11 @@ using TextReplace.MVVM.Model;
 namespace TextReplace.MVVM.ViewModel
 {
     partial class SourcesViewModel : ObservableRecipient,
-        IRecipient<SourceFileNamesMsg>
+        IRecipient<SourceFilesMsg>
     {
         [ObservableProperty]
         private ObservableCollection<string> _fullFileNames =
-            new ObservableCollection<string>(SourceFilesData.FileNames);
+            new ObservableCollection<string>(SourceFilesData.SourceFiles.Select(x => x.FileName));
 
         /// <summary>
         /// Wrapper for SourceFilesData.SetNewSourceFiles
@@ -23,9 +23,9 @@ namespace TextReplace.MVVM.ViewModel
             return SourceFilesData.SetNewSourceFiles(fileNames);
         }
 
-        public void Receive(SourceFileNamesMsg message)
+        public void Receive(SourceFilesMsg message)
         {
-            FullFileNames = new ObservableCollection<string>(SourceFilesData.FileNames);
+            FullFileNames = new ObservableCollection<string>(message.Value.Select(x => x.FileName));
         }
     }
 }
