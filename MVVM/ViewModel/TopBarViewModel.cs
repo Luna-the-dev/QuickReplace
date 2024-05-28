@@ -6,11 +6,13 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Sources;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.ViewModel
 {
     partial class TopBarViewModel : ObservableObject,
-        IRecipient<SuffixMsg>
+        IRecipient<SourceFileOptionsMsg>,
+        IRecipient<DefaultSourceFileOptionsMsg>
     {
 
         [ObservableProperty]
@@ -22,10 +24,10 @@ namespace TextReplace.MVVM.ViewModel
         private Visibility _wholeWord = Visibility.Hidden;
 
         [ObservableProperty]
-        private string _suffix = SourceFilesData.Suffix;
-        partial void OnSuffixChanging(string value)
+        private string _suffix = SourceFilesData.DefaultSourceFileOptions.Suffix ?? "";
+        partial void OnSuffixChanged(string value)
         {
-            SourceFilesData.Suffix = value;
+            SourceFilesData.UpdateSourceFileOptions(suffix: value);
         }
 
         // visibility flags for top bar components
@@ -154,8 +156,8 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Change default file path window was closed");
                 return;
             }
-            
-            SourceFilesData.OutputDirectory = dialog.FileName;
+
+            SourceFilesData.UpdateSourceFileOptions(outputDirectory: dialog.FileName);
         }
 
         /// <summary>
@@ -221,9 +223,14 @@ namespace TextReplace.MVVM.ViewModel
                                   SourceFileReadSuccess == Visibility.Visible);
         }
 
-        public void Receive(SuffixMsg message)
+        public void Receive(SourceFileOptionsMsg message)
         {
-            Suffix = message.Value;
+            throw new NotImplementedException();
+        }
+
+        public void Receive(DefaultSourceFileOptionsMsg message)
+        {
+            Suffix = message.Value.Suffix;
         }
     }
 }
