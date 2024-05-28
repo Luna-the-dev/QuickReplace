@@ -70,6 +70,10 @@
                 <popup:SetDelimiterInputWindow/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type popupvm:UploadSourceFilesInputViewModel}">
+                <popup:UploadSourceFilesInputWindow/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

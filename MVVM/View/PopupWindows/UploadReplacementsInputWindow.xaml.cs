@@ -99,13 +99,18 @@ namespace TextReplace.MVVM.View.PopupWindows
 
         private void BtnUpload_OnClick(object sender, RoutedEventArgs e)
         {
+            string filter = "All files (*.*)|*.*|" +
+                "CSV File (*.csv)|*.csv|" +
+                "TSV File (*.tsv)|*.tsv|" +
+                "Excel File (*.xlsx)|*.xls;*.xlsx|" +
+                "Text Document (*.txt)|*.txt";
             // configure open file dialog box
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
                 Title = "Open Text File",
                 FileName = "Document", // Default file name
                 DefaultExt = ".txt", // Default file extension
-                Filter = "All files (*.*)|*.*" // Filter files by extension
+                Filter = filter // Filter files by extension
             };
 
             // open file dialog box

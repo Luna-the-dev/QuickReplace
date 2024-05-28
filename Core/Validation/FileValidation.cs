@@ -19,12 +19,12 @@ namespace TextReplace.Core.Validation
             }
             catch (ArgumentException)
             {
-                Debug.WriteLine("Replace file name is empty.");
+                Debug.WriteLine("File name is empty.");
                 return false;
             }
             catch
             {
-                Debug.WriteLine("Replace file could not be opened.");
+                Debug.WriteLine("File could not be opened.");
                 return false;
             }
         }
@@ -43,12 +43,12 @@ namespace TextReplace.Core.Validation
             }
             catch (ArgumentException)
             {
-                Debug.WriteLine("Replace file name is empty.");
+                Debug.WriteLine("File name is empty.");
                 return false;
             }
             catch
             {
-                Debug.WriteLine("Replace file could not be opened.");
+                Debug.WriteLine("File could not be opened.");
                 return false;
             }
         }
@@ -104,16 +104,31 @@ namespace TextReplace.Core.Validation
         }
 
         /// <summary>
-        /// Checks to see if the file is of a supported type
+        /// Checks to see if the replace file is of a supported type
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>False if the file type is not supported</returns>
-        public static bool IsFileTypeValid(string fileName)
+        public static bool IsReplaceFileTypeValid(string fileName)
         {
             string extension = Path.GetExtension(fileName).ToLower();
             return extension switch
             {
                 ".csv" or ".tsv" or ".xlsx" or ".xls" or ".txt" or ".text" => true,
+                _ => false
+            };
+        }
+
+        /// <summary>
+        /// Checks to see if the source file is of a supported type
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>False if the file type is not supported</returns>
+        public static bool IsSourceFileTypeValid(string fileName)
+        {
+            string extension = Path.GetExtension(fileName).ToLower();
+            return extension switch
+            {
+                ".txt" or ".text" or ".doc" or ".docx" => true,
                 _ => false
             };
         }

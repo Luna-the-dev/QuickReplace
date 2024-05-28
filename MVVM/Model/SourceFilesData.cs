@@ -48,10 +48,10 @@ namespace TextReplace.MVVM.Model
         /// <returns>
         /// False if one of the files was invalid, null user closed the window without selecting a file.
         /// </returns>
-        public static bool SetNewSourceFilesFromUser(string[] fileNames)
+        public static bool SetNewSourceFiles(List<string> fileNames)
         {
             // set the SourceFilesData names
-            if (FileValidation.AreFileNamesValid(fileNames.ToList()))
+            if (FileValidation.AreFileNamesValid(fileNames) == false)
             {
                 Debug.WriteLine("An input file is not readable. SourceFilesData was not updated.");
                 return false;

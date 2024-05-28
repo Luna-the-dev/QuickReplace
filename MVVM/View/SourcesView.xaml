@@ -140,9 +140,6 @@
                 <RowDefinition Height="40"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="25"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
 
@@ -159,30 +156,7 @@
                     BorderBrush="{StaticResource TextUnclickable}"
                     BorderThickness="0 0 0 1"/>
 
-            <ToggleButton Grid.Column="1" Grid.Row="1"
-                          Command="{Binding ToggleSortCommand}"
-                          IsEnabled="{Binding IsFileSelected}"
-                          Style="{StaticResource OptionToggleButtonTheme}">
-                <ToggleButton.Content>
-                    <TextBlock Text="Case Sensitive" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </ToggleButton.Content>
-            </ToggleButton>
-
-            <Button Grid.Column="1" Grid.Row="2"
-                    Width="140" Height="40"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}">
-                <Button.Content>
-                    <TextBlock Text="Whole Word"
-                               HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
-
-            <Button Grid.Column="1" Grid.Row="4"
+            <Button Grid.Column="1" Grid.Row="1"
                     Width="140" Height="40"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsPhraseSelected}">
@@ -194,7 +168,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="5"
+            <Button Grid.Column="1" Grid.Row="2"
                     Width="140" Height="40"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsPhraseSelected}">

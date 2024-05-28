@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Windows;
@@ -42,24 +43,16 @@ namespace TextReplace.MVVM.View
 
         private void UploadSourceFile_OnClick(object sender, RoutedEventArgs e)
         {
-            // configure open file dialog box
-            var dialog = new Microsoft.Win32.OpenFileDialog
-            {
-                Title = "Open Text Files",
-                FileName = "Document", // Default file name
-                DefaultExt = ".txt", // Default file extension
-                Filter = "Text documents (.txt)|*.txt", // Filter files by extension
-                Multiselect = true
-            };
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Upload";
 
-            // open file dialog box
-            if (dialog.ShowDialog() != true)
+            var dialog = new PopupWindows.UploadSourceFilesInputWindow(window, title);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
             {
-                Debug.WriteLine("Replace file upload window was closed.");
-                return;
+                ((TopBarViewModel)DataContext).SourceFiles(dialog.FullFileNames);
             }
-
-            ((TopBarViewModel)DataContext).SourceFiles(dialog.FileNames);
         }
 
         private void OpenFileSuffixInputWindow(object sender, RoutedEventArgs e)

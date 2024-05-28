@@ -108,7 +108,7 @@ namespace TextReplace.MVVM.ViewModel
             string fileName = newFileName ?? FullFileName;
 
             // check if the file type is suppoerted
-            if (FileValidation.IsFileTypeValid(fileName) == false)
+            if (FileValidation.IsReplaceFileTypeValid(fileName) == false)
             {
                 Debug.WriteLine("File type is not supported, file not saved.");
                 return false;

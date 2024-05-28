@@ -81,10 +81,10 @@ namespace TextReplace.MVVM.ViewModel
             return result;
         }
 
-        public void SourceFiles(string[] fileNames)
+        public void SourceFiles(List<string> fileNames)
         {
             // open a file dialogue for the user and update the source files
-            bool result = SourceFilesData.SetNewSourceFilesFromUser(fileNames);
+            bool result = SourceFilesData.SetNewSourceFiles(fileNames);
 
             if (result == true)
             {

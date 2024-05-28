@@ -66,7 +66,7 @@
                                Foreground="{StaticResource TextLight}"
                                FontSize="13"
                                FontFamily="/Fonts/#Poppins"
-                               Margin="3 10 34 15"/>
+                               Margin="3 5 34 15"/>
 
                     <Border Width="19" Height="19"
                             Margin="0 0 5 10"

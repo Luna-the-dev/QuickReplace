@@ -179,7 +179,7 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
-            if (FileValidation.IsFileTypeValid(dialog.FileName) == false)
+            if (FileValidation.IsReplaceFileTypeValid(dialog.FileName) == false)
             {
                 Debug.WriteLine("File type not supported, replace phrases not saved.");
                 return;

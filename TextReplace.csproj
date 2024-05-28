@@ -50,7 +50,10 @@
     <Compile Update="MVVM\View\PopupWindows\SetDelimiterInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MVVM\View\PopupWindows\UploadReplacementsFileInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\UploadSourceFilesInputWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MVVM\View\PopupWindows\UploadReplacementsInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="MVVM\View\PopupWindows\ConfirmWindow.xaml.cs">
