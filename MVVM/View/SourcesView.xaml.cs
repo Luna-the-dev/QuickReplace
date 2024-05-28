@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace TextReplace.MVVM.View
 {
@@ -10,6 +11,11 @@ namespace TextReplace.MVVM.View
         public SourcesView()
         {
             InitializeComponent();
+        }
+
+        private void OpenUploadWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
