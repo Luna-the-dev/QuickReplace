@@ -188,7 +188,7 @@
             <Button Grid.Column="1" Grid.Row="1"
                     Width="140" Height="40"
                     Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
+                    IsEnabled="{Binding IsFileSelected}">
                 <Button.Content>
                     <TextBlock Text="Output Directory"
                                HorizontalAlignment="Center"
@@ -200,7 +200,7 @@
             <Button Grid.Column="1" Grid.Row="2"
                     Width="140" Height="40"
                     Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
+                    IsEnabled="{Binding IsFileSelected}">
                 <Button.Content>
                     <TextBlock Text="File Suffix"
                                HorizontalAlignment="Center"
@@ -224,8 +224,7 @@
 
             <Button Grid.Column="1" Grid.Row="5"
                     Width="140" Height="40"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
+                    Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="Output Directory"
                                HorizontalAlignment="Center"
@@ -236,8 +235,7 @@
 
             <Button Grid.Column="1" Grid.Row="6"
                     Width="140" Height="40"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
+                    Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="File Suffix"
                                HorizontalAlignment="Center"

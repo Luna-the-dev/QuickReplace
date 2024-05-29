@@ -19,7 +19,7 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new SourceFilesMsg(value));
             }
         }
-        private static SourceFile _defaultSourceFileOptions = new SourceFile("", "", "");
+        private static SourceFile _defaultSourceFileOptions = new SourceFile();
         public static SourceFile DefaultSourceFileOptions
         {
             get { return _defaultSourceFileOptions; }
@@ -29,7 +29,7 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new DefaultSourceFileOptionsMsg(value));
             }
         }
-        private static SourceFile _selectedFile = new SourceFile("", "", "");
+        private static SourceFile _selectedFile = new SourceFile();
         public static SourceFile SelectedFile
         {
             get { return _selectedFile; }
@@ -163,11 +163,30 @@ namespace TextReplace.MVVM.Model
         }
     }
 
-    class SourceFile(string fileName, string outputDirectory, string suffix)
+    class SourceFile
     {
-        public string FileName { get; set; } = fileName;
-        public string ShortFileName { get; set; } = Path.GetFileName(fileName);
-        public string OutputDirectory { get; set; } = outputDirectory;
-        public string Suffix { get; set; } = suffix;
+        public string FileName { get; set; }
+        public string ShortFileName { get; set; }
+        public string OutputDirectory { get; set; }
+        public string Suffix { get; set; }
+
+        public SourceFile()
+        {
+            FileName = "";
+            ShortFileName = "";
+            OutputDirectory = "";
+            Suffix = "";
+        }
+
+        public SourceFile(
+            string fileName,
+            string outputDirectory,
+            string suffix)
+        {
+            FileName = fileName;
+            ShortFileName = Path.GetFileName(fileName);
+            OutputDirectory = outputDirectory;
+            Suffix = suffix;
+        }
     }
 }

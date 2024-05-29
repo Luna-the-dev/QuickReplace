@@ -61,7 +61,7 @@ namespace TextReplace.MVVM.ViewModel
         private string _searchText = string.Empty;
         partial void OnSearchTextChanged(string value)
         {
-            UpdateReplacePhrases(SelectedPhrase.Item1);
+            UpdateReplacePhrasesView(SelectedPhrase.Item1);
         }
 
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
@@ -70,7 +70,7 @@ namespace TextReplace.MVVM.ViewModel
         public ReplaceViewModel()
         {
             // highlight the previously selected phrase
-            UpdateReplacePhrases(SelectedPhrase.Item1);
+            UpdateReplacePhrasesView(SelectedPhrase.Item1);
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -80,7 +80,7 @@ namespace TextReplace.MVVM.ViewModel
         private void ToggleSort()
         {
             ReplaceData.IsSorted = !ReplaceData.IsSorted;
-            UpdateReplacePhrases(SelectedPhrase.Item1);
+            UpdateReplacePhrasesView(SelectedPhrase.Item1);
             ReplaceData.IsUnsaved = true;
         }
 
@@ -162,7 +162,7 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("New phrase could not be added.");
                 return;
             }
-            UpdateReplacePhrases(item1);
+            UpdateReplacePhrasesView(item1);
             ReplaceData.IsUnsaved = true;
         }
 
@@ -198,7 +198,7 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Phrase could not be edited.");
                 return;
             }
-            UpdateReplacePhrases(item1);
+            UpdateReplacePhrasesView(item1);
             ReplaceData.IsUnsaved = true;
         }
 
@@ -216,17 +216,16 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Phrase could not be removed.");
                 return;
             }
-            UpdateReplacePhrases("");
+            UpdateReplacePhrasesView("");
             ReplaceData.IsUnsaved = true;
         }
 
         /// <summary>
         /// Updates the replace phrases view by whether or not it should be sorted or
-        /// if the user is searching for a specific phrase. Pass an empty or null
-        /// string to remove the selected phrase
+        /// if the user is searching for a specific phrase. Pass an empty string to deselect the phrase
         /// </summary>
         /// <param name="selectedItem1"></param>
-        private void UpdateReplacePhrases(string selectedItem1)
+        private void UpdateReplacePhrasesView(string selectedItem1)
         {
             // if there is no search text, display the replace phrases like normal
             if (SearchText == string.Empty)
@@ -266,7 +265,7 @@ namespace TextReplace.MVVM.ViewModel
         private IEnumerable<ReplacePhrase> GetReplacePhrases(string selectedItem1 = "")
         {
             // simply get the replacement phrases if no selected phrase is specified
-            if (string.IsNullOrEmpty(selectedItem1))
+            if (selectedItem1 == string.Empty)
             {
                 SelectedPhrase = new ReplacePhrase();
                 return ReplaceData.ReplacePhrasesList.Select(x => new ReplacePhrase(x.Item1, x.Item2));
@@ -366,7 +365,7 @@ namespace TextReplace.MVVM.ViewModel
     /// <summary>
     /// Struct representing a single replacement phrase from ReplaceData.ReplacePhrases.
     /// Item1 is the original phrase, Item2 is the replacement, isSelected is used to mark
-    /// a selected phrase when updating the UI with UpdateReplacePhrases()
+    /// a selected phrase when updating the UI with UpdateReplacePhrasesView()
     /// </summary>
     /// <param name="item1"></param>
     /// <param name="item2"></param>

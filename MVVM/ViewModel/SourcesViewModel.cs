@@ -17,10 +17,20 @@ namespace TextReplace.MVVM.ViewModel
             new ObservableCollection<SourceFileWrapper>(SourceFilesData.SourceFiles.Select(SourceFileWrapper.WrapSourceFile));
 
         [ObservableProperty]
-        private SourceFileWrapper _selectedFile = new SourceFileWrapper("", "", "");
+        private SourceFileWrapper _selectedFile = new SourceFileWrapper();
         partial void OnSelectedFileChanged(SourceFileWrapper value)
         {
             SourceFilesData.SelectedFile = SourceFileWrapper.UnwrapSourceFile(value);
+        }
+
+        [ObservableProperty]
+        private bool _isFileSelected = (SourceFilesData.SelectedFile.FileName != "");
+
+        [ObservableProperty]
+        private string _searchText = string.Empty;
+        partial void OnSearchTextChanged(string value)
+        {
+            UpdateSourceFilesView(SelectedFile.FileName);
         }
 
         public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
@@ -42,6 +52,31 @@ namespace TextReplace.MVVM.ViewModel
             SourceFileWrapper f = (SourceFileWrapper)file;
             f.IsSelected = true;
             SelectedFile = f;
+        }
+
+        /// <summary>
+        /// Updates the source files view by search term. Pass an empty string to deselect the file.
+        /// </summary>
+        /// <param name="selectedFile"></param>
+        private void UpdateSourceFilesView(string selectedFile)
+        {
+            if (SearchText == string.Empty)
+            {
+                SourceFiles = new ObservableCollection<SourceFileWrapper>(
+                    SourceFilesData.SourceFiles.Select(SourceFileWrapper.WrapSourceFile));
+            }
+            else
+            {
+                SourceFiles = new ObservableCollection<SourceFileWrapper>(
+                    SourceFilesData.SourceFiles.Select(SourceFileWrapper.WrapSourceFile)
+                    .Where(x => x.FileName.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
+                
+                // if the selected file is not in the search, clear the selected file
+                if (SourceFiles.Any(x => x.FileName == selectedFile) == false)
+                {
+                    SelectedFile = new SourceFileWrapper();
+                }
+            }
         }
 
         /// <summary>
@@ -67,16 +102,39 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(SelectedSourceFileMsg message)
         {
             SelectedFile = SourceFileWrapper.WrapSourceFile(message.Value);
+            IsFileSelected = (message.Value.FileName == "");
         }
     }
 
-    class SourceFileWrapper(string fileName, string outputDirectory, string suffix, bool isSelected = false)
+    class SourceFileWrapper
     {
-        public string FileName { get; set; } = fileName;
-        public string ShortFileName { get; set; } = Path.GetFileName(fileName);
-        public string OutputDirectory { get; set; } = outputDirectory;
-        public string Suffix { get; set; } = suffix;
-        public bool IsSelected { get; set; } = isSelected;
+        public string FileName { get; set; }
+        public string ShortFileName { get; set; }
+        public string OutputDirectory { get; set; }
+        public string Suffix { get; set; }
+        public bool IsSelected { get; set; }
+
+        public SourceFileWrapper()
+        {
+            FileName = "";
+            ShortFileName = "";
+            OutputDirectory = "";
+            Suffix = "";
+            IsSelected = false;
+        }
+
+        public SourceFileWrapper(
+            string fileName,
+            string outputDirectory,
+            string suffix,
+            bool isSelected = false)
+        {
+            FileName = fileName;
+            ShortFileName = Path.GetFileName(fileName);
+            OutputDirectory = outputDirectory;
+            Suffix = suffix;
+            IsSelected = isSelected;
+        }
 
         public static SourceFileWrapper WrapSourceFile(SourceFile file)
         {
