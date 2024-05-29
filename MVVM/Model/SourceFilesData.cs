@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using System.Diagnostics;
 using System.IO;
-using System.Xml.Linq;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
@@ -28,6 +27,15 @@ namespace TextReplace.MVVM.Model
             {
                 _defaultSourceFileOptions = value;
                 WeakReferenceMessenger.Default.Send(new DefaultSourceFileOptionsMsg(value));
+            }
+        }
+        private static SourceFile _selectedFile = new SourceFile("", "", "");
+        public static SourceFile SelectedFile
+        {
+            get { return _selectedFile; }
+            set
+            {
+                _selectedFile = value;
             }
         }
 
@@ -59,6 +67,8 @@ namespace TextReplace.MVVM.Model
                         DefaultSourceFileOptions.Suffix));
                 }
             }
+
+            WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
             return true;
         }
 
@@ -156,6 +166,7 @@ namespace TextReplace.MVVM.Model
     class SourceFile(string fileName, string outputDirectory, string suffix)
     {
         public string FileName { get; set; } = fileName;
+        public string ShortFileName { get; set; } = Path.GetFileName(fileName);
         public string OutputDirectory { get; set; } = outputDirectory;
         public string Suffix { get; set; } = suffix;
     }

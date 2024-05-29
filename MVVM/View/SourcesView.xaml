@@ -73,14 +73,14 @@
             </Button>
         </Grid>
 
-        <!-- Replace phrases view -->
+        <!-- Source files view -->
         <ScrollViewer Grid.Column="1" Grid.Row="2"
                       Style="{DynamicResource ScrollViewerTheme}"
                       Background="{StaticResource BackgroundColor}"
                       PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
             <ListBox x:Name="listBox" Margin="0 4"
                      Background="Transparent" BorderThickness="0"
-                     ItemsSource="{Binding ReplacePhrases}"
+                     ItemsSource="{Binding SourceFiles}"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
@@ -96,15 +96,41 @@
                 </ListBox.ItemContainerStyle>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <RadioButton Command="{Binding Path=DataContext.SetSelectedPhraseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                     CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
-                                     Style="{DynamicResource ReplacePhraseTheme}">
-                            <RadioButton.IsChecked>
-                                <Binding Path="IsSelected"
-                                         RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
-                                         Mode="TwoWay"/>
-                            </RadioButton.IsChecked>
-                        </RadioButton>
+                        <Grid>
+                            <RadioButton Command="{Binding Path=DataContext.SetSelectedFileCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                         CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
+                                         Style="{DynamicResource ReplacePhraseTheme}">
+                                <RadioButton.IsChecked>
+                                    <Binding Path="IsSelected"
+                                             RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
+                                             Mode="TwoWay"/>
+                                </RadioButton.IsChecked>
+                            </RadioButton>
+                            <Button Width="20" Height="20"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Cursor="Hand"
+                                    BorderThickness="0">
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}">
+                                        <Setter Property="Margin" Value="0 8 17 0"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Border Background="{TemplateBinding Background}">
+                                                        <Path Stretch="Uniform"
+                                                              Margin="4"
+                                                              Fill="{StaticResource BackgroundColorDark}"
+                                                              Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
@@ -137,15 +163,18 @@
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="40"/>
+                <RowDefinition Height="28"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition />
+                <RowDefinition Height="40"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
             <TextBlock Grid.Column="1" Grid.Row="0"
                        Margin="0 0 0 6"
-                       Text="Global Settings"
+                       Text="Modify"
                        VerticalAlignment="Bottom"
                        HorizontalAlignment="Center"
                        Foreground="{StaticResource TextLight}"
@@ -174,7 +203,44 @@
                     IsEnabled="{Binding IsPhraseSelected}">
                 <Button.Content>
                     <TextBlock Text="File Suffix"
-                               x:Name="removeMenuOption" HorizontalAlignment="Center"
+                               HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <TextBlock Grid.Column="1" Grid.Row="4"
+                       Margin="0 0 0 6"
+                       Text="Global Settings"
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       Foreground="{StaticResource TextLight}"
+                       FontSize="14"
+                       FontFamily="/Fonts/#Poppins"/>
+            <Border Grid.Column="1" Grid.Row="4"
+                    Margin="0 0 0 4" Width="120"
+                    BorderBrush="{StaticResource TextUnclickable}"
+                    BorderThickness="0 0 0 1"/>
+
+            <Button Grid.Column="1" Grid.Row="5"
+                    Width="140" Height="40"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsPhraseSelected}">
+                <Button.Content>
+                    <TextBlock Text="Output Directory"
+                               HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="6"
+                    Width="140" Height="40"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsPhraseSelected}">
+                <Button.Content>
+                    <TextBlock Text="File Suffix"
+                               HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
                 </Button.Content>
@@ -184,7 +250,7 @@
 
     <!-- User control -->
     <UserControl.Resources>
-        <!-- Style for the middle replacements scrollviewer -->
+        <!-- Style for the middle files scrollviewer -->
         <Style x:Key="ScrollViewerTheme" TargetType="{x:Type ScrollViewer}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -212,38 +278,64 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Individual replace phrase styling -->
+        <!-- Individual source file styling -->
         <Style TargetType="RadioButton" x:Key="ReplacePhraseTheme">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
                         <Border x:Name="border" Background="{StaticResource BtnLight}"
-                            CornerRadius="4" Height="30" Margin="8 2 14 2" Padding="10 0">
+                                CornerRadius="4" Height="100" Margin="8 4 14 4">
                             <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Item1}"
-                                       TextWrapping="NoWrap"
-                                       TextTrimming="CharacterEllipsis"
-                                       FontFamily="/Fonts/#Poppins" FontSize="14"
-                                       Foreground="{StaticResource TextLight}"
-                                       VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Item2}"
-                                       TextWrapping="NoWrap"
-                                       TextTrimming="CharacterEllipsis"
-                                       FontFamily="/Fonts/#Poppins" FontSize="14"
-                                       Foreground="{StaticResource TextLight}"
-                                       VerticalAlignment="Center"/>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="2*"/>
+                                    <RowDefinition Height="3*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Margin="10 0"
+                                           Text="{Binding ShortFileName}"
+                                           TextWrapping="NoWrap"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontFamily="/Fonts/#Poppins" FontSize="14"
+                                           Foreground="{StaticResource TextLight}"
+                                           VerticalAlignment="Center"/>
+                                <Border Grid.Row="1"
+                                        x:Name="innerBorder"
+                                        Margin="6 0 6 7" Padding="6 10"
+                                        CornerRadius="4"
+                                        VerticalAlignment="Bottom"
+                                        BorderThickness="0">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+
+                                        <TextBlock Grid.Row="0" Margin="0 0 0 5"
+                                                   Text="{Binding OutputDirectory, StringFormat=Directory: {0}}"
+                                                   TextWrapping="NoWrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontFamily="/Fonts/#Poppins" FontSize="13"
+                                                   Foreground="{StaticResource TextLight}"
+                                                   VerticalAlignment="Center"/>
+                                        <TextBlock Grid.Row="1"
+                                                   Margin="0 5 0 0"
+                                                   Text="{Binding Suffix, StringFormat=Suffix: {0}}"
+                                                   TextWrapping="NoWrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontFamily="/Fonts/#Poppins" FontSize="13"
+                                                   Foreground="{StaticResource TextLight}"
+                                                   VerticalAlignment="Center"/>
+                                    </Grid>
+                                </Border>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="RadioButton.IsChecked" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource BtnHighlighted}"/>
+                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnHighlightedShadow}"/>
                             </Trigger>
                             <Trigger Property="RadioButton.IsChecked" Value="False">
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}"/>
+                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnDark}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

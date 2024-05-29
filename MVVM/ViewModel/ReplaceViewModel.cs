@@ -16,7 +16,9 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<IsNewReplacementsFileMsg>,
         IRecipient<SetReplacePhrasesMsg>,
         IRecipient<SelectedPhraseMsg>,
-        IRecipient<InsertReplacePhraseAtMsg>
+        IRecipient<InsertReplacePhraseAtMsg>,
+        IRecipient<IsReplaceFileUnsavedMsg>,
+        IRecipient<AreReplacePhrasesSortedMsg>
     {
         [ObservableProperty]
         private string _fullFileName = ReplaceData.FileName;
@@ -30,17 +32,19 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private bool _isFileSelected = (ReplaceData.FileName != string.Empty);
         [ObservableProperty]
-        private bool _isUnsaved = false;
+        private bool _isUnsaved = ReplaceData.IsUnsaved;
         public bool IsNewFile = ReplaceData.IsNewFile;
 
         [ObservableProperty]
         private ObservableCollection<ReplacePhrase> _replacePhrases =
             new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrasesDict.Select(x => new ReplacePhrase(x.Key, x.Value)));
-        
-        private bool SortReplacePhrases = false;
 
         [ObservableProperty]
-        private ReplacePhrase _selectedPhrase = new ReplacePhrase();
+        private bool _sortReplacePhrases = ReplaceData.IsSorted;
+
+        [ObservableProperty]
+        private ReplacePhrase _selectedPhrase =
+            new ReplacePhrase(ReplaceData.SelectedPhrase.Item1, ReplaceData.SelectedPhrase.Item2, true);
         partial void OnSelectedPhraseChanged(ReplacePhrase value)
         {
             ReplaceData.SelectedPhrase = !Equals(value, default(ReplacePhrase)) ?
@@ -60,12 +64,13 @@ namespace TextReplace.MVVM.ViewModel
             UpdateReplacePhrases(SelectedPhrase.Item1);
         }
 
-
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
         
         public ReplaceViewModel()
         {
+            // highlight the previously selected phrase
+            UpdateReplacePhrases(SelectedPhrase.Item1);
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -74,9 +79,9 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         private void ToggleSort()
         {
-            SortReplacePhrases = !SortReplacePhrases;
+            ReplaceData.IsSorted = !ReplaceData.IsSorted;
             UpdateReplacePhrases(SelectedPhrase.Item1);
-            IsUnsaved = true;
+            ReplaceData.IsUnsaved = true;
         }
 
         /// <summary>
@@ -95,6 +100,7 @@ namespace TextReplace.MVVM.ViewModel
             ReplacePhrase p = (ReplacePhrase)phrase;
             p.IsSelected = true;
             SelectedPhrase = p;
+            
         }
 
         /// <summary>
@@ -130,7 +136,7 @@ namespace TextReplace.MVVM.ViewModel
             {
                 ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases, newDelimiter);
 
-                IsUnsaved = false;
+                ReplaceData.IsUnsaved = false;
                 return true;
             }
             // exception thrown if the file type is invalid
@@ -157,7 +163,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             UpdateReplacePhrases(item1);
-            IsUnsaved = true;
+            ReplaceData.IsUnsaved = true;
         }
 
         /// <summary>
@@ -193,7 +199,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             UpdateReplacePhrases(item1);
-            IsUnsaved = true;
+            ReplaceData.IsUnsaved = true;
         }
 
         public void RemoveSelectedPhrase()
@@ -211,7 +217,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             UpdateReplacePhrases("");
-            IsUnsaved = true;
+            ReplaceData.IsUnsaved = true;
         }
 
         /// <summary>
@@ -315,7 +321,7 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         public void CreateNewReplaceFile()
         {
-            IsUnsaved = false;
+            ReplaceData.IsUnsaved = false;
             ReplaceData.CreateNewReplaceFile();
         }
 
@@ -344,6 +350,16 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(InsertReplacePhraseAtMsg message)
         {
             _insertReplacePhraseAt = message.Value;
+        }
+
+        public void Receive(IsReplaceFileUnsavedMsg message)
+        {
+            IsUnsaved = message.Value;
+        }
+
+        public void Receive(AreReplacePhrasesSortedMsg message)
+        {
+            SortReplacePhrases = message.Value;
         }
     }
 

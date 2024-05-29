@@ -8,6 +8,7 @@ using CsvHelper.Configuration;
 using CsvHelper;
 using System.Globalization;
 using System.Text;
+using System.ComponentModel.Design;
 
 namespace TextReplace.MVVM.Model
 {
@@ -59,7 +60,7 @@ namespace TextReplace.MVVM.Model
         {
             get { return _caseSensitive; }
             set { _caseSensitive = value; }
-        }
+        } 
         // the delimiter used for parsing the replace file
         private static string _delimiter = string.Empty;
         public static string Delimiter
@@ -78,6 +79,29 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg(value));
             }
         }
+        // a flag to denote whether any modifications have been made but not saved to the file
+        private static bool _isUnsaved;
+        public static bool IsUnsaved
+        {
+            get { return _isUnsaved; }
+            set
+            {
+                _isUnsaved = value;
+                WeakReferenceMessenger.Default.Send(new IsReplaceFileUnsavedMsg(value));
+            }
+        }
+        // a flag to denote whether the replace phrases are sorted
+        private static bool _isSorted;
+        public static bool IsSorted
+        {
+            get { return _isSorted; }
+            set
+            {
+                _isSorted = value;
+                WeakReferenceMessenger.Default.Send(new AreReplacePhrasesSortedMsg(value));
+            }
+        }
+
 
         // delimiters that decide what seperates whole words
         private const string WORD_DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";

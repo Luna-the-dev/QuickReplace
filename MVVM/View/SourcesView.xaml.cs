@@ -1,7 +1,6 @@
 ﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View

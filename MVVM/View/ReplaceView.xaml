@@ -181,11 +181,12 @@
             <ToggleButton Grid.Column="1" Grid.Row="0"
                           Command="{Binding ToggleSortCommand}"
                           IsEnabled="{Binding IsFileSelected}"
+                          IsChecked="{Binding SortReplacePhrases}"
                           Style="{StaticResource OptionToggleButtonTheme}">
                 <ToggleButton.Content>
                     <TextBlock Text="Sort" HorizontalAlignment="Center"
-                   FontFamily="/Fonts/#Poppins"
-                   Foreground="{StaticResource TextLight}"/>
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
                 </ToggleButton.Content>
             </ToggleButton>
 
