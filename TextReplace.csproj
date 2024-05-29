@@ -38,22 +38,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="MVVM\View\PopupWindows\AddPhraseDoubleInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\Replace\AddPhraseDoubleInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="MVVM\View\PopupWindows\UnsavedChangesConfirmWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MVVM\View\PopupWindows\EditPhraseDoubleInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\Replace\EditPhraseDoubleInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MVVM\View\PopupWindows\SetDelimiterInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\Replace\SetDelimiterInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MVVM\View\PopupWindows\UploadSourceFilesInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\Sources\UploadSourceFilesInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="MVVM\View\PopupWindows\UploadReplacementsInputWindow.xaml.cs">
+    <Compile Update="MVVM\View\PopupWindows\Replace\UploadReplacementsInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="MVVM\View\PopupWindows\ConfirmWindow.xaml.cs">

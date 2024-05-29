@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
@@ -52,6 +53,24 @@ namespace TextReplace.MVVM.ViewModel
             SourceFileWrapper f = (SourceFileWrapper)file;
             f.IsSelected = true;
             SelectedFile = f;
+        }
+
+        public void RemoveSourceFile(int index)
+        {
+            if (index > SourceFiles.Count - 1)
+            {
+                Debug.WriteLine("Source file index is invalid");
+                return;
+            }
+
+            bool res = SourceFilesData.RemoveSourceFile(SourceFiles[index].FileName);
+            if (res == false)
+            {
+                Debug.WriteLine("Source file could not be removed.");
+                return;
+            }
+
+            UpdateSourceFilesView("");
         }
 
         /// <summary>

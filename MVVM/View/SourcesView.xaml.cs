@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.MVVM.ViewModel;
@@ -28,6 +29,22 @@ namespace TextReplace.MVVM.View
             if (dialog.BtnOk.IsChecked == true)
             {
                 SourcesViewModel.SetNewSourceFiles(dialog.FullFileNames);
+            }
+        }
+
+        private void RemoveSelectedFile_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Remove Source File";
+            string body = "Are you sure you would like to remove the selected file?";
+
+            var dialog = new PopupWindows.ConfirmWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                int index = listBox.Items.IndexOf(((Button)sender).DataContext);
+                ((SourcesViewModel)DataContext).RemoveSourceFile(index);
             }
         }
 

@@ -161,6 +161,20 @@ namespace TextReplace.MVVM.Model
             SourceFiles = newSourceFiles;
             DefaultSourceFileOptions = newDefaultSfo;
         }
+
+        public static bool RemoveSourceFile(string fileName)
+        {
+            var index = SourceFiles.FindIndex(x => x.FileName == fileName);
+            if (index == -1)
+            {
+                Debug.WriteLine($"{fileName} was not found in SourceFiles and was not removed.");
+                return false;
+            }
+
+            SourceFiles.RemoveAt(index);
+            WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
+            return true;
+        }
     }
 
     class SourceFile

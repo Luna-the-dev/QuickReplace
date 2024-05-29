@@ -14,7 +14,7 @@ namespace TextReplace.MVVM.ViewModel
     partial class ReplaceViewModel : ObservableRecipient,
         IRecipient<ReplaceFileNameMsg>,
         IRecipient<IsNewReplacementsFileMsg>,
-        IRecipient<SetReplacePhrasesMsg>,
+        IRecipient<ReplacePhrasesMsg>,
         IRecipient<SelectedPhraseMsg>,
         IRecipient<InsertReplacePhraseAtMsg>,
         IRecipient<IsReplaceFileUnsavedMsg>,
@@ -206,7 +206,7 @@ namespace TextReplace.MVVM.ViewModel
         {
             if (string.IsNullOrEmpty(SelectedPhrase.Item1))
             {
-                Debug.WriteLine("Selected phrase is null");
+                Debug.WriteLine("Selected phrase is empty");
                 return;
             }
 
@@ -336,7 +336,7 @@ namespace TextReplace.MVVM.ViewModel
             IsNewFile = message.Value;
         }
 
-        public void Receive(SetReplacePhrasesMsg message)
+        public void Receive(ReplacePhrasesMsg message)
         {
             ReplacePhrases = new ObservableCollection<ReplacePhrase>(message.Value.Select(x => new ReplacePhrase(x.Item1, x.Item2)));
         }

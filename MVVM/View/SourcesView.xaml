@@ -99,7 +99,7 @@
                         <Grid>
                             <RadioButton Command="{Binding Path=DataContext.SetSelectedFileCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
                                          CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
-                                         Style="{DynamicResource ReplacePhraseTheme}">
+                                         Style="{DynamicResource SourceFileTheme}">
                                 <RadioButton.IsChecked>
                                     <Binding Path="IsSelected"
                                              RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
@@ -110,26 +110,9 @@
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Top"
                                     Cursor="Hand"
-                                    BorderThickness="0">
-                                <Button.Style>
-                                    <Style TargetType="{x:Type Button}">
-                                        <Setter Property="Margin" Value="0 8 17 0"/>
-                                        <Setter Property="Background" Value="Transparent"/>
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type Button}">
-                                                    <Border Background="{TemplateBinding Background}">
-                                                        <Path Stretch="Uniform"
-                                                              Margin="4"
-                                                              Fill="{StaticResource BackgroundColorDark}"
-                                                              Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
-                                                    </Border>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </Button.Style>
-                            </Button>
+                                    BorderThickness="0"
+                                    Click="RemoveSelectedFile_OnClick"
+                                    Style="{DynamicResource SourceFileCloseTheme}"/>
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
@@ -276,8 +259,26 @@
             </Style.Triggers>
         </Style>
 
+        <!-- Source file X button styling -->
+        <Style TargetType="{x:Type Button}" x:Key="SourceFileCloseTheme">
+            <Setter Property="Margin" Value="0 8 17 0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Background="{TemplateBinding Background}">
+                            <Path Stretch="Uniform"
+                    Margin="4"
+                    Fill="{StaticResource BackgroundColorDark}"
+                    Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Individual source file styling -->
-        <Style TargetType="RadioButton" x:Key="ReplacePhraseTheme">
+        <Style TargetType="RadioButton" x:Key="SourceFileTheme">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>

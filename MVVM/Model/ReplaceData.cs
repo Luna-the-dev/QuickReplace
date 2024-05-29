@@ -51,7 +51,7 @@ namespace TextReplace.MVVM.Model
             set
             {
                 _replacePhrasesList = value;
-                WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(value));
+                WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(value));
             }
         }
         // flag for whether the search should be case sensitive
@@ -458,7 +458,7 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList.Insert(index, new ReplacePhrasesWrapper(item1, item2));
-            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -485,7 +485,7 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList[index] = new ReplacePhrasesWrapper(item1, item2);
-            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -519,7 +519,7 @@ namespace TextReplace.MVVM.Model
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList[index] = new ReplacePhrasesWrapper(item1, item2);
-            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -547,7 +547,7 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesList.RemoveAt(index);
-            WeakReferenceMessenger.Default.Send(new SetReplacePhrasesMsg(ReplacePhrasesList));
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
     }

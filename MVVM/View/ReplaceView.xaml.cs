@@ -99,7 +99,7 @@ namespace TextReplace.MVVM.View
             TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
 
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = textInfo.ToTitleCase(editMenuOption.Text);
+            string title = textInfo.ToTitleCase(removeMenuOption.Text);
             string body = "Are you sure you would like to remove the selected phrase?";
 
             var dialog = new PopupWindows.ConfirmWindow(window, title, body);
