@@ -35,7 +35,7 @@ namespace TextReplace.MVVM.View
         private void RemoveSelectedFile_OnClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = "Remove Source File";
+            string title = "Remove File";
             string body = "Are you sure you would like to remove the selected file?";
 
             var dialog = new PopupWindows.ConfirmWindow(window, title, body);
@@ -45,6 +45,21 @@ namespace TextReplace.MVVM.View
             {
                 int index = listBox.Items.IndexOf(((Button)sender).DataContext);
                 ((SourcesViewModel)DataContext).RemoveSourceFile(index);
+            }
+        }
+
+        private void RemoveAllFiles_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Remove Files";
+            string body = "Are you sure you would like to remove all files?";
+
+            var dialog = new PopupWindows.ConfirmWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                SourcesViewModel.RemoveAllSourceFiles();
             }
         }
 

@@ -63,6 +63,8 @@
 
             <Button Grid.Column="1" Grid.Row="1"
                     Width="140" Height="40"
+                    IsEnabled="{Binding IsSourceFileUploaded}"
+                    Click="RemoveAllFiles_OnClick"
                     Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="Remove All"

@@ -18,6 +18,9 @@ namespace TextReplace.MVVM.ViewModel
             new ObservableCollection<SourceFileWrapper>(SourceFilesData.SourceFiles.Select(SourceFileWrapper.WrapSourceFile));
 
         [ObservableProperty]
+        private bool _isSourceFileUploaded = (SourceFilesData.SourceFiles.Count > 0);
+
+        [ObservableProperty]
         private SourceFileWrapper _selectedFile = new SourceFileWrapper();
         partial void OnSelectedFileChanged(SourceFileWrapper value)
         {
@@ -55,6 +58,10 @@ namespace TextReplace.MVVM.ViewModel
             SelectedFile = f;
         }
 
+        /// <summary>
+        /// Removes a source file based on the index of the file.
+        /// </summary>
+        /// <param name="index"></param>
         public void RemoveSourceFile(int index)
         {
             if (index > SourceFiles.Count - 1)
@@ -71,6 +78,14 @@ namespace TextReplace.MVVM.ViewModel
             }
 
             UpdateSourceFilesView("");
+        }
+
+        /// <summary>
+        /// Removes all source files.
+        /// </summary>
+        public static void RemoveAllSourceFiles()
+        {
+            SourceFilesData.SourceFiles = [];
         }
 
         /// <summary>
@@ -116,6 +131,8 @@ namespace TextReplace.MVVM.ViewModel
                 x.Suffix = (x.Suffix == string.Empty) ? "Default" : x.Suffix;
                 return SourceFileWrapper.WrapSourceFile(x);
             }));
+
+            IsSourceFileUploaded = (message.Value.Count > 0);
         }
 
         public void Receive(SelectedSourceFileMsg message)
