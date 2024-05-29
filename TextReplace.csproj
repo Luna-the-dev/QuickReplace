@@ -41,6 +41,9 @@
     <Compile Update="MVVM\View\PopupWindows\Replace\AddPhraseDoubleInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="MVVM\View\PopupWindows\Sources\SetOutputDirectoryWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="MVVM\View\PopupWindows\UnsavedChangesConfirmWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

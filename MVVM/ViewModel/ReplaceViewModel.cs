@@ -119,12 +119,6 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("File type is not supported, file not saved.");
                 return false;
             }
-            // check if the user has write perms to the directory
-            if (FileValidation.IsDirectoryWritable(Path.GetDirectoryName(fileName) ?? "") == false)
-            {
-                Debug.WriteLine("Cannot write to directory, file not saved.");
-                return false;
-            }
             // if a new file is *not* being created, check if the user has write perms
             if (newFileName == null && FileValidation.IsInputFileReadWriteable(fileName) == false)
             {

@@ -54,33 +54,6 @@ namespace TextReplace.Core.Validation
         }
 
         /// <summary>
-        /// Checks to see if a directory is writable
-        /// </summary>
-        /// <param name="dirPath"></param>
-        /// <param name="throwIfFails"></param>
-        /// <returns>Returns false if directory is not writable</returns>
-        public static bool IsDirectoryWritable(string dirPath, bool throwIfFails = false)
-        {
-            try
-            {
-                string path = Path.Combine(dirPath, Path.GetRandomFileName());
-                using FileStream fs = File.Create(path, 1, FileOptions.DeleteOnClose);
-                return true;
-            }
-            catch
-            {
-                if (throwIfFails)
-                {
-                    throw;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-
-        /// <summary>
         /// Checks to see if all files in a list are readable
         /// </summary>
         /// <param name="filenames"></param>

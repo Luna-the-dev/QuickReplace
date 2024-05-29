@@ -74,6 +74,10 @@
                 <popup:UploadSourceFilesInputWindow/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type popupvm:SetOutputDirectoryViewModel}">
+                <popup:SetOutputDirectoryWindow/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

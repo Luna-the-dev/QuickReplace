@@ -6,8 +6,6 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Sources;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
-using TextReplace.Messages.Replace;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -151,9 +149,12 @@ namespace TextReplace.MVVM.ViewModel
         private void ChangeOutputDirectoryCmd()
         {
             // configure open file dialog box
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.Title = "Select Folder";
-            dialog.IsFolderPicker = true;
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                Title = "Select Folder",
+                IsFolderPicker = true
+            };
+
             if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
             {
                 Debug.WriteLine("Change default file path window was closed");

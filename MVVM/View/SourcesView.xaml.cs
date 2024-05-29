@@ -63,6 +63,26 @@ namespace TextReplace.MVVM.View
             }
         }
 
+        private void SetOutputDirectory_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Set Directory";
+            string body = "Please select a directory which the files will be saved to.";
+
+            var dialog = new PopupWindows.SetOutputDirectoryWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                SourcesViewModel.UpdateAllSourceFileOutputDirectories(dialog.DirectoryName);
+            }
+
+            if (dialog.BtnDefault.IsChecked == true)
+            {
+                SourcesViewModel.UpdateAllSourceFileOutputDirectories("");
+            }
+        }
+
         /// <summary>
         /// This function exists to make scroll wheel work for a scroll viewer with a list box
         /// inside of it. It normally doesnt work out of the box because a list box's template

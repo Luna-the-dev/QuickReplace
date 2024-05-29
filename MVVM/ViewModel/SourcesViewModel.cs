@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -86,6 +87,11 @@ namespace TextReplace.MVVM.ViewModel
         public static void RemoveAllSourceFiles()
         {
             SourceFilesData.SourceFiles = [];
+        }
+
+        public static void UpdateAllSourceFileOutputDirectories(string directoryName)
+        {
+            SourceFilesData.UpdateAllSourceFileOptions(outputDirectory: directoryName);
         }
 
         /// <summary>
