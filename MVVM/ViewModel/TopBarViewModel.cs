@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Sources;
+using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -39,8 +40,6 @@ namespace TextReplace.MVVM.ViewModel
         private Visibility _sourceFileReadFail = Visibility.Hidden;
         [ObservableProperty]
         private bool _replaceIsClickable = false;
-
-        private const string INVALID_SUFFIX_CHARS = "<>:\"/\\|?*\n\t";
 
         // commands
         public RelayCommand Replace => new RelayCommand(ReplaceCmd);
@@ -190,7 +189,7 @@ namespace TextReplace.MVVM.ViewModel
         /// <returns></returns>
         public bool SetSuffix(string suffix)
         {
-            if (IsSuffixValid(suffix))
+            if (DataValidation.IsSuffixValid(suffix))
             {
                 Suffix = suffix;
                 return true;
@@ -199,23 +198,6 @@ namespace TextReplace.MVVM.ViewModel
             {
                 return false;
             }
-        }
-
-        /// <summary>
-        /// Checks if the suffix string contains any invalid characters.
-        /// </summary>
-        /// <param name="suffix"></param>
-        /// <returns>True if the string is empty or does not contain any invalid characters.</returns>
-        private bool IsSuffixValid(string suffix)
-        {
-            foreach (char c in suffix)
-            {
-                if (INVALID_SUFFIX_CHARS.Contains(c) || char.IsControl(c))
-                {
-                    return false;
-                }
-            }
-            return true;
         }
 
         /// <summary>

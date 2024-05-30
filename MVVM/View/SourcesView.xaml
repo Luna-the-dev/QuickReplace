@@ -69,7 +69,8 @@
                     Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="Remove All"
-                               x:Name="removeAllOption" HorizontalAlignment="Center"
+                               x:Name="removeAllOption"
+                               HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
                 </Button.Content>
@@ -178,6 +179,7 @@
                     Click="SetOutputDirectory_OnClick">
                 <Button.Content>
                     <TextBlock Text="Output Directory"
+                               x:Name="outputDirectoryOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
@@ -187,9 +189,11 @@
             <Button Grid.Column="1" Grid.Row="2"
                     Width="140" Height="40"
                     Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}">
+                    IsEnabled="{Binding IsFileSelected}"
+                    Click="SetSuffix_OnClick">
                 <Button.Content>
                     <TextBlock Text="File Suffix"
+                               x:Name="suffixOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
@@ -215,6 +219,7 @@
                     Click="SetGlobalOutputDirectory_OnClick">
                 <Button.Content>
                     <TextBlock Text="Output Directory"
+                               x:Name="globalOutputDirectoryOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
@@ -223,9 +228,11 @@
 
             <Button Grid.Column="1" Grid.Row="6"
                     Width="140" Height="40"
-                    Style="{StaticResource OptionButtonTheme}">
+                    Style="{StaticResource OptionButtonTheme}"
+                    Click="SetGlobalSuffix_OnClick">
                 <Button.Content>
                     <TextBlock Text="File Suffix"
+                               x:Name="globalSuffixOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
@@ -288,7 +295,7 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Border x:Name="border" Background="{StaticResource BtnLight}"
-                                CornerRadius="4" Height="100" Margin="8 4 14 4">
+                                CornerRadius="4" Height="110" Margin="8 4 14 4">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="2*"/>
@@ -319,26 +326,21 @@
                                                        FontFamily="/Fonts/#Poppins"
                                                        Foreground="{StaticResource TextLight}"
                                                        VerticalAlignment="Center"/>
-                                            <userControl:RollingText Margin="67 0 0 0"
+                                            <userControl:RollingText Margin="68 0 0 0"
                                                                      Text="{Binding OutputDirectory}"
                                                                      Foreground="{StaticResource TextLight}"
                                                                      FontSize="13"
                                                                      FontFamily="/Fonts/#Poppins"/>
                                         </Grid>
-                                        
-                                        <Grid Grid.Row="1" Margin="0 5 0 0">
-                                            <TextBlock Text="Suffix: "
-                                                       FontSize="13"
-                                                       FontFamily="/Fonts/#Poppins"
-                                                       Foreground="{StaticResource TextLight}"
-                                                       VerticalAlignment="Center"/>
-                                            <userControl:RollingText Margin="42 0 0 0"
-                                                                     Text="{Binding Suffix}"
-                                                                     Foreground="{StaticResource TextLight}"
-                                                                     FontSize="13"
-                                                                     FontFamily="/Fonts/#Poppins"/>
-                                        </Grid>
-                                        
+
+                                        <TextBlock Grid.Row="1" Margin="0 5 0 0"
+                                                   Text="{Binding Suffix, StringFormat=Suffix:  {0}}"
+                                                   TextWrapping="NoWrap"
+                                                   TextTrimming="CharacterEllipsis"
+                                                   FontFamily="/Fonts/#Poppins" FontSize="13"
+                                                   Foreground="{StaticResource TextLight}"
+                                                   VerticalAlignment="Center"/>
+
                                     </Grid>
                                 </Border>
                             </Grid>

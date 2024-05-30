@@ -64,8 +64,10 @@ namespace TextReplace.MVVM.View
 
         private void SetOutputDirectory_OnClick(object sender, RoutedEventArgs e)
         {
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = "Set Directory";
+            string title = textInfo.ToTitleCase(outputDirectoryOption.Text);
             string body = "Please select a directory which the files will be saved to.";
 
             var dialog = new PopupWindows.SetOutputDirectoryWindow(window, title, body);
@@ -84,8 +86,10 @@ namespace TextReplace.MVVM.View
 
         private void SetGlobalOutputDirectory_OnClick(object sender, RoutedEventArgs e)
         {
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = "Set Directory";
+            string title = textInfo.ToTitleCase(globalOutputDirectoryOption.Text);
             string body = "Please select a directory which the files will be saved to.";
 
             var dialog = new PopupWindows.SetOutputDirectoryWindow(window, title, body);
@@ -99,6 +103,48 @@ namespace TextReplace.MVVM.View
             if (dialog.BtnDefault.IsChecked == true)
             {
                 SourcesViewModel.UpdateAllSourceFileOutputDirectories("");
+            }
+        }
+
+        private void SetSuffix_OnClick(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (SourcesViewModel)DataContext;
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = textInfo.ToTitleCase(suffixOption.Text);
+            string body = "Please select a suffix to be added to the end of all file names.\n" +
+                    "<u>Note:</u> This defaults to \"-replacify\"";
+            string watermark = "-replacify";
+            string currentSuffix = viewModel.DefaultSourceFileOptions.Suffix;
+
+            var dialog = new PopupWindows.SetSuffixInputResetWindow(window, title, body, watermark, currentSuffix);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
+            {
+                viewModel.UpdateSourceFileSuffixes(dialog.InputText);
+            }
+        }
+
+        private void SetGlobalSuffix_OnClick(object sender, RoutedEventArgs e)
+        {
+            var viewModel = (SourcesViewModel)DataContext;
+            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
+
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = textInfo.ToTitleCase(globalSuffixOption.Text);
+            string body = "Please select a suffix to be added to the end of all file names.\n" +
+                    "<u>Note:</u> This defaults to \"-replacify\"";
+            string watermark = "-replacify";
+            string currentSuffix = viewModel.DefaultSourceFileOptions.Suffix;
+
+            var dialog = new PopupWindows.SetSuffixInputResetWindow(window, title, body, watermark, currentSuffix);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
+            {
+                SourcesViewModel.UpdateAllSourceFileSuffixes(dialog.InputText);
             }
         }
 

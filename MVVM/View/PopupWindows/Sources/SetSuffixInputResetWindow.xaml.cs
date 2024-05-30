@@ -1,14 +1,15 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using TextReplace.MVVM.Model;
+using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.MVVM.View.PopupWindows
 {
     /// <summary>
     /// Interaction logic for InputWindow.xaml
     /// </summary>
-    public partial class InputResetWindow : Window
+    public partial class SetSuffixInputResetWindow : Window
     {
         public string WindowName
         {
@@ -21,6 +22,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             get { return BodyTextBox.Text; }
             set
             {
+                BodyTextBox.Text = "";
                 string[] separator = ["<u>", "</u>"];
                 var parts = value.Split(separator, StringSplitOptions.None);
                 bool isUnderline = false; // Start in normal mode
@@ -35,6 +37,8 @@ namespace TextReplace.MVVM.View.PopupWindows
                 }
             }
         }
+        public string DefaultBodyText { get; set; }
+
         public string InputWatermarkText
         {
             get { return InputWatermark.Text.ToString() ?? string.Empty; }
@@ -52,11 +56,12 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
-        public InputResetWindow(Window owner, string title, string body, string watermark, string inputText = "")
+        public SetSuffixInputResetWindow(Window owner, string title, string body, string watermark, string inputText = "")
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
+            DefaultBodyText = body;
             BodyText = body;
             InputWatermarkText = watermark;
             InputText = inputText;
@@ -64,16 +69,7 @@ namespace TextReplace.MVVM.View.PopupWindows
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)
         {
-            // if the user didnt enter a value, dont replace
-            // the delimiter with an empty string.
-            if (InputText == string.Empty)
-            {
-                BtnCancel.IsChecked = true;
-            }
-            else
-            {
-                BtnOk.IsChecked = true;
-            }
+            BtnOk.IsChecked = true;
             Close();
         }
 
@@ -103,6 +99,13 @@ namespace TextReplace.MVVM.View.PopupWindows
             {
                 Keyboard.ClearFocus();
             }
+        }
+
+        private void InputTextBoxTextChanged(object sender, EventArgs e)
+        {
+            BodyText = SetSuffixInputResetViewModel.IsSuffixValid(InputText) ?
+                DefaultBodyText :
+                "<u>Suffix is not valid.</u>";
         }
     }
 }

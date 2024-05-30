@@ -5,6 +5,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Messages.Replace;
+using TextReplace.Messages.Sources;
 using TextReplace.MVVM.Model;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
@@ -12,7 +13,8 @@ namespace TextReplace.MVVM.ViewModel
 {
     partial class SourcesViewModel : ObservableRecipient,
         IRecipient<SourceFilesMsg>,
-        IRecipient<SelectedSourceFileMsg>
+        IRecipient<SelectedSourceFileMsg>,
+        IRecipient<DefaultSourceFileOptionsMsg>
     {
         [ObservableProperty]
         private ObservableCollection<SourceFileWrapper> _sourceFiles =
@@ -37,6 +39,9 @@ namespace TextReplace.MVVM.ViewModel
         {
             UpdateSourceFilesView(SelectedFile.FileName);
         }
+
+        [ObservableProperty]
+        private SourceFile _defaultSourceFileOptions = SourceFilesData.DefaultSourceFileOptions;
 
         public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
 
@@ -87,14 +92,40 @@ namespace TextReplace.MVVM.ViewModel
             SourceFilesData.SourceFiles = [];
         }
 
+        /// <summary>
+        /// Updates the output directory for the selected source file
+        /// </summary>
+        /// <param name="directoryName"></param>
         public void UpdateSourceFileOutputDirectory(string directoryName)
         {
             SourceFilesData.UpdateSourceFileOptions(SelectedFile.FileName, outputDirectory: directoryName);
         }
 
+        /// <summary>
+        /// Updates the output directory for all source files
+        /// </summary>
+        /// <param name="directoryName"></param>
         public static void UpdateAllSourceFileOutputDirectories(string directoryName)
         {
             SourceFilesData.UpdateAllSourceFileOptions(outputDirectory: directoryName);
+        }
+
+        /// <summary>
+        /// Updates the suffix for the selected source file
+        /// </summary>
+        /// <param name="suffix"></param>
+        public void UpdateSourceFileSuffixes(string suffix)
+        {
+            SourceFilesData.UpdateSourceFileOptions(SelectedFile.FileName, suffix: suffix);
+        }
+
+        /// <summary>
+        /// Updates the suffix for all source files
+        /// </summary>
+        /// <param name="suffix"></param>
+        public static void UpdateAllSourceFileSuffixes(string suffix)
+        {
+            SourceFilesData.UpdateAllSourceFileOptions(suffix: suffix);
         }
 
         /// <summary>
@@ -147,6 +178,11 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(SelectedSourceFileMsg message)
         {
             SelectedFile = SourceFileWrapper.WrapSourceFile(message.Value);
+        }
+
+        public void Receive(DefaultSourceFileOptionsMsg message)
+        {
+            DefaultSourceFileOptions = message.Value;
         }
     }
 

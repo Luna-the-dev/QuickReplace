@@ -36,7 +36,7 @@ namespace TextReplace.MVVM.View.PopupWindows
                 }
             }
         }
-        public string DefaultBodyText { get; set; } = string.Empty;
+        public string DefaultBodyText { get; set; }
 
         public string TopInputWatermarkText
         {

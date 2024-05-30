@@ -1,7 +1,4 @@
-﻿using System.Data;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.Core.Validation;
@@ -70,11 +67,11 @@ namespace TextReplace.MVVM.View
             else
             {
                 body = "Enter suffix which will be appended onto the output file names.\n" +
-                "<u>Note:</u> This defaults to \"-replacify\"";
+                    "<u>Note:</u> This defaults to \"-replacify\"";
             }
-            string defaultInputTest = "-replacify";
+            string watermark = "-replacify";
 
-            var dialog = new PopupWindows.InputResetWindow(window, title, body, defaultInputTest);
+            var dialog = new PopupWindows.SetSuffixInputResetWindow(window, title, body, watermark);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)

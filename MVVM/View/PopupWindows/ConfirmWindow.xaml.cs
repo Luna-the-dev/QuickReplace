@@ -21,6 +21,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             get { return BodyTextBox.Text; }
             set
             {
+                BodyTextBox.Text = "";
                 string[] separator = ["<u>", "</u>"];
                 var parts = value.Split(separator, StringSplitOptions.None);
                 bool isUnderline = false; // Start in normal mode
