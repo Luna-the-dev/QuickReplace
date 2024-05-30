@@ -43,10 +43,8 @@ namespace TextReplace.UserControls
                     return 0;
                 }
 
-                // animate to the difference between the width of the parent element
-                // and the text. the +5 is to compensate for the whitespace after the text
-                // within its element.
-                return -val + (double)par.ActualWidth + 5;
+                // animate to the difference between the width of the parent element and the text
+                return -val + (double)par.ActualWidth;
             }
 
             return value;

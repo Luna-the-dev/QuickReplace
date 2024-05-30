@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TextReplace.MVVM.View"
              xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
+             xmlns:userControl="clr-namespace:TextReplace.UserControls"
              xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
@@ -311,21 +312,32 @@
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
 
-                                        <TextBlock Grid.Row="0" Margin="0 0 0 5"
-                                                   Text="{Binding OutputDirectory, StringFormat=Directory: {0}}"
-                                                   TextWrapping="NoWrap"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   FontFamily="/Fonts/#Poppins" FontSize="13"
-                                                   Foreground="{StaticResource TextLight}"
-                                                   VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Row="1"
-                                                   Margin="0 5 0 0"
-                                                   Text="{Binding Suffix, StringFormat=Suffix: {0}}"
-                                                   TextWrapping="NoWrap"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   FontFamily="/Fonts/#Poppins" FontSize="13"
-                                                   Foreground="{StaticResource TextLight}"
-                                                   VerticalAlignment="Center"/>
+                                        <Grid Grid.Row="0" Margin="0 0 0 5">
+                                            <TextBlock Text="Directory: "
+                                                       FontSize="13"
+                                                       FontFamily="/Fonts/#Poppins"
+                                                       Foreground="{StaticResource TextLight}"
+                                                       VerticalAlignment="Center"/>
+                                            <userControl:RollingText Margin="67 0 0 0"
+                                                                     Text="{Binding OutputDirectory}"
+                                                                     Foreground="{StaticResource TextLight}"
+                                                                     FontSize="13"
+                                                                     FontFamily="/Fonts/#Poppins"/>
+                                        </Grid>
+                                        
+                                        <Grid Grid.Row="1" Margin="0 5 0 0">
+                                            <TextBlock Text="Suffix: "
+                                                       FontSize="13"
+                                                       FontFamily="/Fonts/#Poppins"
+                                                       Foreground="{StaticResource TextLight}"
+                                                       VerticalAlignment="Center"/>
+                                            <userControl:RollingText Margin="42 0 0 0"
+                                                                     Text="{Binding Suffix}"
+                                                                     Foreground="{StaticResource TextLight}"
+                                                                     FontSize="13"
+                                                                     FontFamily="/Fonts/#Poppins"/>
+                                        </Grid>
+                                        
                                     </Grid>
                                 </Border>
                             </Grid>
