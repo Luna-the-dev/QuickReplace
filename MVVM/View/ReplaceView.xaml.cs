@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 
 namespace TextReplace.MVVM.View
 {
@@ -81,10 +81,14 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(editMenuOption.Text);
+            string body = "Edit the replacement phrase.";
+            string topWatermark = "Original";
+            string bottomWatermark = "Replacement";
             string topInputText = viewModel.SelectedPhrase.Item1 ?? string.Empty;
             string bottomInputText = viewModel.SelectedPhrase.Item2 ?? string.Empty;
 
-            var dialog = new PopupWindows.EditPhraseDoubleInputWindow(window, title, topInputText, bottomInputText);
+            var dialog = new PopupWindows.EditPhraseDoubleInputWindow(window, title, body,
+                topWatermark, bottomWatermark, topInputText, bottomInputText);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
@@ -118,8 +122,11 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(editMenuOption.Text);
+            string body = "Add a replacement phrase.";
+            string topWatermark = "Original";
+            string bottomWatermark = "Replace with";
 
-            var dialog = new PopupWindows.AddPhraseDoubleInputWindow(window, title);
+            var dialog = new PopupWindows.AddPhraseDoubleInputWindow(window, title, body, topWatermark, bottomWatermark);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
@@ -197,8 +204,10 @@ namespace TextReplace.MVVM.View
                 // get a new delimiter
                 var window = Window.GetWindow(sender as DependencyObject);
                 string title = "Text File Delimiter";
+                string body = "Enter the character you wish to use to seperate the original phrases from the replacements in the text file:";
+                string watermark = "Ex. :, -, or ;";
 
-                var delimiterDialog = new PopupWindows.SetDelimiterInputWindow(window, title);
+                var delimiterDialog = new PopupWindows.SetDelimiterInputWindow(window, title, body, watermark);
                 delimiterDialog.ShowDialog();
 
                 if (delimiterDialog.BtnOk.IsChecked == false)

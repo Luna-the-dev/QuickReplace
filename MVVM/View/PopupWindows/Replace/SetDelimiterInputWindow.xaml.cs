@@ -54,14 +54,14 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
-        public SetDelimiterInputWindow(Window owner, string title)
+        public SetDelimiterInputWindow(Window owner, string title, string body, string watermark)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            DefaultBodyText = "Enter the character you wish to use to seperate the original phrases from the replacements in the text file:";
+            DefaultBodyText = 
             BodyText = DefaultBodyText;
-            InputWatermarkText = "Ex. :, -, or ;";
+            InputWatermarkText = watermark;
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)

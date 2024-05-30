@@ -21,8 +21,9 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(uploadOption.Text);
+            string body = "Upload Text or Document files for the sources to perform the replacements on.";
 
-            var dialog = new PopupWindows.UploadSourceFilesInputWindow(window, title);
+            var dialog = new PopupWindows.UploadSourceFilesInputWindow(window, title, body);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)

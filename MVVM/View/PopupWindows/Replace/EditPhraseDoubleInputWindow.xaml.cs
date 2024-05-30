@@ -73,15 +73,16 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
-        public EditPhraseDoubleInputWindow(Window owner, string title, string topInputText, string bottomInputText)
+        public EditPhraseDoubleInputWindow(Window owner, string title, string body,
+            string topWatermark, string bottomWatermark, string topInputText, string bottomInputText)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            DefaultBodyText = "Edit the replacement phrase.";
+            DefaultBodyText = body;
             BodyText = DefaultBodyText;
-            TopInputWatermarkText = "Original";
-            BottomInputWatermarkText = "Replacement";
+            TopInputWatermarkText = topWatermark;
+            BottomInputWatermarkText = bottomWatermark;
             DefaultTopInputText = topInputText;
             TopInputText = topInputText;
             BottomInputText = bottomInputText;

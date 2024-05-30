@@ -20,8 +20,12 @@ namespace TextReplace.MVVM.View
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Upload";
-            
-            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title);
+            string body = "Upload a file for the replacement phrases.";
+            string delimiterBody = "Enter the character used to seperate the original phrases from the replacements:";
+            string delimiterInputWatermark = "Ex. :, -, or ;";
+
+
+            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body, delimiterBody, delimiterInputWatermark);
 
             dialog.ShowDialog();
 

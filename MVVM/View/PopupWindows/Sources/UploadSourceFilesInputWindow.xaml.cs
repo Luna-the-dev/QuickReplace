@@ -44,12 +44,12 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { ((UploadSourceFilesInputViewModel)DataContext).FullFileNames = value; }
         }
 
-        public UploadSourceFilesInputWindow(Window owner, string title)
+        public UploadSourceFilesInputWindow(Window owner, string title, string body)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            DefaultBodyText = "Upload Text or Document files for the sources to perform the replacements on.";
+            DefaultBodyText = body;
             BodyText = DefaultBodyText;
         }
 
