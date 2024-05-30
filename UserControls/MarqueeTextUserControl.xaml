@@ -1,0 +1,73 @@
+﻿<UserControl x:Class="TextReplace.UserControls.RollingText"
+             x:Name="rollingTextUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TextReplace.UserControls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <Style TargetType="Label">
+            <Setter Property="Foreground" Value="{Binding Foreground, ElementName=rollingTextUserControl, Mode=OneWay}"/>
+            <Setter Property="FontSize" Value="{Binding FontSize, ElementName=rollingTextUserControl, Mode=OneWay}"/>
+            <Setter Property="FontWeight" Value="{Binding FontWeight, ElementName=rollingTextUserControl, Mode=OneWay}"/>
+            <Setter Property="FontFamily" Value="{Binding FontFamily, ElementName=rollingTextUserControl, Mode=OneWay}"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid x:Name="root">
+        <StackPanel Orientation="Horizontal" x:Name="stack">
+            <StackPanel.Resources>
+                <local:NegatingConverter x:Key="NegatingConverter" />
+                <Storyboard x:Key="slide" RepeatBehavior="Forever">
+                    <DoubleAnimation From="-5"
+                                     To="-5"
+                                     Duration="00:00:2"
+                                     Storyboard.TargetProperty="X"
+                                     Storyboard.TargetName="translateText"/>
+                    <DoubleAnimation BeginTime="00:00:2"
+                                     From="-5"
+                                     To="{Binding ActualWidth,
+                                          ElementName=rollingText,
+                                          Converter={StaticResource NegatingConverter},
+                                          ConverterParameter={x:Reference Name=root}}"
+                                     Duration="00:00:8"
+                                     Storyboard.TargetProperty="X"
+                                     Storyboard.TargetName="translateText"/>
+                    <DoubleAnimation BeginTime="00:00:10"
+                                     From="{Binding ActualWidth,
+                                            ElementName=rollingText,
+                                            Converter={StaticResource NegatingConverter},
+                                            ConverterParameter={x:Reference Name=root}}"
+                                     To="{Binding ActualWidth,
+                                          ElementName=rollingText,
+                                          Converter={StaticResource NegatingConverter},
+                                          ConverterParameter={x:Reference Name=root}}"
+                                     Duration="00:00:3"
+                                     Storyboard.TargetProperty="X"
+                                     Storyboard.TargetName="translateText"/>
+                </Storyboard>
+            </StackPanel.Resources>
+
+            <Label Content="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=Text}" 
+                   x:Name="rollingText" 
+                   Canvas.Left="0"
+                   HorizontalAlignment="Stretch">
+                <Label.Triggers>
+                    <EventTrigger RoutedEvent="Label.Loaded">
+                        <BeginStoryboard Storyboard="{StaticResource slide}"/>
+                    </EventTrigger>
+                    <EventTrigger RoutedEvent="Label.SizeChanged">
+                        <BeginStoryboard Storyboard="{StaticResource slide}"/>
+                    </EventTrigger>
+                </Label.Triggers>
+                <Label.RenderTransform>
+                    <TranslateTransform x:Name="translateText" X="0"/>
+                </Label.RenderTransform>
+            </Label>
+        </StackPanel>
+    </Grid>
+
+</UserControl>

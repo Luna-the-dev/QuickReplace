@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TextReplace.MVVM.View"
         xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel.PopupWindows"
+        xmlns:userControl="clr-namespace:TextReplace.UserControls"
         mc:Ignorable="d"
         Title="SetOutputDirectoryWindow"
         MinHeight="225" MinWidth="350"
@@ -56,16 +57,14 @@
                            FontFamily="/Fonts/#Poppins"
                            Margin="0 0 0 10" />
 
-                <TextBlock Grid.Column="1" Grid.Row="2"
-                           Name="DirectoryNameTextBox"
-                           Text="{Binding DirectoryName}"
-                           Visibility="{Binding ShowDirectoryName}"
-                           HorizontalAlignment="Stretch"
-                           TextTrimming="CharacterEllipsis"
-                           Foreground="{StaticResource TextLight}"
-                           FontSize="13"
-                           FontFamily="/Fonts/#Poppins"
-                           Margin="3 2 3 15"/>
+                <userControl:RollingText Grid.Column="1" Grid.Row="2"
+                                         x:Name="DirectoryNameTextBox"
+                                         Visibility="{Binding ShowDirectoryName}"
+                                         Text="{Binding DirectoryName}"
+                                         Foreground="{StaticResource TextLight}"
+                                         FontSize="13"
+                                         FontFamily="/Fonts/#Poppins"
+                                         Margin="5 2 5 15"/>
 
                 <ToggleButton Grid.Column="1" Grid.Row="3" Height="30"
                               Name="BtnUpload" Content="Select new directory"

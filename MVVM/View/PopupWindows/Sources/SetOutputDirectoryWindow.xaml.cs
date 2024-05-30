@@ -1,8 +1,9 @@
 ﻿using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
-using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.MVVM.View.PopupWindows
