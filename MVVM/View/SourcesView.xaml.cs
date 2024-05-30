@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.MVVM.ViewModel;
@@ -64,6 +63,26 @@ namespace TextReplace.MVVM.View
         }
 
         private void SetOutputDirectory_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Set Directory";
+            string body = "Please select a directory which the files will be saved to.";
+
+            var dialog = new PopupWindows.SetOutputDirectoryWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                ((SourcesViewModel)DataContext).UpdateSourceFileOutputDirectory(dialog.DirectoryName);
+            }
+
+            if (dialog.BtnDefault.IsChecked == true)
+            {
+                ((SourcesViewModel)DataContext).UpdateSourceFileOutputDirectory("");
+            }
+        }
+
+        private void SetGlobalOutputDirectory_OnClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Set Directory";

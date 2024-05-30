@@ -4,6 +4,7 @@ using System.IO;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
+using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace TextReplace.MVVM.Model
 {
@@ -36,6 +37,7 @@ namespace TextReplace.MVVM.Model
             set
             {
                 _selectedFile = value;
+                WeakReferenceMessenger.Default.Send(new SelectedSourceFileMsg(value));
             }
         }
 
@@ -133,6 +135,34 @@ namespace TextReplace.MVVM.Model
         /// </summary>
         /// <param name="outputDirectory"></param>
         /// <param name="suffix"></param>
+        public static void UpdateSourceFileOptions(string fileName, string? outputDirectory = null, string? suffix = null)
+        {
+            int index = SourceFiles.FindIndex(x => x.FileName == fileName);
+
+            if (index < 0)
+            {
+                Debug.WriteLine("Filename could not be found, source file option not updated.");
+                return;
+            }
+
+            if (outputDirectory != null)
+            {
+                SourceFiles[index].OutputDirectory = outputDirectory;
+            }
+
+            if (suffix != null)
+            {
+                SourceFiles[index].Suffix = suffix;
+            }
+
+            WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
+        }
+
+        /// <summary>
+        /// Updates the output directory and/or the suffix of all files, as well as the default option for the files.
+        /// </summary>
+        /// <param name="outputDirectory"></param>
+        /// <param name="suffix"></param>
         public static void UpdateAllSourceFileOptions(string? outputDirectory = null, string? suffix = null)
         {
             var newSourceFiles = SourceFiles;
@@ -169,6 +199,11 @@ namespace TextReplace.MVVM.Model
             {
                 Debug.WriteLine($"{fileName} was not found in SourceFiles and was not removed.");
                 return false;
+            }
+
+            if (SourceFiles[index].FileName == SelectedFile.FileName)
+            {
+                SelectedFile = new SourceFile();
             }
 
             SourceFiles.RemoveAt(index);

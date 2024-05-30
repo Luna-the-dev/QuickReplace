@@ -174,7 +174,8 @@
             <Button Grid.Column="1" Grid.Row="1"
                     Width="140" Height="40"
                     Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}">
+                    IsEnabled="{Binding IsFileSelected}"
+                    Click="SetOutputDirectory_OnClick">
                 <Button.Content>
                     <TextBlock Text="Output Directory"
                                HorizontalAlignment="Center"
@@ -211,7 +212,7 @@
             <Button Grid.Column="1" Grid.Row="5"
                     Width="140" Height="40"
                     Style="{StaticResource OptionButtonTheme}"
-                    Click="SetOutputDirectory_OnClick">
+                    Click="SetGlobalOutputDirectory_OnClick">
                 <Button.Content>
                     <TextBlock Text="Output Directory"
                                HorizontalAlignment="Center"

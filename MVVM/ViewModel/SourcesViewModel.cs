@@ -25,7 +25,7 @@ namespace TextReplace.MVVM.ViewModel
         private SourceFileWrapper _selectedFile = new SourceFileWrapper();
         partial void OnSelectedFileChanged(SourceFileWrapper value)
         {
-            SourceFilesData.SelectedFile = SourceFileWrapper.UnwrapSourceFile(value);
+            IsFileSelected = value.FileName != string.Empty;
         }
 
         [ObservableProperty]
@@ -55,8 +55,7 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
             SourceFileWrapper f = (SourceFileWrapper)file;
-            f.IsSelected = true;
-            SelectedFile = f;
+            SourceFilesData.SelectedFile = SourceFileWrapper.UnwrapSourceFile(f);
         }
 
         /// <summary>
@@ -77,8 +76,7 @@ namespace TextReplace.MVVM.ViewModel
                 Debug.WriteLine("Source file could not be removed.");
                 return;
             }
-
-            UpdateSourceFilesView("");
+            UpdateSourceFilesView(SelectedFile.FileName);
         }
 
         /// <summary>
@@ -87,6 +85,11 @@ namespace TextReplace.MVVM.ViewModel
         public static void RemoveAllSourceFiles()
         {
             SourceFilesData.SourceFiles = [];
+        }
+
+        public void UpdateSourceFileOutputDirectory(string directoryName)
+        {
+            SourceFilesData.UpdateSourceFileOptions(SelectedFile.FileName, outputDirectory: directoryName);
         }
 
         public static void UpdateAllSourceFileOutputDirectories(string directoryName)
@@ -144,7 +147,6 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(SelectedSourceFileMsg message)
         {
             SelectedFile = SourceFileWrapper.WrapSourceFile(message.Value);
-            IsFileSelected = (message.Value.FileName == "");
         }
     }
 
