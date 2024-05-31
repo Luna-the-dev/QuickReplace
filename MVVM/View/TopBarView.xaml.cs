@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.Core.Validation;
@@ -46,8 +47,9 @@ namespace TextReplace.MVVM.View
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Upload";
+            string body = "Upload Text or Document files for the sources to perform the replacements on.";
 
-            var dialog = new PopupWindows.UploadSourceFilesInputWindow(window, title);
+            var dialog = new PopupWindows.UploadSourceFilesInputWindow(window, title, body);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)

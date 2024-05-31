@@ -25,8 +25,12 @@ namespace TextReplace.MVVM.View
 
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(uploadOption.Text);
+            string body = "Upload a file for the replacement phrases.";
+            string delimiterBody = "Enter the character used to seperate the original phrases from the replacements:";
+            string delimiterWatermark = "Ex. :, -, or ;";
 
-            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title);
+
+            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body, delimiterBody, delimiterWatermark);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
