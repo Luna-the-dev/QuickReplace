@@ -61,7 +61,7 @@
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
 
-            <Button Grid.Column="1" Grid.Row="0" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="0"
                     Click="OpenUploadWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
@@ -72,7 +72,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="1" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="1"
                     Click="OpenCreateWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
@@ -83,7 +83,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="3"
                     Click="OpenSaveWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsUnsaved}">
@@ -95,7 +95,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="4"
                     Click="OpenSaveAsWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsFileSelected}">
@@ -203,7 +203,7 @@
                     BorderBrush="{StaticResource TextUnclickable}"
                     BorderThickness="0 0 0 1"/>
 
-            <Button Grid.Column="1" Grid.Row="2" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="2"
                     Click="OpenAddWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsFileSelected}">
@@ -215,7 +215,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="3" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="3"
                     Click="OpenEditWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsPhraseSelected}">
@@ -227,7 +227,7 @@
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="4" Width="140" Height="40"
+            <Button Grid.Column="1" Grid.Row="4"
                     Click="OpenRemoveWindow_OnClick"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsPhraseSelected}">
