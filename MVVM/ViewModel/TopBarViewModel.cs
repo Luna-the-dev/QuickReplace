@@ -91,8 +91,6 @@ namespace TextReplace.MVVM.ViewModel
 
             if (result == true)
             {
-                Debug.Write("Source file name(s):");
-                SourceFilesData.SourceFiles.ForEach(i => Debug.WriteLine($"\t{i.FileName}"));
                 SourceFileReadSuccess = Visibility.Visible;
                 SourceFileReadFail = Visibility.Hidden;
             }

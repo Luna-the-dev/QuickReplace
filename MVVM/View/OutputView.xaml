@@ -74,9 +74,25 @@
         </Grid>
 
         <!-- Source files view -->
+        <Border Grid.Column="1" Grid.Row="2"
+                Visibility="{Binding IsFilesNeededVisible}"
+                Background="{StaticResource BackgroundColor}"
+                BorderThickness="0">
+            <TextBlock VerticalAlignment="Center"
+                       HorizontalAlignment="Stretch"
+                       Text="{Binding FilesNeededText}"
+                       TextAlignment="Center"
+                       TextWrapping="Wrap"
+                       Foreground="{StaticResource TextUnclickable}"
+                       FontFamily="/Fonts/#Poppins"
+                       FontSize="16">
+            </TextBlock>
+        </Border>
+        
         <ScrollViewer Grid.Column="1" Grid.Row="2"
                       Style="{DynamicResource ScrollViewerTheme}"
                       Background="{StaticResource BackgroundColor}"
+                      Visibility="{Binding AreOutputFilesVisible}"
                       PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
             <ListBox x:Name="listBox" Margin="0 4"
                      Background="Transparent" BorderThickness="0"
@@ -266,24 +282,26 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Border x:Name="border" Background="{StaticResource BtnLight}"
-                                CornerRadius="4" Height="110" Margin="8 4 14 4">
+                                CornerRadius="4" Height="80" Margin="8 4 14 4">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Margin="10 0"
+                                <TextBlock Grid.Row="0" Margin="15 10 15 0"
                                            Text="{Binding ShortFileName}"
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="14"
+                                           FontFamily="/Fonts/#Poppins"
+                                           FontSize="15"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
-                                <TextBlock Grid.Row="1" Margin="0 5 0 0"
+                                <TextBlock Grid.Row="1" Margin="15 0 15 7"
                                            Text="{Binding NumOfReplacementsString}"
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="13"
+                                           FontFamily="/Fonts/#Poppins"
+                                           FontSize="12"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
                             </Grid>

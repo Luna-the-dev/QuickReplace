@@ -151,7 +151,7 @@ namespace TextReplace.MVVM.ViewModel
                 // if the selected file is not in the search, clear the selected file
                 if (SourceFiles.Any(x => x.FileName == selectedFile) == false)
                 {
-                    SelectedFile = new SourceFileWrapper();
+                    SourceFilesData.SelectedFile = new SourceFile();
                 }
             }
         }
@@ -168,16 +168,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(SourceFilesMsg message)
         {
-            // if the source file has no custom output directory or suffix, replace the empty string with "Default"
-            SourceFiles = new ObservableCollection<SourceFileWrapper>(message.Value.Select(x =>
-            {
-                SourceFile newSourceFile = new SourceFile(
-                    x.FileName,
-                    (x.OutputDirectory == string.Empty) ? "Default" : x.OutputDirectory,
-                    (x.Suffix == string.Empty) ? "Default" : x.Suffix);
-                
-                return SourceFileWrapper.WrapSourceFile(newSourceFile);
-            }));
+            SourceFiles = new ObservableCollection<SourceFileWrapper>(message.Value.Select(SourceFileWrapper.WrapSourceFile));
         }
 
         public void Receive(SelectedSourceFileMsg message)
@@ -196,7 +187,9 @@ namespace TextReplace.MVVM.ViewModel
         public string FileName { get; set; }
         public string ShortFileName { get; set; }
         public string OutputDirectory { get; set; }
+        public string OutputDirectoryText { get; set; }
         public string Suffix { get; set; }
+        public string SuffixText { get; set; }
         public bool IsSelected { get; set; }
 
         public SourceFileWrapper()
@@ -204,7 +197,9 @@ namespace TextReplace.MVVM.ViewModel
             FileName = string.Empty;
             ShortFileName = string.Empty;
             OutputDirectory = string.Empty;
+            OutputDirectoryText = string.Empty;
             Suffix = string.Empty;
+            SuffixText = string.Empty;
             IsSelected = false;
         }
 
@@ -213,7 +208,9 @@ namespace TextReplace.MVVM.ViewModel
             FileName = file.FileName;
             ShortFileName = Path.GetFileName(file.FileName);
             OutputDirectory = file.OutputDirectory;
+            OutputDirectoryText = (OutputDirectory == string.Empty) ? "Default" : OutputDirectory;
             Suffix = file.Suffix;
+            SuffixText = (Suffix == string.Empty) ? "Default" : Suffix;
             IsSelected = isSelected;
         }
 

@@ -322,14 +322,14 @@
                                                        Foreground="{StaticResource TextLight}"
                                                        VerticalAlignment="Center"/>
                                             <userControl:RollingText Margin="68 0 0 0"
-                                                                     Text="{Binding OutputDirectory}"
+                                                                     Text="{Binding OutputDirectoryText}"
                                                                      Foreground="{StaticResource TextLight}"
                                                                      FontSize="13"
                                                                      FontFamily="/Fonts/#Poppins"/>
                                         </Grid>
 
                                         <TextBlock Grid.Row="1" Margin="0 5 0 0"
-                                                   Text="{Binding Suffix, StringFormat=Suffix:  {0}}"
+                                                   Text="{Binding SuffixText, StringFormat=Suffix:  {0}}"
                                                    TextWrapping="NoWrap"
                                                    TextTrimming="CharacterEllipsis"
                                                    FontFamily="/Fonts/#Poppins" FontSize="13"

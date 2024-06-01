@@ -2,12 +2,18 @@
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Windows;
+using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class OutputViewModel : ObservableRecipient
+    partial class OutputViewModel : ObservableRecipient,
+        IRecipient<OutputFilesMsg>,
+        IRecipient<SelectedOutputFileMsg>,
+        IRecipient<ReplacePhrasesMsg>,
+        IRecipient<SourceFilesMsg>
     {
         [ObservableProperty]
         private ObservableCollection<OutputFileWrapper> _outputFiles =
@@ -64,25 +70,25 @@ namespace TextReplace.MVVM.ViewModel
 
         private void SetIsReplacifyEnabled()
         {
-            string newFilesNeededText = string.Empty;
+            bool areFilesNeeded = false;
 
-            if (ReplaceData.ReplacePhrasesList.Count > 0)
+            if (ReplaceData.ReplacePhrasesList.Count == 0 && SourceFilesData.SourceFiles.Count == 0)
             {
-                newFilesNeededText += "Please upload Replacements.";
+                FilesNeededText = "Please upload Replacements\nand Source Files.";
+                areFilesNeeded = true;
             }
-
-            if (SourceFilesData.SourceFiles.Count > 0)
+            else if (ReplaceData.ReplacePhrasesList.Count == 0)
             {
-                if (newFilesNeededText != string.Empty)
-                {
-                    newFilesNeededText += "\n";
-                }
-                newFilesNeededText += "Please upload Source Files.";
+                FilesNeededText = "Please upload Replacements.";
+                areFilesNeeded = true;
             }
-
-            FilesNeededText = newFilesNeededText;
-
-            if (newFilesNeededText != string.Empty)
+            else if (SourceFilesData.SourceFiles.Count == 0)
+            {
+                FilesNeededText = "Please upload Source Files.";
+                areFilesNeeded = true;
+            }
+            
+            if (areFilesNeeded)
             {
                 IsReplacifyEnabled = false;
                 IsFilesNeededVisible = Visibility.Visible;
@@ -100,7 +106,7 @@ namespace TextReplace.MVVM.ViewModel
         /// <param name="selectedFile"></param>
         private void UpdateOutputFilesView(string selectedFile)
         {
-            if (SearchText != string.Empty)
+            if (SearchText == string.Empty)
             {
                 OutputFiles = new ObservableCollection<OutputFileWrapper>(
                     OutputData.OutputFiles.Select(OutputFileWrapper.WrapOutputFile));
@@ -114,9 +120,31 @@ namespace TextReplace.MVVM.ViewModel
                 // if the selected file is not in the search, clear the selected file
                 if (OutputFiles.Any(x => x.FileName == selectedFile) == false)
                 {
-                    SelectedFile = new OutputFileWrapper();
+                    OutputData.SelectedFile = new OutputFile();
                 }
             }
+        }
+
+        public void Receive(OutputFilesMsg message)
+        {
+            OutputFiles = new ObservableCollection<OutputFileWrapper>(message.Value.Select(OutputFileWrapper.WrapOutputFile));
+        }
+
+        public void Receive(SelectedOutputFileMsg message)
+        {
+            SelectedFile = OutputFileWrapper.WrapOutputFile(message.Value);
+        }
+
+        public void Receive(ReplacePhrasesMsg message)
+        {
+            // check to see if replacements and source files are uploaded
+            SetIsReplacifyEnabled();
+        }
+
+        public void Receive(SourceFilesMsg message)
+        {
+            // check to see if replacements and source files are uploaded
+            SetIsReplacifyEnabled();
         }
     }
 
@@ -155,7 +183,7 @@ namespace TextReplace.MVVM.ViewModel
         {
             NumOfReplacementsString = (NumOfReplacements < 0) ?
                 "Replacements were not yet made." :
-                $"{NumOfReplacements} replacements were made.";
+                $"{NumOfReplacements:n0} replacements were made.";
         }
 
         public static OutputFileWrapper WrapOutputFile(OutputFile file)

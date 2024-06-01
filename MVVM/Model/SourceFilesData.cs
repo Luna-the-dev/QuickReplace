@@ -66,15 +66,10 @@ namespace TextReplace.MVVM.Model
                         fileName,
                         DefaultSourceFileOptions.OutputDirectory,
                         DefaultSourceFileOptions.Suffix));
-
-                    Debug.WriteLine($"1: {DefaultSourceFileOptions.OutputDirectory}\t{DefaultSourceFileOptions.Suffix}");
-                    Debug.WriteLine($"2: {SourceFiles[0].OutputDirectory}\t{SourceFiles[0].Suffix}");
                 }
             }
 
             WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
-            Debug.WriteLine($"3: {DefaultSourceFileOptions.OutputDirectory}\t{DefaultSourceFileOptions.Suffix}");
-            Debug.WriteLine($"4: {SourceFiles[0].OutputDirectory}\t{SourceFiles[0].Suffix}");
             OutputData.UpdateOutputFiles(SourceFiles);
             return true;
         }

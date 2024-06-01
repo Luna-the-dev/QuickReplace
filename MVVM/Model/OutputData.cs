@@ -265,7 +265,7 @@ namespace TextReplace.MVVM.Model
         public OutputFile(SourceFile file)
         {
             FileName = GenerateDestFileName(file);
-            ShortFileName = Path.GetFileName(file.FileName);
+            ShortFileName = Path.GetFileName(FileName);
             SourceFileName = file.FileName;
             NumOfReplacements = -1;
         }
