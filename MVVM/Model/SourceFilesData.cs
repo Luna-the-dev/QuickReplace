@@ -4,7 +4,6 @@ using System.IO;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
-using static Microsoft.WindowsAPICodePack.Shell.PropertySystem.SystemProperties.System;
 
 namespace TextReplace.MVVM.Model
 {
@@ -48,7 +47,7 @@ namespace TextReplace.MVVM.Model
         /// <returns>
         /// False if one of the files was invalid, null user closed the window without selecting a file.
         /// </returns>
-        public static bool SetNewSourceFiles(List<string> fileNames)
+        public static bool AddNewSourceFiles(List<string> fileNames)
         {
             // set the SourceFilesData names
             if (FileValidation.AreFileNamesValid(fileNames) == false)
@@ -67,41 +66,17 @@ namespace TextReplace.MVVM.Model
                         fileName,
                         DefaultSourceFileOptions.OutputDirectory,
                         DefaultSourceFileOptions.Suffix));
+
+                    Debug.WriteLine($"1: {DefaultSourceFileOptions.OutputDirectory}\t{DefaultSourceFileOptions.Suffix}");
+                    Debug.WriteLine($"2: {SourceFiles[0].OutputDirectory}\t{SourceFiles[0].Suffix}");
                 }
             }
 
             WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
+            Debug.WriteLine($"3: {DefaultSourceFileOptions.OutputDirectory}\t{DefaultSourceFileOptions.Suffix}");
+            Debug.WriteLine($"4: {SourceFiles[0].OutputDirectory}\t{SourceFiles[0].Suffix}");
+            OutputData.UpdateOutputFiles(SourceFiles);
             return true;
-        }
-
-        /// <summary>
-        /// Generates a list of destination file names by adding a suffix onto the SrouceFile file names
-        /// </summary>
-        /// <param name="suffix"></param>
-        /// <returns>A list of destination file names</returns>
-        public static List<string> GenerateDestFileNames()
-        {
-            List<string> destFileNames = new List<string>();
-
-            foreach (var file in SourceFiles)
-            {
-                string? directory = (file.OutputDirectory == string.Empty) ?
-                    Path.GetDirectoryName(file.FileName) :
-                    file.OutputDirectory;
-
-                string suffix = (file.Suffix == string.Empty) ?
-                    "-replacify" :
-                    file.Suffix;
-
-                destFileNames.Add(string.Format(@"{0}\{1}{2}{3}",
-                                                directory,
-                                                Path.GetFileNameWithoutExtension(file.FileName),
-                                                suffix,
-                                                Path.GetExtension(file.FileName)
-                                                ));
-            }
-
-            return destFileNames;
         }
 
         /// <summary>
@@ -156,6 +131,7 @@ namespace TextReplace.MVVM.Model
             }
 
             WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
+            OutputData.UpdateOutputFiles(SourceFiles);
         }
 
         /// <summary>
@@ -189,6 +165,7 @@ namespace TextReplace.MVVM.Model
             }
 
             SourceFiles = newSourceFiles;
+            OutputData.UpdateOutputFiles(newSourceFiles);
             DefaultSourceFileOptions = newDefaultSfo;
         }
 
@@ -208,6 +185,7 @@ namespace TextReplace.MVVM.Model
 
             SourceFiles.RemoveAt(index);
             WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
+            OutputData.UpdateOutputFiles(SourceFiles);
             return true;
         }
     }
@@ -221,10 +199,10 @@ namespace TextReplace.MVVM.Model
 
         public SourceFile()
         {
-            FileName = "";
-            ShortFileName = "";
-            OutputDirectory = "";
-            Suffix = "";
+            FileName = string.Empty;
+            ShortFileName = string.Empty;
+            OutputDirectory = string.Empty;
+            Suffix = string.Empty;
         }
 
         public SourceFile(

@@ -16,7 +16,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
         public SourcesViewModel SourcesVm = new SourcesViewModel();
-        public PerformReplaceViewModel PerformReplaceVm = new PerformReplaceViewModel();
+        public OutputViewModel PerformReplaceVm = new OutputViewModel();
 
         public SideBarViewModel()
         {

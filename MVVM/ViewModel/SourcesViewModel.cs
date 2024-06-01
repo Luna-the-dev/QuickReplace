@@ -7,7 +7,6 @@ using System.IO;
 using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
 using TextReplace.MVVM.Model;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -18,7 +17,11 @@ namespace TextReplace.MVVM.ViewModel
     {
         [ObservableProperty]
         private ObservableCollection<SourceFileWrapper> _sourceFiles =
-            new ObservableCollection<SourceFileWrapper>(SourceFilesData.SourceFiles.Select(SourceFileWrapper.WrapSourceFile));
+            new(SourceFilesData.SourceFiles.Select(SourceFileWrapper.WrapSourceFile));
+        partial void OnSourceFilesChanged(ObservableCollection<SourceFileWrapper> value)
+        {
+            IsSourceFileUploaded = (value.Count > 0);
+        }
 
         [ObservableProperty]
         private bool _isSourceFileUploaded = (SourceFilesData.SourceFiles.Count > 0);
@@ -158,21 +161,23 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         /// <param name="fileNames"></param>
         /// <returns></returns>
-        public static bool SetNewSourceFiles(List<string> fileNames)
+        public static bool AddNewSourceFiles(List<string> fileNames)
         {
-            return SourceFilesData.SetNewSourceFiles(fileNames);
+            return SourceFilesData.AddNewSourceFiles(fileNames);
         }
 
         public void Receive(SourceFilesMsg message)
         {
             // if the source file has no custom output directory or suffix, replace the empty string with "Default"
-            SourceFiles = new ObservableCollection<SourceFileWrapper>(message.Value.Select(x => {
-                x.OutputDirectory = (x.OutputDirectory == string.Empty) ? "Default" : x.OutputDirectory;
-                x.Suffix = (x.Suffix == string.Empty) ? "Default" : x.Suffix;
-                return SourceFileWrapper.WrapSourceFile(x);
+            SourceFiles = new ObservableCollection<SourceFileWrapper>(message.Value.Select(x =>
+            {
+                SourceFile newSourceFile = new SourceFile(
+                    x.FileName,
+                    (x.OutputDirectory == string.Empty) ? "Default" : x.OutputDirectory,
+                    (x.Suffix == string.Empty) ? "Default" : x.Suffix);
+                
+                return SourceFileWrapper.WrapSourceFile(newSourceFile);
             }));
-
-            IsSourceFileUploaded = (message.Value.Count > 0);
         }
 
         public void Receive(SelectedSourceFileMsg message)
@@ -196,23 +201,19 @@ namespace TextReplace.MVVM.ViewModel
 
         public SourceFileWrapper()
         {
-            FileName = "";
-            ShortFileName = "";
-            OutputDirectory = "";
-            Suffix = "";
+            FileName = string.Empty;
+            ShortFileName = string.Empty;
+            OutputDirectory = string.Empty;
+            Suffix = string.Empty;
             IsSelected = false;
         }
 
-        public SourceFileWrapper(
-            string fileName,
-            string outputDirectory,
-            string suffix,
-            bool isSelected = false)
+        public SourceFileWrapper(SourceFile file, bool isSelected = false)
         {
-            FileName = fileName;
-            ShortFileName = Path.GetFileName(fileName);
-            OutputDirectory = outputDirectory;
-            Suffix = suffix;
+            FileName = file.FileName;
+            ShortFileName = Path.GetFileName(file.FileName);
+            OutputDirectory = file.OutputDirectory;
+            Suffix = file.Suffix;
             IsSelected = isSelected;
         }
 
@@ -220,9 +221,9 @@ namespace TextReplace.MVVM.ViewModel
         {
             if (file.FileName == SourceFilesData.SelectedFile.FileName)
             {
-                return new SourceFileWrapper(file.FileName, file.OutputDirectory, file.Suffix, true);
+                return new SourceFileWrapper(file, true);
             }
-            return new SourceFileWrapper(file.FileName, file.OutputDirectory, file.Suffix);
+            return new SourceFileWrapper(file);
         }
 
         public static SourceFile UnwrapSourceFile(SourceFileWrapper file)

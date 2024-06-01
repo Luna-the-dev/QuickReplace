@@ -7,20 +7,24 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Sources;
 using TextReplace.Core.Validation;
+using TextReplace.Messages.Replace;
 
 namespace TextReplace.MVVM.ViewModel
 {
     partial class TopBarViewModel : ObservableObject,
-        IRecipient<DefaultSourceFileOptionsMsg>
+        IRecipient<WholeWordMsg>,
+        IRecipient<CaseSensitiveMsg>,
+        IRecipient<DefaultSourceFileOptionsMsg>,
+        IRecipient<ReplacePhrasesMsg>,
+        IRecipient<SourceFilesMsg>
     {
+        [ObservableProperty]
+        private Visibility _caseSensitive =
+            (OutputData.CaseSensitive) ? Visibility.Visible : Visibility.Hidden;
 
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ToggleCaseSensitiveCommand))]
-        private Visibility _caseSensitive = Visibility.Hidden;
-
-        [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ToggleWholeWordCommand))]
-        private Visibility _wholeWord = Visibility.Hidden;
+        private Visibility _wholeWord =
+            (OutputData.WholeWord) ? Visibility.Visible : Visibility.Hidden;
 
         [ObservableProperty]
         private string _suffix = SourceFilesData.DefaultSourceFileOptions.Suffix ?? "";
@@ -44,6 +48,8 @@ namespace TextReplace.MVVM.ViewModel
         // commands
         public RelayCommand Replace => new RelayCommand(ReplaceCmd);
         public RelayCommand ChangeOutputDirectory => new RelayCommand(ChangeOutputDirectoryCmd);
+        public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
+        public RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
 
         public TopBarViewModel()
         {
@@ -81,7 +87,7 @@ namespace TextReplace.MVVM.ViewModel
         public void SourceFiles(List<string> fileNames)
         {
             // open a file dialogue for the user and update the source files
-            bool result = SourceFilesData.SetNewSourceFiles(fileNames);
+            bool result = SourceFilesData.AddNewSourceFiles(fileNames);
 
             if (result == true)
             {
@@ -108,20 +114,19 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
 
-            bool caseSensitive = (CaseSensitive == Visibility.Visible) ? true : false;
-            ReplaceData replaceData = new ReplaceData(caseSensitive);
-
-            // create a list of destination file names
-            List<string> destFileNames = SourceFilesData.GenerateDestFileNames();
-
             // perform the text replacements
+            bool caseSensitive = (CaseSensitive == Visibility.Visible) ? true : false;
             bool wholeWord = (WholeWord == Visibility.Visible) ? true : false;
-            bool result = replaceData.PerformReplacements(
+
+            bool result = OutputData.PerformReplacements(
+                ReplaceData.ReplacePhrasesDict,
                 SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
-                destFileNames,
-                wholeWord);
+                OutputData.OutputFiles.Select(x => x.FileName).ToList(),
+                wholeWord,
+                caseSensitive);
+
             Debug.WriteLine("Output file names:");
-            destFileNames.ForEach(o => Debug.WriteLine($"\t{o}"));
+            OutputData.OutputFiles.ForEach(o => Debug.WriteLine($"\t{o.FileName}"));
 
             if (result == false)
             {
@@ -133,16 +138,14 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
-        [RelayCommand]
         private void ToggleCaseSensitive()
         {
-            CaseSensitive = (CaseSensitive == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
+            OutputData.CaseSensitive = !OutputData.CaseSensitive;
         }
 
-        [RelayCommand]
         private void ToggleWholeWord()
         {
-            WholeWord = (WholeWord == Visibility.Hidden) ? Visibility.Visible : Visibility.Hidden;
+            OutputData.WholeWord = !OutputData.WholeWord;
         }
 
         private void ChangeOutputDirectoryCmd()
@@ -212,6 +215,44 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(DefaultSourceFileOptionsMsg message)
         {
             Suffix = message.Value.Suffix;
+        }
+
+        public void Receive(WholeWordMsg message)
+        {
+            WholeWord = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public void Receive(CaseSensitiveMsg message)
+        {
+            CaseSensitive = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        public void Receive(ReplacePhrasesMsg message)
+        {
+            if (message.Value.Count > 0)
+            {
+                ReplaceFileReadSuccess = Visibility.Visible;
+                ReplaceFileReadFail = Visibility.Hidden;
+                SetReplaceButtonClickability();
+                return;
+            }
+            ReplaceFileReadSuccess = Visibility.Hidden;
+            ReplaceFileReadFail = Visibility.Visible;
+            SetReplaceButtonClickability();
+        }
+
+        public void Receive(SourceFilesMsg message)
+        {
+            if (message.Value.Count > 0)
+            {
+                SourceFileReadSuccess = Visibility.Visible;
+                SourceFileReadFail = Visibility.Hidden;
+                SetReplaceButtonClickability();
+                return;
+            }
+            SourceFileReadSuccess = Visibility.Hidden;
+            SourceFileReadFail = Visibility.Visible;
+            SetReplaceButtonClickability();
         }
     }
 }

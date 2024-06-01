@@ -28,7 +28,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                SourcesViewModel.SetNewSourceFiles(dialog.FullFileNames);
+                SourcesViewModel.AddNewSourceFiles(dialog.FullFileNames);
             }
         }
 

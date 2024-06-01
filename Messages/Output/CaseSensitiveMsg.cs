@@ -2,7 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class IsReplaceFileUnsavedMsg(bool value) : ValueChangedMessage<bool>(value)
+    class CaseSensitiveMsg(bool value) : ValueChangedMessage<bool>(value)
     {
     }
 }

@@ -38,8 +38,8 @@
                 <view:SourcesView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type viewModel:PerformReplaceViewModel}">
-                <view:PerformReplaceView/>
+            <DataTemplate DataType="{x:Type viewModel:OutputViewModel}">
+                <view:OutputView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type viewModel:TopBarViewModel}">
