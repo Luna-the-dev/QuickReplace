@@ -291,11 +291,9 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="RadioButton.IsChecked" Value="True">
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource BtnHighlighted}"/>
-                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnHighlightedShadow}"/>
                             </Trigger>
                             <Trigger Property="RadioButton.IsChecked" Value="False">
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}"/>
-                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnDark}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
