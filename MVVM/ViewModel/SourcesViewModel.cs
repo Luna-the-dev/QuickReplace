@@ -147,12 +147,12 @@ namespace TextReplace.MVVM.ViewModel
                 SourceFiles = new ObservableCollection<SourceFileWrapper>(
                     SourceFilesData.SourceFiles.Select(SourceFileWrapper.WrapSourceFile)
                     .Where(x => x.FileName.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
-                
-                // if the selected file is not in the search, clear the selected file
-                if (SourceFiles.Any(x => x.FileName == selectedFile) == false)
-                {
-                    SourceFilesData.SelectedFile = new SourceFile();
-                }
+            }
+
+            // if the selected file is not in the search, clear the selected file
+            if (SourceFiles.Any(x => x.FileName == selectedFile) == false)
+            {
+                SourceFilesData.SelectedFile = new SourceFile();
             }
         }
 

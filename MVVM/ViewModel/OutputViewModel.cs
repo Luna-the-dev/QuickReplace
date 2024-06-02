@@ -13,7 +13,9 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<OutputFilesMsg>,
         IRecipient<SelectedOutputFileMsg>,
         IRecipient<ReplacePhrasesMsg>,
-        IRecipient<SourceFilesMsg>
+        IRecipient<SourceFilesMsg>,
+        IRecipient<WholeWordMsg>,
+        IRecipient<CaseSensitiveMsg>
     {
         [ObservableProperty]
         private ObservableCollection<OutputFileWrapper> _outputFiles =
@@ -47,12 +49,33 @@ namespace TextReplace.MVVM.ViewModel
             UpdateOutputFilesView(SelectedFile.FileName);
         }
 
+        [ObservableProperty]
+        private bool _isWholeWord = OutputData.WholeWord;
+        [ObservableProperty]
+        private bool _isCaseSensitive = OutputData.CaseSensitive;
+
+        public RelayCommand ReplaceAllCommand => new RelayCommand(ReplaceAll);
+        public RelayCommand ReplaceSelectedCommand => new RelayCommand(ReplaceSelected);
         public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
+        public RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
+        public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
 
         public OutputViewModel()
         {
             SetIsReplacifyEnabled();
             WeakReferenceMessenger.Default.RegisterAll(this);
+        }
+
+        private void ReplaceAll()
+        {
+            PerformReplacements(
+                SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
+                OutputData.OutputFiles.Select(x => x.FileName).ToList());
+        }
+
+        private void ReplaceSelected()
+        {
+            PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
         }
 
         private void SetSelectedFile(object? file)
@@ -66,6 +89,45 @@ namespace TextReplace.MVVM.ViewModel
             }
             OutputFileWrapper f = (OutputFileWrapper)file;
             OutputData.SelectedFile = OutputFileWrapper.UnwrapOutputFile(f);
+        }
+
+        private void ToggleWholeWord()
+        {
+            OutputData.WholeWord = !OutputData.WholeWord;
+        }
+
+        private void ToggleCaseSensitive()
+        {
+            OutputData.CaseSensitive = !OutputData.CaseSensitive;
+        }
+
+        private static void PerformReplacements(List<string> sourceFiles, List<string> destFiles)
+        {
+            if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
+            {
+                Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
+                return;
+            }
+
+            // perform the text replacements
+            bool result = OutputData.PerformReplacements(
+                ReplaceData.ReplacePhrasesDict,
+                sourceFiles,
+                destFiles,
+                OutputData.WholeWord,
+                OutputData.CaseSensitive);
+
+            Debug.WriteLine("Output file names:");
+            destFiles.ForEach(o => Debug.WriteLine($"\t{o}"));
+
+            if (result == false)
+            {
+                Debug.WriteLine("A replacement could not be made.");
+            }
+            else
+            {
+                Debug.WriteLine("Replacements successfully performed.");
+            }
         }
 
         private void SetIsReplacifyEnabled()
@@ -116,18 +178,18 @@ namespace TextReplace.MVVM.ViewModel
                 OutputFiles = new ObservableCollection<OutputFileWrapper>(
                     OutputData.OutputFiles.Select(OutputFileWrapper.WrapOutputFile)
                     .Where(x => x.FileName.Contains(SearchText, StringComparison.OrdinalIgnoreCase)));
+            }
 
-                // if the selected file is not in the search, clear the selected file
-                if (OutputFiles.Any(x => x.FileName == selectedFile) == false)
-                {
-                    OutputData.SelectedFile = new OutputFile();
-                }
+            // if the selected file is not in the search, clear the selected file
+            if (OutputFiles.Any(x => x.FileName == selectedFile) == false)
+            {
+                OutputData.SelectedFile = new OutputFile();
             }
         }
 
         public void Receive(OutputFilesMsg message)
         {
-            OutputFiles = new ObservableCollection<OutputFileWrapper>(message.Value.Select(OutputFileWrapper.WrapOutputFile));
+            UpdateOutputFilesView(SelectedFile.FileName);
         }
 
         public void Receive(SelectedOutputFileMsg message)
@@ -145,6 +207,16 @@ namespace TextReplace.MVVM.ViewModel
         {
             // check to see if replacements and source files are uploaded
             SetIsReplacifyEnabled();
+        }
+
+        public void Receive(WholeWordMsg message)
+        {
+            IsWholeWord = message.Value;
+        }
+
+        public void Receive(CaseSensitiveMsg message)
+        {
+            IsCaseSensitive = message.Value;
         }
     }
 

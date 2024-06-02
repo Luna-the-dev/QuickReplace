@@ -113,15 +113,12 @@ namespace TextReplace.MVVM.ViewModel
             }
 
             // perform the text replacements
-            bool caseSensitive = (CaseSensitive == Visibility.Visible) ? true : false;
-            bool wholeWord = (WholeWord == Visibility.Visible) ? true : false;
-
             bool result = OutputData.PerformReplacements(
                 ReplaceData.ReplacePhrasesDict,
                 SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
                 OutputData.OutputFiles.Select(x => x.FileName).ToList(),
-                wholeWord,
-                caseSensitive);
+                OutputData.WholeWord,
+                OutputData.CaseSensitive);
 
             Debug.WriteLine("Output file names:");
             OutputData.OutputFiles.ForEach(o => Debug.WriteLine($"\t{o.FileName}"));
@@ -218,11 +215,13 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(WholeWordMsg message)
         {
             WholeWord = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+            Debug.WriteLine(message.Value);
         }
 
         public void Receive(CaseSensitiveMsg message)
         {
             CaseSensitive = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+            Debug.WriteLine(message.Value);
         }
 
         public void Receive(ReplacePhrasesMsg message)

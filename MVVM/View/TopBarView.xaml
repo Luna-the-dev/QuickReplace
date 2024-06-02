@@ -90,25 +90,6 @@
                                    Style="{StaticResource DropdownMenuRightOffsetTheme}">
             <Border BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
                 <StackPanel>
-                    <!--Case sensitive option-->
-                    <Button Command="{Binding ToggleCaseSensitiveCommand}">
-                        <Button.Content>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition/>
-                                    <ColumnDefinition Width="20"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="Case sensitive" Padding="0 0 15 0"
-                                   FontFamily="/Fonts/#Poppins" FontSize="12"
-                                   FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
-                                <TextBlock Grid.Column="1" HorizontalAlignment="Right"
-                                   Text="✓" Visibility="{Binding CaseSensitive}"
-                                   FontFamily="/Fonts/#Poppins" FontSize="12"
-                                   FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
-                            </Grid>
-                        </Button.Content>
-                    </Button>
-
                     <!--Whole word option-->
                     <Button Command="{Binding ToggleWholeWordCommand}">
                         <Button.Content>
@@ -124,6 +105,25 @@
                                            Text="✓" Visibility="{Binding WholeWord}"
                                            FontFamily="/Fonts/#Poppins" FontSize="12"
                                            FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                    <!--Case sensitive option-->
+                    <Button Command="{Binding ToggleCaseSensitiveCommand}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Case sensitive" Padding="0 0 15 0"
+                                   FontFamily="/Fonts/#Poppins" FontSize="12"
+                                   FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Right"
+                                   Text="✓" Visibility="{Binding CaseSensitive}"
+                                   FontFamily="/Fonts/#Poppins" FontSize="12"
+                                   FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
                     </Button>

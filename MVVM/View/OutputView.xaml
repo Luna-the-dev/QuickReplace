@@ -51,7 +51,9 @@
             </Grid.RowDefinitions>
 
             <Button Grid.Column="1" Grid.Row="0"
-                    Style="{StaticResource OptionButtonTheme}">
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsReplacifyEnabled}"
+                    Command="{Binding ReplaceAllCommand}">
                 <Button.Content>
                     <TextBlock Text="All files"
                                x:Name="replaceAllFilesOption"
@@ -62,7 +64,9 @@
             </Button>
 
             <Button Grid.Column="1" Grid.Row="1"
-                    Style="{StaticResource OptionButtonTheme}">
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsFileSelected}"
+                    Command="{Binding ReplaceSelectedCommand}">
                 <Button.Content>
                     <TextBlock Text="Selected file"
                                x:Name="replaceSelectedFileOption"
@@ -200,38 +204,42 @@
                     BorderBrush="{StaticResource TextUnclickable}"
                     BorderThickness="0 0 0 1"/>
 
-            <Button Grid.Column="1" Grid.Row="4"
-                    Style="{StaticResource OptionButtonTheme}">
-                <Button.Content>
+            <ToggleButton Grid.Column="1" Grid.Row="4"
+                          Style="{StaticResource OptionToggleButtonTheme}"
+                          Command="{Binding ToggleWholeWordCommand}"
+                          IsChecked="{Binding IsWholeWord}">
+                <ToggleButton.Content>
                     <TextBlock Text="Whole word"
                                x:Name="wholeWordOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
+                </ToggleButton.Content>
+            </ToggleButton>
 
-            <Button Grid.Column="1" Grid.Row="5"
-                    Style="{StaticResource OptionButtonTheme}">
-                <Button.Content>
+            <ToggleButton Grid.Column="1" Grid.Row="5"
+                          Style="{StaticResource OptionToggleButtonTheme}"
+                          Command="{Binding ToggleCaseSensitiveCommand}"
+                          IsChecked="{Binding IsCaseSensitive}">
+                <ToggleButton.Content>
                     <TextBlock Text="Match case"
                                x:Name="matchCaseOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
+                </ToggleButton.Content>
+            </ToggleButton>
 
-            <Button Grid.Column="1" Grid.Row="6"
-                    Style="{StaticResource OptionButtonTheme}">
-                <Button.Content>
+            <ToggleButton Grid.Column="1" Grid.Row="6"
+                    Style="{StaticResource OptionToggleButtonTheme}">
+                <ToggleButton.Content>
                     <TextBlock Text="Preserve case"
                                x:Name="preserveCaseOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
+                </ToggleButton.Content>
+            </ToggleButton>
 
             <Button Grid.Column="1" Grid.Row="7"
                     Style="{StaticResource OptionButtonTheme}">
