@@ -1,5 +1,4 @@
-﻿using TextReplace.Core.AhoCorasick;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Validation;
 using CommunityToolkit.Mvvm.Messaging;
@@ -8,7 +7,9 @@ using CsvHelper.Configuration;
 using CsvHelper;
 using System.Globalization;
 using System.Text;
-using System.ComponentModel.Design;
+using CsvHelper.Configuration.Attributes;
+using ExcelDataReader;
+using System.Data;
 
 namespace TextReplace.MVVM.Model
 {
@@ -44,8 +45,8 @@ namespace TextReplace.MVVM.Model
             set { _replacePhrasesDict = value; }
         }
         // key is the phrase to replace, value is what it is being replaced with
-        private static List<ReplacePhrasesWrapper> _replacePhrasesList = [];
-        public static List<ReplacePhrasesWrapper> ReplacePhrasesList
+        private static List<ReplacePhrase> _replacePhrasesList = [];
+        public static List<ReplacePhrase> ReplacePhrasesList
         {
             get { return _replacePhrasesList; }
             set
@@ -62,14 +63,14 @@ namespace TextReplace.MVVM.Model
             set { _delimiter = value; }
         }
         // a flag to denote whether a phrase is selected in the replace view
-        private static (string, string) _selectedPhrase = ("", "");
-        public static (string, string) SelectedPhrase
+        private static ReplacePhrase _selectedPhrase = new ReplacePhrase();
+        public static ReplacePhrase SelectedPhrase
         {
             get { return _selectedPhrase; }
             set
             {
                 _selectedPhrase = value;
-                WeakReferenceMessenger.Default.Send(new SelectedPhraseMsg(value));
+                WeakReferenceMessenger.Default.Send(new SelectedReplacePhraseMsg(value));
             }
         }
         // a flag to denote whether any modifications have been made but not saved to the file
@@ -93,6 +94,45 @@ namespace TextReplace.MVVM.Model
                 _isSorted = value;
                 WeakReferenceMessenger.Default.Send(new AreReplacePhrasesSortedMsg(value));
             }
+        }
+
+        /// <summary>
+        /// Parses the replacements from a file. Supports excel files as well as value-seperated files
+        /// </summary>
+        /// <param name="delimiter"></param>
+        /// <returns>
+        /// A dictionary of pairs of the values from the file. If one of the lines in the file has an
+        /// incorrect number of values or if the operation fails for another reason, return an empty list.
+        /// </returns>
+        public static Dictionary<string, string> ParseReplacements(string fileName)
+        {
+            var phrases = new Dictionary<string, string>();
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using var stream = File.Open(fileName, FileMode.Open, FileAccess.Read);
+
+            using var reader = (Path.GetExtension(fileName).Equals(".xlsx", StringComparison.CurrentCultureIgnoreCase) ||
+                Path.GetExtension(fileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase)) ?
+                ExcelReaderFactory.CreateReader(stream) :
+                ExcelReaderFactory.CreateCsvReader(stream);
+
+            while (reader.Read())
+            {
+                if (reader.GetString(0) == string.Empty)
+                {
+                    Debug.WriteLine("A field within the first column of the replace file is empty.");
+                    continue;
+                }
+
+                phrases[reader.GetString(0)] = reader.GetString(1);
+            }
+
+            if (phrases.Count == 0)
+            {
+                throw new InvalidOperationException("The dictionary returned by ParseReplacements() is empty.");
+            }
+
+            return phrases;
         }
 
         /// <summary>
@@ -141,15 +181,15 @@ namespace TextReplace.MVVM.Model
                 if (dryRun)
                 {
                     // will throw InvalidOperationException if it returns a dict of count == 0
-                    DataValidation.ParseDSV(fileName, delimiter);
+                    ParseReplacements(fileName, delimiter);
                     return true;
                 }
 
                 // parse through phrases and attempt to save them
-                ReplacePhrasesDict = DataValidation.ParseDSV(fileName, delimiter);
+                ReplacePhrasesDict = ParseReplacements(fileName, delimiter);
 
                 // put copy the dict into a list which gets used by the view models
-                ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrasesWrapper(x.Key, x.Value)).ToList();
+                ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrase(x.Key, x.Value)).ToList();
 
                 FileName = fileName;
                 Delimiter = delimiter;
@@ -163,6 +203,11 @@ namespace TextReplace.MVVM.Model
                 return false;
             }
             catch (InvalidOperationException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
+            catch (NotSupportedException e)
             {
                 Debug.WriteLine(e);
                 return false;
@@ -263,7 +308,7 @@ namespace TextReplace.MVVM.Model
             }
 
             ReplacePhrasesDict[item1] = item2;
-            ReplacePhrasesList.Insert(index, new ReplacePhrasesWrapper(item1, item2));
+            ReplacePhrasesList.Insert(index, new ReplacePhrase(item1, item2));
             WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
@@ -290,7 +335,7 @@ namespace TextReplace.MVVM.Model
             }
 
             ReplacePhrasesDict[item1] = item2;
-            ReplacePhrasesList[index] = new ReplacePhrasesWrapper(item1, item2);
+            ReplacePhrasesList[index] = new ReplacePhrase(item1, item2);
             WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
@@ -324,7 +369,7 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesDict[item1] = item2;
-            ReplacePhrasesList[index] = new ReplacePhrasesWrapper(item1, item2);
+            ReplacePhrasesList[index] = new ReplacePhrase(item1, item2);
             WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
@@ -355,6 +400,33 @@ namespace TextReplace.MVVM.Model
             ReplacePhrasesList.RemoveAt(index);
             WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
+        }
+    }
+
+    /// <summary>
+    /// Wrapper class for the replace phrases dictionary.
+    /// This wrapper exists only to read in data with CsvHelper.
+    /// Note: Keep the variables in the constructor the exact same as the fields.
+    /// This is to make CsvHelper work without a default constructor.
+    /// </summary>
+    public class ReplacePhrase
+    {
+        [Index(0)]
+        public string Item1 { get; set; }
+
+        [Index(1)]
+        public string Item2 { get; set; }
+
+        public ReplacePhrase()
+        {
+            Item1 = string.Empty;
+            Item2 = string.Empty;
+        }
+
+        public ReplacePhrase(string item1, string item2)
+        {
+            Item1 = item1;
+            Item2 = item2;
         }
     }
 }

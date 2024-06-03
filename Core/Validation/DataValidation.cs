@@ -49,49 +49,5 @@ namespace TextReplace.Core.Validation
             }
             return true;
         }
-
-        /// <summary>
-        /// Parses "delimiter seperated value" files such as .csv or .tsv. Defaults to .csv files.
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns>
-        /// A dictionary of pairs of the values from the file. If one of the lines in the file has an
-        /// incorrect number of values or if the operation fails for another reason, return an empty list.
-        /// </returns>
-        public static Dictionary<string, string> ParseDSV(string fileName,
-                                                          string delimiter = ",",
-                                                          TrimOptions trimOptions = TrimOptions.None)
-        {
-            var phrases = new Dictionary<string, string>();
-
-            using var reader = new StreamReader(fileName);
-            var csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
-            {
-                Delimiter = delimiter,
-                HasHeaderRecord = false,
-                TrimOptions = trimOptions
-            };
-            using var csv = new CsvReader(reader, csvConfig);
-
-            var records = csv.GetRecords<ReplacePhrasesWrapper>();
-
-            foreach (var record in records)
-            {
-                if (record.Item1 == string.Empty)
-                {
-                    Debug.WriteLine("A field within the first column of the replace file is empty.");
-                    continue;
-                }
-
-                phrases[record.Item1] = record.Item2;
-            }
-
-            if (phrases.Count == 0)
-            {
-                throw new InvalidOperationException("The dictionary returned by ParseDSV is empty.");
-            }
-
-            return phrases;
-        }
     }
  }

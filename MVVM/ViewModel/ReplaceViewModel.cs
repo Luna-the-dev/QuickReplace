@@ -15,7 +15,7 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<ReplaceFileNameMsg>,
         IRecipient<IsNewReplacementsFileMsg>,
         IRecipient<ReplacePhrasesMsg>,
-        IRecipient<SelectedPhraseMsg>,
+        IRecipient<SelectedReplacePhraseMsg>,
         IRecipient<InsertReplacePhraseAtMsg>,
         IRecipient<IsReplaceFileUnsavedMsg>,
         IRecipient<AreReplacePhrasesSortedMsg>
@@ -36,20 +36,17 @@ namespace TextReplace.MVVM.ViewModel
         public bool IsNewFile = ReplaceData.IsNewFile;
 
         [ObservableProperty]
-        private ObservableCollection<ReplacePhrase> _replacePhrases =
-            new ObservableCollection<ReplacePhrase>(ReplaceData.ReplacePhrasesDict.Select(x => new ReplacePhrase(x.Key, x.Value)));
+        private ObservableCollection<ReplacePhraseWrapper> _replacePhrases =
+            new ObservableCollection<ReplacePhraseWrapper>(ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase));
 
         [ObservableProperty]
         private bool _sortReplacePhrases = ReplaceData.IsSorted;
 
         [ObservableProperty]
-        private ReplacePhrase _selectedPhrase =
-            new ReplacePhrase(ReplaceData.SelectedPhrase.Item1, ReplaceData.SelectedPhrase.Item2, true);
-        partial void OnSelectedPhraseChanged(ReplacePhrase value)
+        private ReplacePhraseWrapper _selectedPhrase = new ReplacePhraseWrapper();
+        partial void OnSelectedPhraseChanged(ReplacePhraseWrapper value)
         {
-            ReplaceData.SelectedPhrase = !Equals(value, default(ReplacePhrase)) ?
-                (value.Item1, value.Item2) :
-                ("", "");
+            IsPhraseSelected = value.Item1 != string.Empty;
         }
 
         [ObservableProperty]
@@ -70,7 +67,7 @@ namespace TextReplace.MVVM.ViewModel
         public ReplaceViewModel()
         {
             // highlight the previously selected phrase
-            UpdateReplacePhrasesView(SelectedPhrase.Item1);
+            UpdateReplacePhrasesView(ReplaceData.SelectedPhrase.Item1);
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -97,9 +94,8 @@ namespace TextReplace.MVVM.ViewModel
             {
                 return;
             }
-            ReplacePhrase p = (ReplacePhrase)phrase;
-            p.IsSelected = true;
-            SelectedPhrase = p;
+            ReplacePhraseWrapper p = (ReplacePhraseWrapper)phrase;
+            ReplaceData.SelectedPhrase = ReplacePhraseWrapper.UnwrapReplacePhrase(p);
             
         }
 
@@ -225,55 +221,34 @@ namespace TextReplace.MVVM.ViewModel
             if (SearchText == string.Empty)
             {
                 ReplacePhrases = (SortReplacePhrases) ?
-                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1).OrderBy(x => x.Item1)) :
-                    new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1));
+                    new ObservableCollection<ReplacePhraseWrapper>(
+                        ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase).OrderBy(x => x.Item1)) :
+                    new ObservableCollection<ReplacePhraseWrapper>(
+                        ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase));
             }
             else
             {
                 ReplacePhrases = (SortReplacePhrases) ?
-                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1)
+                    new ObservableCollection<ReplacePhraseWrapper>(
+                        ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase)
                         .Where(x => {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
                         })
                         .OrderBy(x => x.Item1)) :
-                new ObservableCollection<ReplacePhrase>(GetReplacePhrases(selectedItem1)
+                    new ObservableCollection<ReplacePhraseWrapper>(
+                        ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase)
                         .Where(x => {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
                         }));
-
-                // if the selected phrase is not in the search, clear the selected phrase
-                if (ReplacePhrases.Any(x => x.Item1 == selectedItem1) == false)
-                {
-                    SelectedPhrase = new ReplacePhrase();
-                }
             }
-        }
 
-        /// <summary>
-        /// Converts ReplacePhrasesList into an enumerable of ReplacePhrase objects, marks the
-        /// selected phrase if there is one, and updates SelectedPhrase.
-        /// </summary>
-        /// <returns>Returns ReplaceData.ReplacePhrases as an enumerable of ReplacePhrase objects</returns>
-        private IEnumerable<ReplacePhrase> GetReplacePhrases(string selectedItem1 = "")
-        {
-            // simply get the replacement phrases if no selected phrase is specified
-            if (selectedItem1 == string.Empty)
+            // if the selected phrase is not in the search, clear the selected phrase
+            if (ReplacePhrases.Any(x => x.Item1 == selectedItem1) == false)
             {
-                SelectedPhrase = new ReplacePhrase();
-                return ReplaceData.ReplacePhrasesList.Select(x => new ReplacePhrase(x.Item1, x.Item2));
+                ReplaceData.SelectedPhrase = new ReplacePhrase();
             }
-
-            // if a selected phrase is specified, mark that specific phrase as selected
-            return ReplaceData.ReplacePhrasesList.Select(x => {
-                if (x.Item1 == selectedItem1)
-                {
-                    SelectedPhrase = new ReplacePhrase(x.Item1, x.Item2, true);
-                    return new ReplacePhrase(x.Item1, x.Item2, true);
-                }
-                return new ReplacePhrase(x.Item1, x.Item2, false);
-            });
         }
 
         /// <summary>
@@ -332,12 +307,12 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(ReplacePhrasesMsg message)
         {
-            ReplacePhrases = new ObservableCollection<ReplacePhrase>(message.Value.Select(x => new ReplacePhrase(x.Item1, x.Item2)));
+            ReplacePhrases = new ObservableCollection<ReplacePhraseWrapper>(message.Value.Select(ReplacePhraseWrapper.WrapReplacePhrase));
         }
 
-        public void Receive(SelectedPhraseMsg message)
+        public void Receive(SelectedReplacePhraseMsg message)
         {
-            IsPhraseSelected = (message.Value.Item1 != "");
+            SelectedPhrase = ReplacePhraseWrapper.WrapReplacePhrase(message.Value);
         }
 
         public void Receive(InsertReplacePhraseAtMsg message)
@@ -364,11 +339,46 @@ namespace TextReplace.MVVM.ViewModel
     /// <param name="item1"></param>
     /// <param name="item2"></param>
     /// <param name="isSelected"></param>
-    struct ReplacePhrase(string item1, string item2, bool isSelected = false)
+    class ReplacePhraseWrapper
     {
-        public string Item1 { get; set; } = item1;
-        public string Item2 { get; set; } = item2;
-        public bool IsSelected { get; set; } = isSelected;
+        public string Item1 { get; set; }
+        public string Item2 { get; set; }
+        public bool IsSelected { get; set; }
+
+        public ReplacePhraseWrapper()
+        {
+            Item1 = string.Empty;
+            Item2 = string.Empty;
+            IsSelected = false;
+        }
+
+        public ReplacePhraseWrapper(string item1, string item2, bool isSelected = false)
+        {
+            Item1 = item1;
+            Item2 = item2;
+            IsSelected = isSelected;
+        }
+
+        public ReplacePhraseWrapper(ReplacePhrase phrase, bool isSelected = false)
+        {
+            Item1 = phrase.Item1;
+            Item2 = phrase.Item2;
+            IsSelected = isSelected;
+        }
+
+        public static ReplacePhraseWrapper WrapReplacePhrase(ReplacePhrase phrase)
+        {
+            if (phrase.Item1 == ReplaceData.SelectedPhrase.Item1)
+            {
+                return new ReplacePhraseWrapper(phrase, true);
+            }
+            return new ReplacePhraseWrapper(phrase);
+        }
+
+        public static ReplacePhrase UnwrapReplacePhrase(ReplacePhraseWrapper phrase)
+        {
+            return new ReplacePhrase(phrase.Item1, phrase.Item2);
+        }
     }
 
     struct ComboBoxData(int index, string value)

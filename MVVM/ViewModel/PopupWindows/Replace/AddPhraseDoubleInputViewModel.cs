@@ -7,7 +7,7 @@ using TextReplace.MVVM.Model;
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
     partial class AddPhraseDoubleInputViewModel : ObservableRecipient,
-        IRecipient<SelectedPhraseMsg>
+        IRecipient<SelectedReplacePhraseMsg>
     {
         [ObservableProperty]
         private string _topInputText = string.Empty;
@@ -41,7 +41,7 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             WeakReferenceMessenger.Default.Send(new InsertReplacePhraseAtMsg((InsertReplacePhraseAtEnum)value));
         }
 
-        public void Receive(SelectedPhraseMsg message)
+        public void Receive(SelectedReplacePhraseMsg message)
         {
             IsPhraseSelected = (message.Value.Item1 != "");
         }

@@ -3,7 +3,7 @@ using TextReplace.MVVM.Model;
 
 namespace TextReplace.Messages.Replace
 {
-    class ReplacePhrasesMsg(List<ReplacePhrase> value) : ValueChangedMessage<List<ReplacePhrase>>(value)
+    class SelectedReplacePhraseMsg(ReplacePhrase value) : ValueChangedMessage<ReplacePhrase>(value)
     {
     }
 }
