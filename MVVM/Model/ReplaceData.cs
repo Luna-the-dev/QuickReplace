@@ -10,6 +10,7 @@ using System.Text;
 using CsvHelper.Configuration.Attributes;
 using ExcelDataReader;
 using System.Data;
+using ClosedXML.Excel;
 
 namespace TextReplace.MVVM.Model
 {
@@ -55,13 +56,6 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(value));
             }
         }
-        // the delimiter used for parsing the replace file
-        private static string _delimiter = string.Empty;
-        public static string Delimiter
-        {
-            get { return _delimiter; }
-            set { _delimiter = value; }
-        }
         // a flag to denote whether a phrase is selected in the replace view
         private static ReplacePhrase _selectedPhrase = new ReplacePhrase();
         public static ReplacePhrase SelectedPhrase
@@ -95,44 +89,11 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new AreReplacePhrasesSortedMsg(value));
             }
         }
-
-        /// <summary>
-        /// Parses the replacements from a file. Supports excel files as well as value-seperated files
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns>
-        /// A dictionary of pairs of the values from the file. If one of the lines in the file has an
-        /// incorrect number of values or if the operation fails for another reason, return an empty list.
-        /// </returns>
-        public static Dictionary<string, string> ParseReplacements(string fileName)
+        private static string _delimiterForCurrentTextFile = string.Empty;
+        public static string DelimiterForCurrentTextFile
         {
-            var phrases = new Dictionary<string, string>();
-
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-            using var stream = File.Open(fileName, FileMode.Open, FileAccess.Read);
-
-            using var reader = (Path.GetExtension(fileName).Equals(".xlsx", StringComparison.CurrentCultureIgnoreCase) ||
-                Path.GetExtension(fileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase)) ?
-                ExcelReaderFactory.CreateReader(stream) :
-                ExcelReaderFactory.CreateCsvReader(stream);
-
-            while (reader.Read())
-            {
-                if (reader.GetString(0) == string.Empty)
-                {
-                    Debug.WriteLine("A field within the first column of the replace file is empty.");
-                    continue;
-                }
-
-                phrases[reader.GetString(0)] = reader.GetString(1);
-            }
-
-            if (phrases.Count == 0)
-            {
-                throw new InvalidOperationException("The dictionary returned by ParseReplacements() is empty.");
-            }
-
-            return phrases;
+            get { return _delimiterForCurrentTextFile; }
+            set { _delimiterForCurrentTextFile = value; }
         }
 
         /// <summary>
@@ -140,12 +101,11 @@ namespace TextReplace.MVVM.Model
         /// Note: the newDelimiter parameter must be supplied if the fileName is a .txt or .text file.
         /// </summary>
         /// <param name="fileName"></param>
-        /// <param name="newDelimiter"></param>
         /// <param name="dryRun"></param>
         /// <returns>
         /// False if one of the files was invalid, null user closed the window without selecting a file.
         /// </returns>
-        public static bool SetNewReplaceFile(string fileName, string? newDelimiter = null, bool dryRun = false)
+        public static bool SetNewReplaceFile(string fileName, bool dryRun = false)
         {
             // set the ReplaceFile name
             try
@@ -157,43 +117,28 @@ namespace TextReplace.MVVM.Model
                     throw new IOException("Input file is not readable in SetNewReplaceFileFromUser().");
                 }
 
-                // if the supplied file is a text file, check if there is a delimiter and if it is valid
-                if (FileValidation.IsTextFile(fileName))
-                {
-                    if (newDelimiter == null)
-                    {
-                        Debug.WriteLine("Please supply a delimiter to use for a text file.");
-                        return false;
-                    }
-                    
-                    if (DataValidation.IsDelimiterValid(newDelimiter) == false)
-                    {
-                        Debug.WriteLine("Delimiter is invalid.");
-                        return false;
-                    }
-                }
-
-                // determine which delimiter should be used
-                string delimiter = DetermineDelemiter(fileName, newDelimiter);
-
                 // if caller specified that this should be a dry run,
                 // then dont actually assign the parsed data to the dict
                 if (dryRun)
                 {
                     // will throw InvalidOperationException if it returns a dict of count == 0
-                    ParseReplacements(fileName, delimiter);
+                    ParseReplacements(fileName);
                     return true;
                 }
 
                 // parse through phrases and attempt to save them
-                ReplacePhrasesDict = ParseReplacements(fileName, delimiter);
+                ReplacePhrasesDict = ParseReplacements(fileName);
 
                 // put copy the dict into a list which gets used by the view models
                 ReplacePhrasesList = ReplacePhrasesDict.Select(x => new ReplacePhrase(x.Key, x.Value)).ToList();
 
                 FileName = fileName;
-                Delimiter = delimiter;
                 IsNewFile = false;
+
+                if (FileValidation.IsTextFile(fileName))
+                {
+                    DelimiterForCurrentTextFile = 
+                }
 
                 return true;
             }
@@ -225,15 +170,83 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
+        /// Parses the replacements from a file. Supports excel files as well as value-seperated files
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>
+        /// A dictionary of pairs of the values from the file. If one of the lines in the file has an
+        /// incorrect number of values or if the operation fails for another reason, return an empty list.
+        /// </returns>
+        public static Dictionary<string, string> ParseReplacements(string fileName)
+        {
+            var phrases = new Dictionary<string, string>();
+
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            using var stream = File.Open(fileName, FileMode.Open, FileAccess.Read);
+
+            using var reader = FileValidation.IsExcelFile(fileName) ?
+                ExcelReaderFactory.CreateReader(stream) :
+                ExcelReaderFactory.CreateCsvReader(stream);
+
+            while (reader.Read())
+            {
+                if (reader.GetString(0) == string.Empty)
+                {
+                    Debug.WriteLine("A field within the first column of the replace file is empty.");
+                    continue;
+                }
+
+                phrases[reader.GetString(0)] = reader.GetString(1);
+            }
+
+            if (phrases.Count == 0)
+            {
+                throw new InvalidOperationException("The dictionary returned by ParseReplacements() is empty.");
+            }
+
+            return phrases;
+        }
+
+        /// <summary>
         /// Saves the replace phrases list to the file system, performing a sort if requested.
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="shouldSort"></param>
         /// <param name="delimiter"></param>
-        public static void SavePhrasesToFile(string fileName, bool shouldSort, string? newDelimiter = null)
+        public static void SavePhrasesToFile(string fileName, bool shouldSort, string delimiter)
         {
-            string delimiter = newDelimiter ?? Delimiter;
+            if (FileValidation.IsExcelFile(fileName))
+            {
+                SavePhrasesToExcel(fileName, shouldSort);
+            }
+            else
+            {
+                SavePhrasesToCsv(fileName, shouldSort, delimiter);
+            }
 
+            FileName = fileName;
+        }
+
+        private static void SavePhrasesToExcel(string fileName, bool shouldSort)
+        {
+            var phrases = (shouldSort) ? ReplacePhrasesList.OrderBy(x => x.Item1).ToList() : ReplacePhrasesList;
+
+            using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add(Path.GetFileName(fileName));
+
+            for (int i = 0; i < phrases.Count; i++)
+            {
+                worksheet.Cell(i+1, 1).Value = phrases[i].Item1;
+                worksheet.Cell(i+1, 2).Value = phrases[i].Item2;
+            }
+
+            worksheet.Columns().AdjustToContents();
+
+            workbook.SaveAs(fileName);
+        }
+
+        private static void SavePhrasesToCsv(string fileName, bool shouldSort, string delimiter)
+        {
             using var writer = new StreamWriter(fileName);
             var csvConfig = new CsvConfiguration(CultureInfo.CurrentCulture)
             {
@@ -245,17 +258,11 @@ namespace TextReplace.MVVM.Model
             using var csvWriter = new CsvWriter(writer, csvConfig);
             if (shouldSort)
             {
-                csvWriter.WriteRecords(ReplacePhrasesList.OrderBy(x => x.Item1).ToList());
+                csvWriter.WriteRecords(ReplacePhrasesList.OrderBy(x => x.Item1));
             }
             else
             {
                 csvWriter.WriteRecords(ReplacePhrasesList);
-            }
-
-            FileName = fileName;
-            if (newDelimiter != null)
-            {
-                Delimiter = delimiter;
             }
         }
 
@@ -265,25 +272,6 @@ namespace TextReplace.MVVM.Model
             ReplacePhrasesDict = [];
             ReplacePhrasesList = [];
             FileName = "Untitled";
-            Delimiter = "";
-        }
-        
-        /// <summary>
-        /// Determines what the delimiter should be based off of the file type
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns>Returns the delimiter used by the given file type.</returns>
-        /// <exception cref="NotSupportedException"></exception>
-        private static string DetermineDelemiter(string fileName, string? newDelimiter = null)
-        {
-            string extension = Path.GetExtension(fileName).ToLower();
-            return extension switch
-            {
-                ".csv" => ",",
-                ".tsv" => "\t",
-                ".xlsx" or ".xls" or ".txt" or ".text" => newDelimiter ?? Delimiter,
-                _ => throw new NotSupportedException($"The {extension} file type is not supported.")
-            };
         }
 
         /// <summary>

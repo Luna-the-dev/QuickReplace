@@ -86,7 +86,7 @@ namespace TextReplace.Core.Validation
             string extension = Path.GetExtension(fileName).ToLower();
             return extension switch
             {
-                ".csv" or ".tsv" or ".xlsx" or ".xls" or ".txt" or ".text" => true,
+                ".csv" or ".tsv" or ".xlsx" or ".txt" or ".text" => true,
                 _ => false
             };
         }
@@ -118,8 +118,7 @@ namespace TextReplace.Core.Validation
 
         public static bool IsExcelFile(string fileName)
         {
-            if (Path.GetExtension(fileName).Equals(".xls", StringComparison.CurrentCultureIgnoreCase) ||
-                Path.GetExtension(fileName).Equals(".xlsx", StringComparison.CurrentCultureIgnoreCase))
+            if (Path.GetExtension(fileName).Equals(".xlsx", StringComparison.CurrentCultureIgnoreCase))
             {
                 return true;
             }

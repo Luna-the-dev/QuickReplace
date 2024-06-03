@@ -40,62 +40,19 @@ namespace TextReplace.MVVM.View.PopupWindows
         }
         public string DefaultBodyText { get; set; } = string.Empty;
 
-        public string DelimiterBodyText
-        {
-            get { return DelimiterBodyTextBox.Text; }
-            set
-            {
-                DelimiterBodyTextBox.Text = "";
-                string[] separator = ["<u>", "</u>"];
-                var parts = value.Split(separator, StringSplitOptions.None);
-                bool isUnderline = false; // Start in normal mode
-                foreach (var part in parts)
-                {
-                    if (isUnderline)
-                        DelimiterBodyTextBox.Inlines.Add(new Underline(new Run(part)));
-                    else
-                        DelimiterBodyTextBox.Inlines.Add(new Run(part));
-
-                    isUnderline = !isUnderline; // toggle between bold and not bold
-                }
-            }
-        }
-        public string DefaultDelimiterBodyText { get; set; } = string.Empty;
-
-        public string DelimiterInputWatermarkText
-        {
-            get { return DelimiterInputWatermark.Text.ToString() ?? string.Empty; }
-            set
-            {
-                DelimiterInputWatermark.Text = value;
-            }
-        }
-        public string DelimiterInputText
-        {
-            get { return DelimiterInputTextBox.Text.ToString() ?? string.Empty; }
-            set
-            {
-                DelimiterInputTextBox.Text = value;
-            }
-        }
-
         public string FullFileName
         {
             get { return ((UploadReplacementsInputViewModel)DataContext).FullFileName; }
             set { ((UploadReplacementsInputViewModel)DataContext).FullFileName = value; }
         }
 
-        public UploadReplacementsInputWindow(Window owner, string title, string body,
-            string delimiterBody, string delimiterInputWatermark)
+        public UploadReplacementsInputWindow(Window owner, string title, string body)
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
             DefaultBodyText = body;
             BodyText = DefaultBodyText;
-            DefaultDelimiterBodyText = delimiterBody;
-            DelimiterBodyText = DefaultDelimiterBodyText;
-            DelimiterInputWatermarkText = delimiterInputWatermark;
         }
 
         private void BtnUpload_OnClick(object sender, RoutedEventArgs e)
@@ -103,7 +60,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             string filter = "All files (*.*)|*.*|" +
                 "CSV File (*.csv)|*.csv|" +
                 "TSV File (*.tsv)|*.tsv|" +
-                "Excel File (*.xlsx)|*.xls;*.xlsx|" +
+                "Excel File (*.xlsx)|*.xlsx|" +
                 "Text Document (*.txt)|*.txt";
             // configure open file dialog box
             var dialog = new Microsoft.Win32.OpenFileDialog
@@ -121,30 +78,7 @@ namespace TextReplace.MVVM.View.PopupWindows
                 return;
             }
 
-            // reset the delimiter body and input text every time a new file is uploaded
-            DelimiterBodyText = DefaultDelimiterBodyText;
-            DelimiterInputText = string.Empty;
-
-            var viewModel = (UploadReplacementsInputViewModel)DataContext;
-
-            // show the delimiter input section if it is a text file
-            if (FileValidation.IsTextFile(dialog.FileName))
-            {
-                viewModel.ShowDelimiter(dialog.FileName);
-            }
-            // else hide the delimiter input section and validate the uploaded file
-            else
-            {
-                viewModel.HideDelimiter();
-                viewModel.ValidateFile(dialog.FileName);
-            }
-        }
-
-        private void BtnEnterDelimiter_OnClick(object sender, RoutedEventArgs e)
-        {
-            DelimiterBodyText = ((UploadReplacementsInputViewModel)DataContext).ValidateDelimiter() ?
-                "<u>File parsed successfully.</u>" :
-                "<u>File could not be parsed with this string.</u>";
+            ((UploadReplacementsInputViewModel)DataContext).ValidateFile(dialog.FileName);
         }
 
         private void BtnOk_OnClick(object sender, RoutedEventArgs e)
@@ -157,25 +91,6 @@ namespace TextReplace.MVVM.View.PopupWindows
         {
             BtnCancel.IsChecked = true;
             Close();
-        }
-
-        private void DelimiterInputTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            // if the user presses enter and has typed something in, trigger
-            // BtnEnterDelimiter_OnClick. if nothing is typed, do nothing
-            if (e.Key == Key.Return && DelimiterInputText != string.Empty)
-            {
-                BtnEnterDelimiter_OnClick(sender, e);
-            }
-            else if (e.Key == Key.Escape)
-            {
-                Keyboard.ClearFocus();
-            }
-        }
-
-        private void DelimiterInputTextBox_TextChanged(object sender, EventArgs e)
-        {
-            DelimiterBodyText = DefaultDelimiterBodyText;
         }
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)

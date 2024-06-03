@@ -1,10 +1,4 @@
-﻿using System.Diagnostics;
-using CsvHelper;
-using System.IO;
-using System.Globalization;
-using CsvHelper.Configuration;
-
-namespace TextReplace.Core.Validation
+﻿namespace TextReplace.Core.Validation
 {
     class DataValidation
     {

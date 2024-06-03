@@ -44,7 +44,6 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition MinHeight="35"/>
                 </Grid.RowDefinitions>
 
@@ -71,7 +70,6 @@
                     <Border Width="19" Height="19"
                             Margin="0 0 5 18"
                             Visibility="{Binding FileIsValid}"
-                            d:Visibility="Visible"
                             HorizontalAlignment="Right">
                         <Path Stretch="Uniform"
                               Fill="{StaticResource TextLight}"
@@ -87,65 +85,14 @@
                               Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
                     </Border>
                 </Grid>
-                
-                <!-- Txt file delimiter input -->
-                <Border Grid.Column="1" Grid.Row="3"
-                        Visibility="{Binding DelimiterVisibility}"
-                        BorderBrush="{StaticResource TextUnclickable}"
-                        BorderThickness="0 1 0 1"
-                        Margin="0 0 0 15"
-                        Padding="0 15">
-                    <StackPanel>
-                        <TextBlock x:Name="DelimiterBodyTextBox"
-                                   d:Text="Please enter the character used to seperate values in the .txt file:"
-                                   HorizontalAlignment="Stretch"
-                                   TextAlignment="Center"
-                                   TextWrapping="Wrap"
-                                   Foreground="{StaticResource TextLight}"
-                                   FontFamily="/Fonts/#Poppins"
-                                   Margin="0 0 0 15"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="70*"/>
-                                <ColumnDefinition Width="30*"/>
-                            </Grid.ColumnDefinitions>
 
-                            <AdornerDecorator Margin="0 0 5 0">
-                                <Border Background="#353340" CornerRadius="10">
-                                    <TextBox Style="{DynamicResource InputBar}"
-                                             Text="{Binding DelimiterInputText, UpdateSourceTrigger=PropertyChanged}"
-                                             Name="DelimiterInputTextBox"
-                                             KeyDown="DelimiterInputTextBox_KeyDown"
-                                             TextChanged="DelimiterInputTextBox_TextChanged">
-                                        <wm:WatermarkService.Watermark>
-                                            <TextBlock x:Name="DelimiterInputWatermark"
-                                                       VerticalAlignment="Center"
-                                                       HorizontalAlignment="Left"
-                                                       Foreground="LightGray"
-                                                       Margin="4 0 0 0"
-                                                       FontFamily="/Fonts/#Poppins"/>
-                                        </wm:WatermarkService.Watermark>
-                                    </TextBox>
-                                </Border>
-                            </AdornerDecorator>
-
-                            <ToggleButton Content="Enter" Grid.Column="1"
-                                          Margin="5 0 0 0" Padding="8"
-                                          Name="BtnEnterDelimiter"
-                                          IsEnabled="{Binding EnterDelimiterIsClickable}"
-                                          Style="{StaticResource InputWindowConfirmButtonTheme}"
-                                          Click="BtnEnterDelimiter_OnClick"/>
-                        </Grid>
-                    </StackPanel>
-                </Border>
-
-                <ToggleButton Grid.Column="1" Grid.Row="4" Height="30"
+                <ToggleButton Grid.Column="1" Grid.Row="3" Height="30"
                               Name="BtnUpload" Content="Upload new file"
                               Margin="0" Padding="8"
                               Style="{StaticResource InputWindowConfirmButtonTheme}"
                               Click="BtnUpload_OnClick"/>
 
-                <Grid Grid.Column="1" Grid.Row="5"
+                <Grid Grid.Column="1" Grid.Row="4"
                       Margin="0 10 0 0" Height="30">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />

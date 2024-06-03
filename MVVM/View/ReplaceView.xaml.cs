@@ -1,11 +1,11 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.View
 {
@@ -26,23 +26,13 @@ namespace TextReplace.MVVM.View
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(uploadOption.Text);
             string body = "Upload a file for the replacement phrases.";
-            string delimiterBody = "Enter the character used to seperate the original phrases from the replacements:";
-            string delimiterWatermark = "Ex. :, -, or ;";
 
-
-            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body, delimiterBody, delimiterWatermark);
+            var dialog = new PopupWindows.UploadReplacementsInputWindow(window, title, body);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                if (FileValidation.IsTextFile(dialog.FullFileName))
-                {
-                    ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName, dialog.DelimiterInputText);
-                }
-                else
-                {
-                    ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName);
-                }
+                ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName);
             }
         }
 
@@ -147,6 +137,25 @@ namespace TextReplace.MVVM.View
             {
                 OpenSaveAsWindow_OnClick(sender, e);
             }
+            else if (FileValidation.IsTextFile(viewModel.FileName))
+            {
+                // get a new delimiter
+                var window = Window.GetWindow(sender as DependencyObject);
+                string title = "Text File Delimiter";
+                string body = "Enter the character you wish to use to seperate the original phrases from the replacements in the text file:";
+                string watermark = "Ex. :, #, or ;";
+
+                var delimiterDialog = new PopupWindows.SetDelimiterInputWindow(window, title, body, watermark);
+                delimiterDialog.ShowDialog();
+
+                if (delimiterDialog.BtnOk.IsChecked == false)
+                {
+                    Debug.WriteLine("No delimiter was set, save aborted.");
+                    return;
+                }
+
+                viewModel.SavePhrasesToFile(newDelimiter: delimiterDialog.InputText);
+            }
             else
             {
                 viewModel.SavePhrasesToFile();
@@ -160,24 +169,24 @@ namespace TextReplace.MVVM.View
 
             string csv = "CSV File (*.csv)|*.csv|";
             string tsv = "TSV File (*.tsv)|*.tsv|";
-            string xls = "Excel File (*.xlsx)|*.xls;*.xlsx|";
+            string xls = "Excel File (*.xlsx)|*.xlsx|";
             string txt = "Text Document (*.txt)|*.txt|";
             string all = "All files (*.*)|*.*|";
 
             string filter = extension switch
             {
-                ".csv" =>            csv + tsv + xls + txt + all,
-                ".tsv" =>            tsv + csv + xls + txt + all,
-                ".xls" or ".xlsx" => xls + csv + tsv + txt + all,
-                ".txt" =>            txt + csv + tsv + xls + all,
-                _ =>                 all + csv + tsv + xls + txt
+                ".csv" =>  csv + tsv + xls + txt + all,
+                ".tsv" =>  tsv + csv + xls + txt + all,
+                ".xlsx" => xls + csv + tsv + txt + all,
+                ".txt" =>  txt + csv + tsv + xls + all,
+                _ =>       all + csv + tsv + xls + txt
             };
 
             filter = filter.Remove(filter.Length - 1);
 
             var dialog = new Microsoft.Win32.SaveFileDialog
             {
-                Title = "Save FIle As",
+                Title = "Save File As",
                 FileName = viewModel.FileName, // Default file name
                 DefaultExt = extension, // Default file extension
                 Filter = filter // Filter files by extension
@@ -196,20 +205,13 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
-            string delimiter = Path.GetExtension(dialog.FileName).ToLower() switch
-            {
-                ".csv" => ",",
-                ".tsv" => "\t",
-                _ => ""
-            };
-
             if (FileValidation.IsTextFile(dialog.FileName))
             {
                 // get a new delimiter
                 var window = Window.GetWindow(sender as DependencyObject);
                 string title = "Text File Delimiter";
                 string body = "Enter the character you wish to use to seperate the original phrases from the replacements in the text file:";
-                string watermark = "Ex. :, -, or ;";
+                string watermark = "Ex. :, #, or ;";
 
                 var delimiterDialog = new PopupWindows.SetDelimiterInputWindow(window, title, body, watermark);
                 delimiterDialog.ShowDialog();
@@ -220,16 +222,11 @@ namespace TextReplace.MVVM.View
                     return;
                 }
 
-                delimiter = delimiterDialog.InputText;
-            }
-
-            if (FileValidation.IsExcelFile(dialog.FileName))
-            {
-                // TODO handle setting the delimiter for an excel file
+                viewModel.SavePhrasesToFile(dialog.FileName, delimiterDialog.InputText);
             }
 
             // save the replace phrases to the new file name
-            viewModel.SavePhrasesToFile(dialog.FileName, delimiter);
+            viewModel.SavePhrasesToFile(dialog.FileName);
         }
 
         /// <summary>

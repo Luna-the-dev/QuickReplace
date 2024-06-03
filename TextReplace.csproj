@@ -25,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="CsvHelper" Version="32.0.3" />
     <PackageReference Include="DropdownMenu.WPF" Version="1.0.0" />
@@ -49,9 +50,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="MVVM\View\PopupWindows\Replace\EditPhraseDoubleInputWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="MVVM\View\PopupWindows\Replace\SetDelimiterInputWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="MVVM\View\PopupWindows\Sources\UploadSourceFilesInputWindow.xaml.cs">

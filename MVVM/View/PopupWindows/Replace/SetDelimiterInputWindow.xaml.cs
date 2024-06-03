@@ -59,7 +59,7 @@ namespace TextReplace.MVVM.View.PopupWindows
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            DefaultBodyText = 
+            DefaultBodyText = body;
             BodyText = DefaultBodyText;
             InputWatermarkText = watermark;
         }

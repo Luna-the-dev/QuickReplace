@@ -60,12 +60,11 @@ namespace TextReplace.MVVM.ViewModel
         /// Wrapper for ReplaceData.SetNewReplaceFile and updates the replace button clickability.
         /// </summary>
         /// <param name="fileName"></param>
-        /// <param name="newDelimiter"></param>
         /// <returns>False if new replace file was not set.</returns>
-        public bool SetNewReplaceFile(string fileName, string? newDelimiter = null)
+        public bool SetNewReplaceFile(string fileName)
         {
             // open a file dialogue for the user and update the replace file
-            bool result = ReplaceData.SetNewReplaceFile(fileName, newDelimiter);
+            bool result = ReplaceData.SetNewReplaceFile(fileName);
 
             if (result)
             {
@@ -159,25 +158,6 @@ namespace TextReplace.MVVM.ViewModel
             }
 
             SourceFilesData.UpdateAllSourceFileOptions(outputDirectory: dialog.FileName);
-        }
-
-        /// <summary>
-        /// Wrapper function for ReplaceData.SetDelimiter
-        /// </summary>
-        /// <param name="delimiter"></param>
-        /// <returns></returns>
-        public static bool SetDelimiter(string delimiter)
-        {
-            try
-            {
-                ReplaceData.Delimiter = delimiter;
-                return true;
-            }
-            catch (ArgumentException e)
-            {
-                Debug.WriteLine(e);
-                return false;
-            }
         }
 
         /// <summary>

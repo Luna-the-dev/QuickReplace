@@ -8,6 +8,7 @@ using TextReplace.Core.Enums;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -52,7 +53,7 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private bool _isPhraseSelected = (ReplaceData.SelectedPhrase.Item1 != "");
 
-        private InsertReplacePhraseAtEnum _insertReplacePhraseAt = InsertReplacePhraseAtEnum.Top;
+        private InsertReplacePhraseAtEnum InsertReplacePhraseAt = InsertReplacePhraseAtEnum.Top;
 
         [ObservableProperty]
         private string _searchText = string.Empty;
@@ -105,9 +106,18 @@ namespace TextReplace.MVVM.ViewModel
         /// <param name="newFileName"></param>
         /// <param name="newDelimiter"></param>
         /// <returns></returns>
-        public bool SavePhrasesToFile(string? newFileName = null, string? newDelimiter = null)
+        public bool SavePhrasesToFile(string? newFileName = null, string newDelimiter = "")
         {
             string fileName = newFileName ?? FullFileName;
+
+            string delimiter = Path.GetExtension(fileName).ToLower() switch
+            {
+                ".csv" => ",",
+                ".tsv" => "\t",
+                ".txt" => newDelimiter,
+                ".xlsx" => string.Empty,
+                _ => throw new NotSupportedException($"SavePhrasesToFile(): The file type is not supported.")
+            };
 
             // check if the file type is suppoerted
             if (FileValidation.IsReplaceFileTypeValid(fileName) == false)
@@ -124,7 +134,7 @@ namespace TextReplace.MVVM.ViewModel
 
             try
             {
-                ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases, newDelimiter);
+                ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases, delimiter);
 
                 ReplaceData.IsUnsaved = false;
                 return true;
@@ -261,14 +271,14 @@ namespace TextReplace.MVVM.ViewModel
         /// </returns>
         private int InsertReplacePhraseIndex()
         {
-            return _insertReplacePhraseAt switch
+            return InsertReplacePhraseAt switch
             {
                 InsertReplacePhraseAtEnum.Top => 0,
                 InsertReplacePhraseAtEnum.Bottom => ReplacePhrases.Count,
                 InsertReplacePhraseAtEnum.AboveSelection =>
-                    ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault()),
+                    ReplaceData.ReplacePhrasesList.FindIndex(x => x.Item1 == SelectedPhrase.Item1),
                 InsertReplacePhraseAtEnum.BelowSelection =>
-                    ReplacePhrases.IndexOf(ReplacePhrases.Where(x => x.Item1 == SelectedPhrase.Item1).FirstOrDefault()) + 1,
+                    ReplaceData.ReplacePhrasesList.FindIndex(x => x.Item1 == SelectedPhrase.Item1) + 1,
                 _ => -1,
             };
         }
@@ -277,11 +287,10 @@ namespace TextReplace.MVVM.ViewModel
         /// Wrapper for ReplaceData.SetNewReplaceFile.
         /// </summary>
         /// <param name="fileName"></param>
-        /// <param name="newDelimiter"></param>
         /// <returns>False if new replace file was not set.</returns>
-        public static bool SetNewReplaceFile(string fileName, string? newDelimiter = null)
+        public static bool SetNewReplaceFile(string fileName)
         {
-            return ReplaceData.SetNewReplaceFile(fileName, newDelimiter);
+            return ReplaceData.SetNewReplaceFile(fileName);
         }
 
         /// <summary>
@@ -317,7 +326,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(InsertReplacePhraseAtMsg message)
         {
-            _insertReplacePhraseAt = message.Value;
+            InsertReplacePhraseAt = message.Value;
         }
 
         public void Receive(IsReplaceFileUnsavedMsg message)
