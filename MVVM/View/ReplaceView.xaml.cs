@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.View
 {

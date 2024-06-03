@@ -89,12 +89,6 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new AreReplacePhrasesSortedMsg(value));
             }
         }
-        private static string _delimiterForCurrentTextFile = string.Empty;
-        public static string DelimiterForCurrentTextFile
-        {
-            get { return _delimiterForCurrentTextFile; }
-            set { _delimiterForCurrentTextFile = value; }
-        }
 
         /// <summary>
         /// Opens a file dialogue and replaces the ReplaceFile with whatever the user selects (if valid).
@@ -134,11 +128,6 @@ namespace TextReplace.MVVM.Model
 
                 FileName = fileName;
                 IsNewFile = false;
-
-                if (FileValidation.IsTextFile(fileName))
-                {
-                    DelimiterForCurrentTextFile = 
-                }
 
                 return true;
             }
