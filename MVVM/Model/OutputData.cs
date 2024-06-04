@@ -1,7 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using DocumentFormat.OpenXml.Packaging;
+using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.AhoCorasick;
+using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 
 namespace TextReplace.MVVM.Model
@@ -120,18 +123,42 @@ namespace TextReplace.MVVM.Model
         {
             try
             {
-                using var sw = new StreamWriter(dest);
+                // source file is csv, tsv, or text
+                if (FileValidation.IsCsvTsvFile(src) || FileValidation.IsTextFile(src))
+                {
+                    // output file type:
+                    if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
+                    {
+                        ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, isWholeWord);
+                    }
+                    else if (FileValidation.IsDocxFile(dest))
+                    {
+                        ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, isWholeWord);
+                    }
+                    return true;
+                }
 
-                // making these two seperate functions in order to cut down on if/else checks
-                // inside the foreach loops (which could potentially loop millions of times each)
-                if (isWholeWord)
+                // source file is docx
+                if (FileValidation.IsDocxFile(src))
                 {
-                    MatchAndWriteWholeWord(replacePhrases, src, sw, matcher);
+                    // output file type:
+                    if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
+                    {
+                        ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, isWholeWord);
+                    }
+                    else if (FileValidation.IsDocxFile(dest))
+                    {
+                        ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, isWholeWord);
+                    }
+                    return true;
                 }
-                else
+
+                // if source file is excel, only write to excel.
+                // doesnt really make sense to write from excel to docx or something
+                if (FileValidation.IsExcelFile(src))
                 {
-                    MatchAndWrite(replacePhrases, src, sw, matcher);
-                }
+                    // ReadFromExcelWriteToExcel();
+                }  
             }
             catch (Exception e)
             {
@@ -143,33 +170,179 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
+        /// Reads in text from a text/csv/tsv file, performs the replacements, and writes it out to a text/csv/tsv file.
+        /// </summary>
+        /// <param name="replacePhrases"></param>
+        /// <param name="src"></param>
+        /// <param name="dest"></param>
+        /// <param name="matcher"></param>
+        /// <param name="isWholeWord"></param>
+        private static void ReadFromTextCsvTsvWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+        {
+            // decide whhich function should be used to substitute the matches
+            // based on whether or not it is looking for whole word matches
+            Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
+                (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+
+            using var sw = new StreamWriter(dest);
+
+            // write the substitutes to the new file
+            foreach (string line in File.ReadLines(src))
+            {
+                sw.WriteLine(subMatches(replacePhrases, line, matcher));
+            }
+        }
+
+        /// <summary>
+        /// Reads in text from a docx file, performs the replacements, and writes it out to a docx file.
+        /// </summary>
+        /// <param name="replacePhrases"></param>
+        /// <param name="src"></param>
+        /// <param name="dest"></param>
+        /// <param name="matcher"></param>
+        /// <param name="isWholeWord"></param>
+        private static void ReadFromTextCsvTsvWriteToDocx(Dictionary<string, string> replacePhrases,
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+        {
+            // decide whhich function should be used to substitute the matches
+            // based on whether or not it is looking for whole word matches
+            Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
+                (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+
+            // create the new document
+            using var document = WordprocessingDocument.Create(dest, DocumentFormat.OpenXml.WordprocessingDocumentType.Document);
+            MainDocumentPart mainDocPart = document.AddMainDocumentPart();
+            mainDocPart.Document = new Wordprocessing.Document();
+            var body = mainDocPart.Document.AppendChild(new Wordprocessing.Body());
+
+            foreach (string line in File.ReadLines(src))
+            {
+                // create a new paragraph
+                Wordprocessing.Paragraph paragraph = body.AppendChild(new Wordprocessing.Paragraph());
+
+                // start the run within the paragraph
+                var run = paragraph.AppendChild(new Wordprocessing.Run());
+
+                // set the run properties
+                var runProperties = new Wordprocessing.RunProperties();
+                var font = new Wordprocessing.RunFonts() { Ascii = "Arial" };
+                var color = new Wordprocessing.Color { Val = "000000" };
+                runProperties.Append(font);
+                runProperties.Append(color);
+
+                run.PrependChild(runProperties);
+
+                run.AppendChild(new Wordprocessing.Text(subMatches(replacePhrases, line, matcher)));
+            }
+
+            mainDocPart.Document.Save();
+        }
+
+        /// <summary>
+        /// Reads in text from a docx file, performs the replacements, and writes it out to a text/csv/tsv file.
+        /// </summary>
+        /// <param name="replacePhrases"></param>
+        /// <param name="src"></param>
+        /// <param name="dest"></param>
+        /// <param name="matcher"></param>
+        /// <param name="isWholeWord"></param>
+        private static void ReadFromDocxWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+        {
+            // decide whhich function should be used to substitute the matches
+            // based on whether or not it is looking for whole word matches
+            Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
+                (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+
+            using var sw = new StreamWriter(dest);
+
+            using var document = WordprocessingDocument.Open(src, false);
+
+            if (document.MainDocumentPart == null || document.MainDocumentPart.Document.Body == null)
+            {
+                Debug.WriteLine("ReadFromDocxWriteToCsvTsvText(): MainDocumentPart or its body is null");
+                return;
+            }
+
+            var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
+
+            foreach (var textNode in textNodes)
+            {
+                sw.WriteLine(subMatches(replacePhrases, textNode.InnerText, matcher));
+            }
+        }
+
+        /// <summary>
+        /// Reads in text from a docx file, performs the replacements, and writes it out to a docx file.
+        /// </summary>
+        /// <param name="replacePhrases"></param>
+        /// <param name="src"></param>
+        /// <param name="dest"></param>
+        /// <param name="matcher"></param>
+        /// <param name="isWholeWord"></param>
+        private static void ReadFromDocxWriteToDocx(Dictionary<string, string> replacePhrases,
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+        {
+            // decide whhich function should be used to substitute the matches
+            // based on whether or not it is looking for whole word matches
+            Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
+                (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+
+            File.Copy(src, dest, true);
+
+            using var document = WordprocessingDocument.Open(dest, true);
+
+            if (document.MainDocumentPart == null || document.MainDocumentPart.Document.Body == null)
+            {
+                Debug.WriteLine("ReadFromDocxWriteToCsvTsvText(): MainDocumentPart or its body is null");
+                return;
+            }
+
+            var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
+
+            foreach (var textNode in textNodes)
+            {
+                textNode.Text = subMatches(replacePhrases, textNode.InnerText, matcher);
+            }
+
+            document.MainDocumentPart.Document.Save();
+        }
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
         /// Uses the Aho-Corasick algorithm to search a file for any substring matches
         /// in a source file. This function is wrapped by WriteReplacementsToFile() and
         /// called from PerformReplacements().
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="sw"></param>
+        /// <param name="replacePhrases"></param>
+        /// <param name="line"></param>
         /// <param name="matcher"></param>
-        private static void MatchAndWrite(Dictionary<string, string> replacePhrases,
-            string src, StreamWriter sw, AhoCorasickStringSearcher matcher)
+        private static string SubstituteMatches(Dictionary<string, string> replacePhrases,
+            string line, AhoCorasickStringSearcher matcher)
         {
-            foreach (string line in File.ReadLines(src))
-            {
-                // search the current line for any text that should be replaced
-                var matches = matcher.Search(line);
+            // search the current line for any text that should be replaced
+            var matches = matcher.Search(line);
 
-                // save an offset to remember how much the position of each replacement
-                // should be shifted if a replacement was already made on the same line
-                int offset = 0;
-                string updatedLine = line;
-                foreach (var m in matches)
-                {
-                    updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
-                                             .Insert(m.Position + offset, replacePhrases[m.Text]);
-                    offset += replacePhrases[m.Text].Length - m.Text.Length;
-                }
-                sw.WriteLine(updatedLine);
+            // save an offset to remember how much the position of each replacement
+            // should be shifted if a replacement was already made on the same line
+            int offset = 0;
+            string updatedLine = line;
+            foreach (var m in matches)
+            {
+                updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
+                                         .Insert(m.Position + offset, replacePhrases[m.Text]);
+                offset += replacePhrases[m.Text].Length - m.Text.Length;
             }
+            return updatedLine;
         }
 
         /// <summary>
@@ -177,33 +350,30 @@ namespace TextReplace.MVVM.Model
         /// in a source file. This function is wrapped by WriteReplacementsToFile() and
         /// called from PerformReplacements().
         /// </summary>
-        /// <param name="src"></param>
-        /// <param name="sw"></param>
+        /// <param name="replacePhrases"></param>
+        /// <param name="line"></param>
         /// <param name="matcher"></param>
-        private static void MatchAndWriteWholeWord(Dictionary<string, string> replacePhrases,
-            string src, StreamWriter sw, AhoCorasickStringSearcher matcher)
+        private static string SubstituteMatchesWholeWord(Dictionary<string, string> replacePhrases,
+            string line, AhoCorasickStringSearcher matcher)
         {
-            foreach (string line in File.ReadLines(src))
-            {
-                // search the current line for any text that should be replaced
-                var matches = matcher.Search(line);
+            // search the current line for any text that should be replaced
+            var matches = matcher.Search(line);
 
-                // save an offset to remember how much the position of each replacement
-                // should be shifted if a replacement was already made on the same line
-                int offset = 0;
-                string updatedLine = line;
-                foreach (var m in matches)
+            // save an offset to remember how much the position of each replacement
+            // should be shifted if a replacement was already made on the same line
+            int offset = 0;
+            string updatedLine = line;
+            foreach (var m in matches)
+            {
+                if (IsMatchWholeWord(line, m.Text, m.Position) == false)
                 {
-                    if (IsMatchWholeWord(line, m.Text, m.Position) == false)
-                    {
-                        continue;
-                    }
-                    updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
-                                             .Insert(m.Position + offset, replacePhrases[m.Text]);
-                    offset += replacePhrases[m.Text].Length - m.Text.Length;
+                    continue;
                 }
-                sw.WriteLine(updatedLine);
+                updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
+                                         .Insert(m.Position + offset, replacePhrases[m.Text]);
+                offset += replacePhrases[m.Text].Length - m.Text.Length;
             }
+            return updatedLine;
         }
 
         /// <summary>
@@ -296,7 +466,8 @@ namespace TextReplace.MVVM.Model
                                  directory,
                                  Path.GetFileNameWithoutExtension(file.FileName),
                                  suffix,
-                                 Path.GetExtension(file.FileName));
+                                 //Path.GetExtension(file.FileName));
+                                 ".txt");
         }
     }
 }

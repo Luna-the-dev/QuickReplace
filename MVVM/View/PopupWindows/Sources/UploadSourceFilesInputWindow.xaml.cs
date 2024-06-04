@@ -56,7 +56,7 @@ namespace TextReplace.MVVM.View.PopupWindows
         private void BtnUpload_OnClick(object sender, RoutedEventArgs e)
         {
             string filter = "All files (*.*)|*.*|" +
-                "Document File (*.docx)|*.doc;*.docx|" +
+                "Document File (*.docx)|*.docx|" +
                 "Text Document (*.txt)|*.txt";
             // configure open file dialog box
             var dialog = new Microsoft.Win32.OpenFileDialog

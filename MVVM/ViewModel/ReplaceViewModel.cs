@@ -8,7 +8,6 @@ using TextReplace.Core.Enums;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 namespace TextReplace.MVVM.ViewModel
 {
