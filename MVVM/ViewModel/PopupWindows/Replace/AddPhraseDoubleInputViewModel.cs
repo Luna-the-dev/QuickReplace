@@ -38,7 +38,6 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             {
                 throw new ArgumentOutOfRangeException();
             }
-            WeakReferenceMessenger.Default.Send(new InsertReplacePhraseAtMsg((InsertReplacePhraseAtEnum)value));
         }
 
         public void Receive(SelectedReplacePhraseMsg message)

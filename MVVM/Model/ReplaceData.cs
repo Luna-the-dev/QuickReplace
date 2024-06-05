@@ -292,6 +292,7 @@ namespace TextReplace.MVVM.Model
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList.Insert(index, new ReplacePhrase(item1, item2));
             WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
+            SelectedPhrase = new ReplacePhrase(item1, item2);
             return true;
         }
 

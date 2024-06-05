@@ -57,7 +57,8 @@ namespace TextReplace.MVVM.View.PopupWindows
         {
             string filter = "All files (*.*)|*.*|" +
                 "Document File (*.docx)|*.docx|" +
-                "Text Document (*.txt)|*.txt";
+                "Text Document (*.txt)|*.txt|" +
+                "Excel File (*.xlsx)|*.xlsx";
             // configure open file dialog box
             var dialog = new Microsoft.Win32.OpenFileDialog
             {

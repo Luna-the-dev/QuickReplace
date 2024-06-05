@@ -1,0 +1,99 @@
+﻿<Window x:Class="TextReplace.MVVM.View.PopupWindows.SetOutputFileTypeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TextReplace.MVVM.View"
+        xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel.PopupWindows"
+        mc:Ignorable="d"
+        Title="SetOutputFileTypeWindow"
+        MinHeight="250" MinWidth="420"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.DataContext>
+        <viewModel:SetOutputFileTypeViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <local:TopBorderView x:Name="TopBorder"/>
+
+        <Border Grid.Row="1"
+                Background="{StaticResource BackgroundColor}"
+                BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="320"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="25" MaxHeight="35"/>
+                    <RowDefinition MinHeight="60" Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="40"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Name="BodyTextBox"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource TextLight}"
+                           FontFamily="/Fonts/#Poppins"
+                           Margin="0 0 0 10" />
+
+                <Grid Grid.Column="1" Grid.Row="2"
+                      Margin="0 10 0 0" Height="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="0 0 5 0"
+                               Text="Select output file type:"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource TextLight}"
+                               FontFamily="/Fonts/#Poppins"/>
+
+                    <ComboBox Grid.Column="1" Margin="12 0 6 0"
+                              SelectedIndex="{Binding OutputFileType}"
+                              Style="{StaticResource CustomComboBoxTheme}">
+                        <ComboBoxItem Content="Original file type"/>
+                        <ComboBoxItem Content="Document file"/>
+                        <ComboBoxItem Content="Text file"/>
+                        <ComboBoxItem Content="PDF file" />
+                    </ComboBox>
+                </Grid>
+
+                <Grid Grid.Column="1" Grid.Row="3"
+                      Margin="0 10 0 0" Height="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
+                                  Margin="0 0 5 0" Padding="8"
+                                  Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
+                    <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
+                                  Margin="5 0 0 0" Padding="8"
+                                  Style="{StaticResource InputWindowCancelButtonTheme}" Click="BtnCancel_Click" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

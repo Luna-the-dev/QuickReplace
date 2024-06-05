@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows;
+using TextReplace.Core.Enums;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
 
@@ -128,6 +129,17 @@ namespace TextReplace.MVVM.ViewModel
             {
                 Debug.WriteLine("Replacements successfully performed.");
             }
+        }
+
+        public void SetSelectedOutputFileType(OutputFileTypeEnum fileType)
+        {
+            OutputData.SetOutputFileType(SelectedFile.SourceFileName, fileType);
+        }
+
+        public static void SetAllOutputFileTypes(OutputFileTypeEnum fileType)
+        {
+            Debug.WriteLine("2");
+            OutputData.SetAllOutputFileTypes(fileType);
         }
 
         private void SetIsReplacifyEnabled()

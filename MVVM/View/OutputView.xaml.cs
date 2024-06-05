@@ -1,4 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Controls;
+using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
 {
@@ -10,6 +13,41 @@ namespace TextReplace.MVVM.View
         public OutputView()
         {
             InitializeComponent();
+        }
+
+        private void OpenGlobalFileTypeWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Output File Type";
+            string body = "Select the type each output file will be converted to.\n" +
+                "<u>Note:</u> Excel files will not be converted";
+
+            var dialog = new PopupWindows.SetOutputFileTypeWindow(window, title, body);
+            dialog.ShowDialog();
+
+            Debug.WriteLine("0");
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                Debug.WriteLine("1");
+                OutputViewModel.SetAllOutputFileTypes(dialog.OutputFileType);
+            }
+        }
+
+        private void OpenSelectedFileTypeWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Output File Type";
+            string body = "Select the type that the selected file will be converted to.\n" +
+                "<u>Note:</u> Excel files will not be converted";
+
+            var dialog = new PopupWindows.SetOutputFileTypeWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                ((OutputViewModel)DataContext).SetSelectedOutputFileType(dialog.OutputFileType);
+            }
         }
 
         /// <summary>

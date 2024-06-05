@@ -1,6 +1,6 @@
 ﻿namespace TextReplace.Core.Enums
 {
-    enum InsertReplacePhraseAtEnum
+    public enum InsertReplacePhraseAtEnum
     {
         Top,
         Bottom,

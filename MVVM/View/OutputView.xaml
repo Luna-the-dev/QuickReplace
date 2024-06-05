@@ -48,6 +48,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
+                <RowDefinition Height="15"/>
+                <RowDefinition Height="28"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition />
             </Grid.RowDefinitions>
 
             <Button Grid.Column="1" Grid.Row="0"
@@ -70,6 +75,44 @@
                 <Button.Content>
                     <TextBlock Text="Selected file"
                                x:Name="replaceSelectedFileOption"
+                               HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <TextBlock Grid.Column="1" Grid.Row="3"
+                       Margin="0 0 0 6"
+                       Text="Output File Type"
+                       VerticalAlignment="Bottom"
+                       HorizontalAlignment="Center"
+                       Foreground="{StaticResource TextLight}"
+                       FontSize="14"
+                       FontFamily="/Fonts/#Poppins"/>
+            <Border Grid.Column="1" Grid.Row="3"
+                    Margin="0 0 0 4" Width="120"
+                    BorderBrush="{StaticResource TextUnclickable}"
+                    BorderThickness="0 0 0 1"/>
+
+            <Button Grid.Column="1" Grid.Row="4"
+                    Style="{StaticResource OptionButtonTheme}"
+                    Click="OpenGlobalFileTypeWindow_OnClick">
+                <Button.Content>
+                    <TextBlock Text="Set all"
+                               x:Name="globalFileTypeOption"
+                               HorizontalAlignment="Center"
+                               FontFamily="/Fonts/#Poppins"
+                               Foreground="{StaticResource TextLight}"/>
+                </Button.Content>
+            </Button>
+
+            <Button Grid.Column="1" Grid.Row="5"
+                    Style="{StaticResource OptionButtonTheme}"
+                    IsEnabled="{Binding IsFileSelected}"
+                    Click="OpenSelectedFileTypeWindow_OnClick">
+                <Button.Content>
+                    <TextBlock Text="Set Selected"
+                               x:Name="selectedFileTypeOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
@@ -159,18 +202,15 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="28"/>
                 <RowDefinition Height="50"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-
+            
             <TextBlock Grid.Column="1" Grid.Row="0"
                        Margin="0 0 0 6"
-                       Text="Output File Type"
+                       Text="Properties"
                        VerticalAlignment="Bottom"
                        HorizontalAlignment="Center"
                        Foreground="{StaticResource TextLight}"
@@ -181,30 +221,7 @@
                     BorderBrush="{StaticResource TextUnclickable}"
                     BorderThickness="0 0 0 1"/>
 
-            <ComboBox Grid.Column="1" Grid.Row="1"
-                      Width="140" Height="40"
-                      SelectedIndex="{Binding OutputFileType}"
-                      Style="{StaticResource CustomComboBoxTheme}">
-                <ComboBoxItem Content="Keep file type"/>
-                <ComboBoxItem Content="Document file"/>
-                <ComboBoxItem Content="Text file"/>
-                <ComboBoxItem Content="PDF file"/>
-            </ComboBox>
-
-            <TextBlock Grid.Column="1" Grid.Row="3"
-                       Margin="0 0 0 6"
-                       Text="Properties"
-                       VerticalAlignment="Bottom"
-                       HorizontalAlignment="Center"
-                       Foreground="{StaticResource TextLight}"
-                       FontSize="14"
-                       FontFamily="/Fonts/#Poppins"/>
-            <Border Grid.Column="1" Grid.Row="3"
-                    Margin="0 0 0 4" Width="120"
-                    BorderBrush="{StaticResource TextUnclickable}"
-                    BorderThickness="0 0 0 1"/>
-
-            <ToggleButton Grid.Column="1" Grid.Row="4"
+            <ToggleButton Grid.Column="1" Grid.Row="1"
                           Style="{StaticResource OptionToggleButtonTheme}"
                           Command="{Binding ToggleWholeWordCommand}"
                           IsChecked="{Binding IsWholeWord}">
@@ -217,7 +234,7 @@
                 </ToggleButton.Content>
             </ToggleButton>
 
-            <ToggleButton Grid.Column="1" Grid.Row="5"
+            <ToggleButton Grid.Column="1" Grid.Row="2"
                           Style="{StaticResource OptionToggleButtonTheme}"
                           Command="{Binding ToggleCaseSensitiveCommand}"
                           IsChecked="{Binding IsCaseSensitive}">
@@ -230,7 +247,7 @@
                 </ToggleButton.Content>
             </ToggleButton>
 
-            <ToggleButton Grid.Column="1" Grid.Row="6"
+            <ToggleButton Grid.Column="1" Grid.Row="3"
                     Style="{StaticResource OptionToggleButtonTheme}">
                 <ToggleButton.Content>
                     <TextBlock Text="Preserve case"
@@ -241,7 +258,7 @@
                 </ToggleButton.Content>
             </ToggleButton>
 
-            <Button Grid.Column="1" Grid.Row="7"
+            <Button Grid.Column="1" Grid.Row="4"
                     Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock Text="Styling"

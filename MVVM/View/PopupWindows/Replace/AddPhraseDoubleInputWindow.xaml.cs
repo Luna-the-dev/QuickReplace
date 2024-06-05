@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using TextReplace.Core.Enums;
 using TextReplace.MVVM.Model;
+using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.MVVM.View.PopupWindows
 {
@@ -69,6 +71,15 @@ namespace TextReplace.MVVM.View.PopupWindows
             set
             {
                 BottomInputTextBox.Text = value;
+            }
+        }
+
+        public InsertReplacePhraseAtEnum InsertReplacePhraseAt
+        {
+            get { return (InsertReplacePhraseAtEnum)((AddPhraseDoubleInputViewModel)DataContext).InsertAt; }
+            set
+            {
+                ((AddPhraseDoubleInputViewModel)DataContext).InsertAt = (int)value;
             }
         }
 

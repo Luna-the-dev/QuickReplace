@@ -8,6 +8,8 @@ using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
+using TextReplace.Core.Enums;
+using DocumentFormat.OpenXml.Bibliography;
 
 namespace TextReplace.MVVM.Model
 {
@@ -491,6 +493,53 @@ namespace TextReplace.MVVM.Model
         public static void UpdateOutputFiles(List<SourceFile> files)
         {
             OutputFiles = new List<OutputFile>(files.Select(x => new OutputFile(x)));
+        }
+
+        /// <summary>
+        /// Sets the file type of an output file by the name of its source file
+        /// (Since fileName is not unique)
+        /// </summary>
+        /// <param name="sourceFileName"></param>
+        /// <param name="fileType"></param>
+        /// <exception cref="ArgumentException"></exception>
+        public static void SetOutputFileType(string sourceFileName, OutputFileTypeEnum fileType)
+        {
+            int i = OutputFiles.FindIndex(x => x.SourceFileName == sourceFileName);
+            if (i == -1)
+            {
+                throw new ArgumentException("SetOutputFileType() could not find name");
+            }
+
+            
+
+            OutputFiles[i].FileName = string.Format(@"{0}\{1}{2}",
+                                                    Path.GetDirectoryName(OutputFiles[i].FileName),
+                                                    Path.GetFileNameWithoutExtension(OutputFiles[i].FileName),
+                                                    OutputFileTypeClass.OutputFileTypeString(fileType, OutputFiles[i].SourceFileName));
+            OutputFiles[i].ShortFileName = Path.GetFileName(OutputFiles[i].FileName);
+
+            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
+        }
+
+        /// <summary>
+        /// Sets the file type of all output files
+        /// </summary>
+        /// <param name="fileType"></param>
+        public static void SetAllOutputFileTypes(OutputFileTypeEnum fileType)
+        {
+            foreach (var outputFile in OutputFiles)
+            {
+                outputFile.FileName = string.Format(@"{0}\{1}{2}",
+                                                    Path.GetDirectoryName(outputFile.FileName),
+                                                    Path.GetFileNameWithoutExtension(outputFile.FileName),
+                                                    OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.SourceFileName));
+                outputFile.ShortFileName = Path.GetFileName(outputFile.FileName);
+                Debug.WriteLine(fileType);
+                Debug.WriteLine(outputFile.FileName);
+                Debug.WriteLine(OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.FileName));
+            }
+
+            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
     }
 

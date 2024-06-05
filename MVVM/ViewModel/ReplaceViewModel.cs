@@ -16,7 +16,6 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<IsNewReplacementsFileMsg>,
         IRecipient<ReplacePhrasesMsg>,
         IRecipient<SelectedReplacePhraseMsg>,
-        IRecipient<InsertReplacePhraseAtMsg>,
         IRecipient<IsReplaceFileUnsavedMsg>,
         IRecipient<AreReplacePhrasesSortedMsg>
     {
@@ -51,8 +50,6 @@ namespace TextReplace.MVVM.ViewModel
 
         [ObservableProperty]
         private bool _isPhraseSelected = (ReplaceData.SelectedPhrase.Item1 != "");
-
-        private InsertReplacePhraseAtEnum InsertReplacePhraseAt = InsertReplacePhraseAtEnum.Top;
 
         [ObservableProperty]
         private string _searchText = string.Empty;
@@ -146,9 +143,9 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
-        public void AddNewPhrase(string item1, string item2)
+        public void AddNewPhrase(string item1, string item2, InsertReplacePhraseAtEnum insertAt)
         {
-            int index = InsertReplacePhraseIndex();
+            int index = InsertReplacePhraseIndex(insertAt);
             if (index == -1)
             {
                 Debug.WriteLine("Selected phrase index could not be found, new phrase not added.");
@@ -268,9 +265,9 @@ namespace TextReplace.MVVM.ViewModel
         /// The where the phrase should be inserted,
         /// -1 if a wrong value is assigned to InsertReplacePhraseAt
         /// </returns>
-        private int InsertReplacePhraseIndex()
+        private int InsertReplacePhraseIndex(InsertReplacePhraseAtEnum insertAt)
         {
-            return InsertReplacePhraseAt switch
+            return insertAt switch
             {
                 InsertReplacePhraseAtEnum.Top => 0,
                 InsertReplacePhraseAtEnum.Bottom => ReplacePhrases.Count,
@@ -321,11 +318,6 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(SelectedReplacePhraseMsg message)
         {
             SelectedPhrase = ReplacePhraseWrapper.WrapReplacePhrase(message.Value);
-        }
-
-        public void Receive(InsertReplacePhraseAtMsg message)
-        {
-            InsertReplacePhraseAt = message.Value;
         }
 
         public void Receive(IsReplaceFileUnsavedMsg message)

@@ -124,7 +124,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                viewModel.AddNewPhrase(dialog.TopInputText, dialog.BottomInputText);
+                viewModel.AddNewPhrase(dialog.TopInputText, dialog.BottomInputText, dialog.InsertReplacePhraseAt);
             }
         }
 
