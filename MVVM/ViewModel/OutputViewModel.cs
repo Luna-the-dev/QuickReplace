@@ -69,7 +69,7 @@ namespace TextReplace.MVVM.ViewModel
         private void ReplaceAll()
         {
             PerformReplacements(
-                SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
+                OutputData.OutputFiles.Select(x => x.SourceFileName).ToList(),
                 OutputData.OutputFiles.Select(x => x.FileName).ToList());
         }
 

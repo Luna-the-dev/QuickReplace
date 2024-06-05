@@ -181,8 +181,7 @@ namespace TextReplace.MVVM.Model
             {
                 if (reader.GetString(0) == string.Empty)
                 {
-                    Debug.WriteLine("A field within the first column of the replace file is empty.");
-                    continue;
+                    throw new InvalidOperationException("A field within the first column of the replace file is empty.");
                 }
 
                 phrases[reader.GetString(0)] = reader.GetString(1);
@@ -221,7 +220,13 @@ namespace TextReplace.MVVM.Model
             var phrases = (shouldSort) ? ReplacePhrasesList.OrderBy(x => x.Item1).ToList() : ReplacePhrasesList;
 
             using var workbook = new XLWorkbook();
-            var worksheet = workbook.Worksheets.Add(Path.GetFileName(fileName));
+            // limit the length of the worksheet name because excel doesnt allow anything over 31 chars
+            string name = Path.GetFileName(fileName);
+            if (name.Length > 31)
+            {
+                name = name.Substring(0, 31);
+            }
+            var worksheet = workbook.Worksheets.Add(name);
 
             for (int i = 0; i < phrases.Count; i++)
             {

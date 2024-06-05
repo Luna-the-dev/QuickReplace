@@ -101,7 +101,7 @@ namespace TextReplace.Core.Validation
             string extension = Path.GetExtension(fileName).ToLower();
             return extension switch
             {
-                ".txt" or ".text" or ".docx" => true,
+                ".csv" or ".tsv" or ".xlsx" or ".txt" or ".text" or ".docx" => true,
                 _ => false
             };
         }
