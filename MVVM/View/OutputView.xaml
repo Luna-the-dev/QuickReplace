@@ -248,7 +248,9 @@
             </ToggleButton>
 
             <ToggleButton Grid.Column="1" Grid.Row="3"
-                    Style="{StaticResource OptionToggleButtonTheme}">
+                          Style="{StaticResource OptionToggleButtonTheme}"
+                          Command="{Binding TogglePreserveCaseCommand}"
+                          IsChecked="{Binding IsPreserveCase}">
                 <ToggleButton.Content>
                     <TextBlock Text="Preserve case"
                                x:Name="preserveCaseOption"

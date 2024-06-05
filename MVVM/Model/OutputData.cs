@@ -59,8 +59,16 @@ namespace TextReplace.MVVM.Model
             }
         }
 
-        // delimiters that decide what seperates whole words
-        private const string WORD_DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
+        private static bool _preserveCase;
+        public static bool PreserveCase
+        {
+            get { return _preserveCase; }
+            set
+            {
+                _preserveCase = value;
+                WeakReferenceMessenger.Default.Send(new PreserveCaseMsg(value));
+            }
+        }
 
         /// <summary>
         /// Searches through a list of source files, looking for instances of keys from 
@@ -80,7 +88,8 @@ namespace TextReplace.MVVM.Model
             List<string> srcFiles,
             List<string> destFiles,
             bool wholeWord,
-            bool caseSensitive)
+            bool caseSensitive,
+            bool preserveCase)
         {
             if (srcFiles.Count == 0 || destFiles.Count == 0)
             {
@@ -101,7 +110,7 @@ namespace TextReplace.MVVM.Model
             bool didEverythingSucceed = true;
             for (int i = 0; i < srcFiles.Count; i++)
             {
-                bool res = WriteReplacementsToFile(replacePhrases, srcFiles[i], destFiles[i], matcher, wholeWord);
+                bool res = WriteReplacementsToFile(replacePhrases, srcFiles[i], destFiles[i], matcher, wholeWord, preserveCase);
                 if (res == false)
                 {
                     Debug.WriteLine("Something went wrong in PerformReplacements()");
@@ -120,10 +129,11 @@ namespace TextReplace.MVVM.Model
         /// <param name="src"></param>
         /// <param name="dest"></param>
         /// <param name="matcher"></param>
-        /// <param name="isWholeWord"></param>
+        /// <param name="wholeWord"></param>
+        /// <param name="preserveCase"></param>
         /// <returns>False is some exception was thrown.</returns>
         private static bool WriteReplacementsToFile(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+            string src, string dest, AhoCorasickStringSearcher matcher, bool wholeWord, bool preserveCase)
         {
             try
             {
@@ -133,11 +143,11 @@ namespace TextReplace.MVVM.Model
                     // output file type:
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
-                        ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, isWholeWord);
+                        ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, isWholeWord);
+                        ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
                     return true;
                 }
@@ -148,11 +158,11 @@ namespace TextReplace.MVVM.Model
                     // output file type:
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
-                        ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, isWholeWord);
+                        ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, isWholeWord);
+                        ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
                     return true;
                 }
@@ -161,7 +171,7 @@ namespace TextReplace.MVVM.Model
                 // doesnt really make sense to write from excel to docx or something
                 if (FileValidation.IsExcelFile(src))
                 {
-                    ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, isWholeWord);
+                    ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     return true;
                 }
 
@@ -182,15 +192,15 @@ namespace TextReplace.MVVM.Model
         /// <param name="dest"></param>
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
+        /// <param name="isPreserveCase"></param>
         private static async void ReadFromTextCsvTsvWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             await Task.Run(() =>
             {
                 // decide whhich function should be used to substitute the matches
-                // based on whether or not it is looking for whole word matches
-                Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
-                    (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+                // this is to reduce the number of unneccesary checks in these functions
+                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
 
                 using var sw = new StreamWriter(dest);
 
@@ -210,15 +220,15 @@ namespace TextReplace.MVVM.Model
         /// <param name="dest"></param>
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
+        /// <param name="isPreserveCase"></param>
         private static async void ReadFromTextCsvTsvWriteToDocx(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             await Task.Run(() =>
             {
                 // decide whhich function should be used to substitute the matches
-                // based on whether or not it is looking for whole word matches
-                Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
-                    (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+                // this is to reduce the number of unneccesary checks in these functions
+                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
 
                 // create the new document
                 using var document = WordprocessingDocument.Create(dest, WordprocessingDocumentType.Document);
@@ -258,15 +268,15 @@ namespace TextReplace.MVVM.Model
         /// <param name="dest"></param>
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
+        /// <param name="isPreserveCase"></param>
         private static async void ReadFromDocxWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             await Task.Run(() =>
             {
                 // decide whhich function should be used to substitute the matches
-                // based on whether or not it is looking for whole word matches
-                Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
-                    (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+                // this is to reduce the number of unneccesary checks in these functions
+                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
 
                 using var sw = new StreamWriter(dest);
 
@@ -295,15 +305,15 @@ namespace TextReplace.MVVM.Model
         /// <param name="dest"></param>
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
+        /// <param name="isPreserveCase"></param>
         private static async void ReadFromDocxWriteToDocx(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             await Task.Run(() =>
             {
                 // decide whhich function should be used to substitute the matches
-                // based on whether or not it is looking for whole word matches
-                Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
-                    (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+                // this is to reduce the number of unneccesary checks in these functions
+                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
 
                 File.Copy(src, dest, true);
 
@@ -337,15 +347,15 @@ namespace TextReplace.MVVM.Model
         /// <param name="dest"></param>
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
+        /// <param name="isPreserveCase"></param>
         private static async void ReadFromExcelWriteToExcel(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord)
+            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             await Task.Run(() =>
             {
                 // decide whhich function should be used to substitute the matches
-                // based on whether or not it is looking for whole word matches
-                Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string> subMatches =
-                    (isWholeWord) ? SubstituteMatchesWholeWord : SubstituteMatches;
+                // this is to reduce the number of unneccesary checks in these functions
+                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
 
                 File.Copy(src, dest, true);
 
@@ -397,99 +407,6 @@ namespace TextReplace.MVVM.Model
             }, default);
         }
 
-        /// <summary>
-        /// Uses the Aho-Corasick algorithm to search a file for any substring matches
-        /// in a source file. This function is wrapped by WriteReplacementsToFile() and
-        /// called from PerformReplacements().
-        /// </summary>
-        /// <param name="replacePhrases"></param>
-        /// <param name="line"></param>
-        /// <param name="matcher"></param>
-        private static string SubstituteMatches(Dictionary<string, string> replacePhrases,
-            string line, AhoCorasickStringSearcher matcher)
-        {
-            // search the current line for any text that should be replaced
-            var matches = matcher.Search(line);
-
-            // save an offset to remember how much the position of each replacement
-            // should be shifted if a replacement was already made on the same line
-            int offset = 0;
-            string updatedLine = line;
-            foreach (var m in matches)
-            {
-                updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
-                                         .Insert(m.Position + offset, replacePhrases[m.Text]);
-                offset += replacePhrases[m.Text].Length - m.Text.Length;
-            }
-            return updatedLine;
-        }
-
-        /// <summary>
-        /// Uses the Aho-Corasick algorithm to search a file for any whole-word matches
-        /// in a source file. This function is wrapped by WriteReplacementsToFile() and
-        /// called from PerformReplacements().
-        /// </summary>
-        /// <param name="replacePhrases"></param>
-        /// <param name="line"></param>
-        /// <param name="matcher"></param>
-        private static string SubstituteMatchesWholeWord(Dictionary<string, string> replacePhrases,
-            string line, AhoCorasickStringSearcher matcher)
-        {
-            // search the current line for any text that should be replaced
-            var matches = matcher.Search(line);
-
-            // save an offset to remember how much the position of each replacement
-            // should be shifted if a replacement was already made on the same line
-            int offset = 0;
-            string updatedLine = line;
-            foreach (var m in matches)
-            {
-                if (IsMatchWholeWord(line, m.Text, m.Position) == false)
-                {
-                    continue;
-                }
-                updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
-                                         .Insert(m.Position + offset, replacePhrases[m.Text]);
-                offset += replacePhrases[m.Text].Length - m.Text.Length;
-            }
-            return updatedLine;
-        }
-
-        /// <summary>
-        /// Checks to see if a match found by the AhoCorasickStringSearcher
-        /// Search() method is a whole word.
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="text"></param>
-        /// <param name="pos"></param>
-        /// <returns>False if the character before and after the match exists and isnt a delimiter.</returns>
-        private static bool IsMatchWholeWord(string line, string text, int pos)
-        {
-            /*
-             * yes, i know this is ugly. this can be boiled down to the following.
-             * match is not a whole word if:
-             *   there is a char before the match AND it is not in the list of word delimiters
-             *   OR
-             *   there is a char after the match AND it is not found in the list of word delimiters
-             */
-            int indexBefore = pos - 1;
-            int indexAfter = pos + text.Length;
-            if ((indexBefore >= 0
-                   &&
-                   WORD_DELIMITERS.Contains(line[indexBefore]) == false
-                 )
-                 ||
-                 (indexAfter < line.Length
-                 &&
-                   WORD_DELIMITERS.Contains(line[indexAfter]) == false
-                 )
-               )
-            {
-                return false;
-            }
-            return true;
-        }
-
         public static void UpdateOutputFiles(List<SourceFile> files)
         {
             OutputFiles = new List<OutputFile>(files.Select(x => new OutputFile(x)));
@@ -509,8 +426,6 @@ namespace TextReplace.MVVM.Model
             {
                 throw new ArgumentException("SetOutputFileType() could not find name");
             }
-
-            
 
             OutputFiles[i].FileName = string.Format(@"{0}\{1}{2}",
                                                     Path.GetDirectoryName(OutputFiles[i].FileName),
@@ -534,9 +449,6 @@ namespace TextReplace.MVVM.Model
                                                     Path.GetFileNameWithoutExtension(outputFile.FileName),
                                                     OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.SourceFileName));
                 outputFile.ShortFileName = Path.GetFileName(outputFile.FileName);
-                Debug.WriteLine(fileType);
-                Debug.WriteLine(outputFile.FileName);
-                Debug.WriteLine(OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.FileName));
             }
 
             WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));

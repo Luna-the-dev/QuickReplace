@@ -16,7 +16,8 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<ReplacePhrasesMsg>,
         IRecipient<SourceFilesMsg>,
         IRecipient<WholeWordMsg>,
-        IRecipient<CaseSensitiveMsg>
+        IRecipient<CaseSensitiveMsg>,
+        IRecipient<PreserveCaseMsg>
     {
         [ObservableProperty]
         private ObservableCollection<OutputFileWrapper> _outputFiles =
@@ -54,12 +55,15 @@ namespace TextReplace.MVVM.ViewModel
         private bool _isWholeWord = OutputData.WholeWord;
         [ObservableProperty]
         private bool _isCaseSensitive = OutputData.CaseSensitive;
+        [ObservableProperty]
+        private bool _isPreserveCase = OutputData.PreserveCase;
 
         public RelayCommand ReplaceAllCommand => new RelayCommand(ReplaceAll);
         public RelayCommand ReplaceSelectedCommand => new RelayCommand(ReplaceSelected);
         public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
         public RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
         public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
+        public RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
 
         public OutputViewModel()
         {
@@ -102,6 +106,11 @@ namespace TextReplace.MVVM.ViewModel
             OutputData.CaseSensitive = !OutputData.CaseSensitive;
         }
 
+        private void TogglePreserveCase()
+        {
+            OutputData.PreserveCase = !OutputData.PreserveCase;
+        }
+
         private static void PerformReplacements(List<string> sourceFiles, List<string> destFiles)
         {
             if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
@@ -116,7 +125,8 @@ namespace TextReplace.MVVM.ViewModel
                 sourceFiles,
                 destFiles,
                 OutputData.WholeWord,
-                OutputData.CaseSensitive);
+                OutputData.CaseSensitive,
+                OutputData.PreserveCase);
 
             Debug.WriteLine("Output file names:");
             destFiles.ForEach(o => Debug.WriteLine($"\t{o}"));
@@ -138,7 +148,6 @@ namespace TextReplace.MVVM.ViewModel
 
         public static void SetAllOutputFileTypes(OutputFileTypeEnum fileType)
         {
-            Debug.WriteLine("2");
             OutputData.SetAllOutputFileTypes(fileType);
         }
 
@@ -229,6 +238,11 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(CaseSensitiveMsg message)
         {
             IsCaseSensitive = message.Value;
+        }
+
+        public void Receive(PreserveCaseMsg message)
+        {
+            IsPreserveCase = message.Value;
         }
     }
 

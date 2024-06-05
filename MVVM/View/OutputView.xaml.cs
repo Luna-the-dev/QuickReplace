@@ -25,11 +25,8 @@ namespace TextReplace.MVVM.View
             var dialog = new PopupWindows.SetOutputFileTypeWindow(window, title, body);
             dialog.ShowDialog();
 
-            Debug.WriteLine("0");
-
             if (dialog.BtnOk.IsChecked == true)
             {
-                Debug.WriteLine("1");
                 OutputViewModel.SetAllOutputFileTypes(dialog.OutputFileType);
             }
         }

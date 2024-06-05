@@ -1,6 +1,6 @@
 ﻿namespace TextReplace.Core.AhoCorasick
 {
-    class AhoCorasickStringSearcher
+    public class AhoCorasickStringSearcher
     {
         // GotoTransations:
         // For each state, we have a Dictionary<char, newState>

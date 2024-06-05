@@ -1,6 +1,6 @@
 ﻿namespace TextReplace.Core.AhoCorasick
 {
-    class StringMatch
+    public class StringMatch
     {
         public string Text { get; private set; }
         public int Position { get; private set; }

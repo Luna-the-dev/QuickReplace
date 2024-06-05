@@ -117,7 +117,8 @@ namespace TextReplace.MVVM.ViewModel
                 SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
                 OutputData.OutputFiles.Select(x => x.FileName).ToList(),
                 OutputData.WholeWord,
-                OutputData.CaseSensitive);
+                OutputData.CaseSensitive,
+                OutputData.PreserveCase);
 
             Debug.WriteLine("Output file names:");
             OutputData.OutputFiles.ForEach(o => Debug.WriteLine($"\t{o.FileName}"));
