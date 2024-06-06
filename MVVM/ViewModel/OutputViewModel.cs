@@ -111,34 +111,37 @@ namespace TextReplace.MVVM.ViewModel
             OutputData.PreserveCase = !OutputData.PreserveCase;
         }
 
-        private static void PerformReplacements(List<string> sourceFiles, List<string> destFiles)
+        private static async void PerformReplacements(List<string> sourceFiles, List<string> destFiles)
         {
-            if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
+            await Task.Run(() =>
             {
-                Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
-                return;
-            }
+                if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
+                {
+                    Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
+                    return;
+                }
 
-            // perform the text replacements
-            bool result = OutputData.PerformReplacements(
-                ReplaceData.ReplacePhrasesDict,
-                sourceFiles,
-                destFiles,
-                OutputData.WholeWord,
-                OutputData.CaseSensitive,
-                OutputData.PreserveCase);
+                // perform the text replacements
+                bool result = OutputData.PerformReplacements(
+                    ReplaceData.ReplacePhrasesDict,
+                    sourceFiles,
+                    destFiles,
+                    OutputData.WholeWord,
+                    OutputData.CaseSensitive,
+                    OutputData.PreserveCase);
 
-            Debug.WriteLine("Output file names:");
-            destFiles.ForEach(o => Debug.WriteLine($"\t{o}"));
+                Debug.WriteLine("Output file names:");
+                destFiles.ForEach(o => Debug.WriteLine($"\t{o}"));
 
-            if (result == false)
-            {
-                Debug.WriteLine("A replacement could not be made.");
-            }
-            else
-            {
-                Debug.WriteLine("Replacements successfully performed.");
-            }
+                if (result == false)
+                {
+                    Debug.WriteLine("A replacement could not be made.");
+                }
+                else
+                {
+                    Debug.WriteLine("Replacements successfully performed.");
+                }
+            });
         }
 
         public void SetSelectedOutputFileType(OutputFileTypeEnum fileType)

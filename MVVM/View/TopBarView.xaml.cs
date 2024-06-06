@@ -1,9 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
@@ -63,7 +61,7 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
-            string filePath = TopBarViewModel.ReplaceAll(dialog.OpenFileLocation);
+            string filePath = TopBarViewModel.ReplaceAll(dialog.OpenFileLocation).Result;
 
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file

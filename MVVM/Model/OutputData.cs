@@ -9,7 +9,6 @@ using TextReplace.Messages.Replace;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using TextReplace.Core.Enums;
-using DocumentFormat.OpenXml.Bibliography;
 
 namespace TextReplace.MVVM.Model
 {
@@ -118,13 +117,18 @@ namespace TextReplace.MVVM.Model
             bool didEverythingSucceed = true;
             for (int i = 0; i < srcFiles.Count; i++)
             {
-                bool res = WriteReplacementsToFile(replacePhrases, srcFiles[i], destFiles[i], matcher, wholeWord, preserveCase);
-                if (res == false)
+                int numOfReplacements = WriteReplacementsToFile(replacePhrases, srcFiles[i], destFiles[i], matcher, wholeWord, preserveCase);
+                if (numOfReplacements == -1)
                 {
                     Debug.WriteLine("Something went wrong in PerformReplacements()");
                     didEverythingSucceed = false;
+                    continue;
                 }
+                OutputFiles[i].NumOfReplacements = numOfReplacements;
+                Debug.WriteLine($"replacements: {numOfReplacements}");
             }
+
+            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
 
             return didEverythingSucceed;
         }
@@ -140,9 +144,11 @@ namespace TextReplace.MVVM.Model
         /// <param name="wholeWord"></param>
         /// <param name="preserveCase"></param>
         /// <returns>False is some exception was thrown.</returns>
-        private static bool WriteReplacementsToFile(Dictionary<string, string> replacePhrases,
+        private static int WriteReplacementsToFile(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool wholeWord, bool preserveCase)
         {
+            int numOfReplacements = -1;
+
             try
             {
                 // source file is csv, tsv, or text
@@ -151,13 +157,13 @@ namespace TextReplace.MVVM.Model
                     // output file type:
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
-                        ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        numOfReplacements = ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        numOfReplacements = ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
-                    return true;
+                    return numOfReplacements;
                 }
 
                 // source file is docx
@@ -166,29 +172,31 @@ namespace TextReplace.MVVM.Model
                     // output file type:
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
-                        ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        numOfReplacements = ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        numOfReplacements = ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                     }
-                    return true;
+                    Debug.WriteLine(numOfReplacements);
+                    return numOfReplacements;
                 }
 
                 // if source file is excel, only write to excel.
                 // doesnt really make sense to write from excel to docx or something
                 if (FileValidation.IsExcelFile(src))
                 {
-                    ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
-                    return true;
+                    numOfReplacements = ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                    return numOfReplacements;
                 }
 
                 throw new NotSupportedException($"Replace operation not supported for file type {Path.GetExtension(src)}");
             }
             catch (Exception e)
             {
-                Debug.WriteLine($"Failed to write from {src} to {dest} due to {e.Message}");
-                return false;
+                Debug.WriteLine(e.Message);
+                Debug.WriteLine($"Failed to write from {src} to {dest}");
+                return -1;
             }
         }
 
@@ -201,23 +209,26 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
-        private static async void ReadFromTextCsvTsvWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
+        private static int ReadFromTextCsvTsvWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
-            await Task.Run(() =>
+            int numOfMatches = 0;
+            int currNumOfMatches = 0;
+
+            // decide whhich function should be used to substitute the matches
+            // this is to reduce the number of unneccesary checks in these functions
+            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+
+            using var sw = new StreamWriter(dest);
+
+            // write the substitutes to the new file
+            foreach (string line in File.ReadLines(src))
             {
-                // decide whhich function should be used to substitute the matches
-                // this is to reduce the number of unneccesary checks in these functions
-                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+                sw.WriteLine(subMatches(replacePhrases, line, matcher, out currNumOfMatches));
+                numOfMatches += currNumOfMatches;
+            }
 
-                using var sw = new StreamWriter(dest);
-
-                // write the substitutes to the new file
-                foreach (string line in File.ReadLines(src))
-                {
-                    sw.WriteLine(subMatches(replacePhrases, line, matcher));
-                }
-            }, default);
+            return numOfMatches;
         }
 
         /// <summary>
@@ -229,43 +240,46 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
-        private static async void ReadFromTextCsvTsvWriteToDocx(Dictionary<string, string> replacePhrases,
+        private static int ReadFromTextCsvTsvWriteToDocx(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
-            await Task.Run(() =>
+            int numOfMatches = 0;
+            int currNumOfMatches = 0;
+
+            // decide whhich function should be used to substitute the matches
+            // this is to reduce the number of unneccesary checks in these functions
+            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+
+            // create the new document
+            using var document = WordprocessingDocument.Create(dest, WordprocessingDocumentType.Document);
+            MainDocumentPart mainDocPart = document.AddMainDocumentPart();
+            mainDocPart.Document = new Wordprocessing.Document();
+            var body = mainDocPart.Document.AppendChild(new Wordprocessing.Body());
+
+            foreach (string line in File.ReadLines(src))
             {
-                // decide whhich function should be used to substitute the matches
-                // this is to reduce the number of unneccesary checks in these functions
-                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+                // create a new paragraph
+                Wordprocessing.Paragraph paragraph = body.AppendChild(new Wordprocessing.Paragraph());
 
-                // create the new document
-                using var document = WordprocessingDocument.Create(dest, WordprocessingDocumentType.Document);
-                MainDocumentPart mainDocPart = document.AddMainDocumentPart();
-                mainDocPart.Document = new Wordprocessing.Document();
-                var body = mainDocPart.Document.AppendChild(new Wordprocessing.Body());
+                // start the run within the paragraph
+                var run = paragraph.AppendChild(new Wordprocessing.Run());
 
-                foreach (string line in File.ReadLines(src))
-                {
-                    // create a new paragraph
-                    Wordprocessing.Paragraph paragraph = body.AppendChild(new Wordprocessing.Paragraph());
+                // set the run properties
+                var runProperties = new Wordprocessing.RunProperties();
+                var font = new Wordprocessing.RunFonts() { Ascii = "Arial" };
+                var color = new Wordprocessing.Color { Val = "000000" };
+                runProperties.Append(font);
+                runProperties.Append(color);
 
-                    // start the run within the paragraph
-                    var run = paragraph.AppendChild(new Wordprocessing.Run());
+                run.PrependChild(runProperties);
 
-                    // set the run properties
-                    var runProperties = new Wordprocessing.RunProperties();
-                    var font = new Wordprocessing.RunFonts() { Ascii = "Arial" };
-                    var color = new Wordprocessing.Color { Val = "000000" };
-                    runProperties.Append(font);
-                    runProperties.Append(color);
+                run.AppendChild(new Wordprocessing.Text(subMatches(replacePhrases, line, matcher, out currNumOfMatches)));
+                numOfMatches += currNumOfMatches;
+            }
 
-                    run.PrependChild(runProperties);
+            mainDocPart.Document.Save();
 
-                    run.AppendChild(new Wordprocessing.Text(subMatches(replacePhrases, line, matcher)));
-                }
-
-                mainDocPart.Document.Save();
-            }, default);
+            return numOfMatches;
         }
 
         /// <summary>
@@ -277,32 +291,33 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
-        private static async void ReadFromDocxWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
+        private static int ReadFromDocxWriteToTextCsvTsv(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
-            await Task.Run(() =>
+            int numOfMatches = 0;
+            int currNumOfMatches = 0;
+
+            // decide whhich function should be used to substitute the matches
+            // this is to reduce the number of unneccesary checks in these functions
+            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+
+            using var sw = new StreamWriter(dest);
+
+            using var document = WordprocessingDocument.Open(src, false);
+
+            if (document.MainDocumentPart == null || document.MainDocumentPart.Document.Body == null)
             {
-                // decide whhich function should be used to substitute the matches
-                // this is to reduce the number of unneccesary checks in these functions
-                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+                throw new NullReferenceException("ReadFromDocxWriteToTextCsvTsv(): MainDocumentPart or its body is null");
+            }
 
-                using var sw = new StreamWriter(dest);
+            var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
 
-                using var document = WordprocessingDocument.Open(src, false);
-
-                if (document.MainDocumentPart == null || document.MainDocumentPart.Document.Body == null)
-                {
-                    Debug.WriteLine("ReadFromDocxWriteToTextCsvTsv(): MainDocumentPart or its body is null");
-                    return;
-                }
-
-                var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
-
-                foreach (var textNode in textNodes)
-                {
-                    sw.WriteLine(subMatches(replacePhrases, textNode.InnerText, matcher));
-                }
-            }, default);
+            foreach (var textNode in textNodes)
+            {
+                sw.WriteLine(subMatches(replacePhrases, textNode.InnerText, matcher, out currNumOfMatches));
+                numOfMatches += currNumOfMatches;
+            }
+            return numOfMatches;
         }
 
         /// <summary>
@@ -314,34 +329,36 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
-        private static async void ReadFromDocxWriteToDocx(Dictionary<string, string> replacePhrases,
+        private static int ReadFromDocxWriteToDocx(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
-            await Task.Run(() =>
+            int numOfMatches = 0;
+            int currNumOfMatches = 0;
+
+            // decide whhich function should be used to substitute the matches
+            // this is to reduce the number of unneccesary checks in these functions
+            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+
+            File.Copy(src, dest, true);
+
+            using var document = WordprocessingDocument.Open(dest, true);
+
+            if (document.MainDocumentPart == null || document.MainDocumentPart.Document.Body == null)
             {
-                // decide whhich function should be used to substitute the matches
-                // this is to reduce the number of unneccesary checks in these functions
-                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+                throw new NullReferenceException("ReadFromDocxWriteToDocx(): MainDocumentPart or its body is null");
+            }
 
-                File.Copy(src, dest, true);
+            var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
 
-                using var document = WordprocessingDocument.Open(dest, true);
+            foreach (var textNode in textNodes)
+            {
+                textNode.Text = subMatches(replacePhrases, textNode.InnerText, matcher, out currNumOfMatches);
+                numOfMatches += currNumOfMatches;
+            }
 
-                if (document.MainDocumentPart == null || document.MainDocumentPart.Document.Body == null)
-                {
-                    Debug.WriteLine("ReadFromDocxWriteToDocx(): MainDocumentPart or its body is null");
-                    return;
-                }
+            document.MainDocumentPart.Document.Save();
 
-                var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
-
-                foreach (var textNode in textNodes)
-                {
-                    textNode.Text = subMatches(replacePhrases, textNode.InnerText, matcher);
-                }
-
-                document.MainDocumentPart.Document.Save();
-            }, default);
+            return numOfMatches;
         }
 
         /// <summary>
@@ -356,63 +373,66 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
-        private static async void ReadFromExcelWriteToExcel(Dictionary<string, string> replacePhrases,
+        private static int ReadFromExcelWriteToExcel(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
-            await Task.Run(() =>
+            int numOfMatches = 0;
+            int currNumOfMatches = 0;
+
+            // decide whhich function should be used to substitute the matches
+            // this is to reduce the number of unneccesary checks in these functions
+            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+
+            File.Copy(src, dest, true);
+
+            using var document = SpreadsheetDocument.Open(dest, true);
+
+            if (document.WorkbookPart == null || document.WorkbookPart.Workbook.Sheets == null)
             {
-                // decide whhich function should be used to substitute the matches
-                // this is to reduce the number of unneccesary checks in these functions
-                var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+                throw new NullReferenceException("ReadFromExcelWriteToExcel(): WorkbookPart or its sheets is null");
+            }
 
-                File.Copy(src, dest, true);
+            WorkbookPart wbPart = document.WorkbookPart;
+            List<Sheet> sheets = wbPart.Workbook.Sheets.Elements<Sheet>().ToList();
 
-                using var document = SpreadsheetDocument.Open(dest, true);
-
-                if (document.WorkbookPart == null || document.WorkbookPart.Workbook.Sheets == null)
+            foreach (var sheet in sheets)
+            {
+                if (sheet.Id?.Value == null)
                 {
-                    throw new NullReferenceException("ReadFromExcelWriteToExcel(): WorkbookPart or its sheets is null");
+                    continue;
                 }
 
-                WorkbookPart wbPart = document.WorkbookPart;
-                List<Sheet> sheets = wbPart.Workbook.Sheets.Elements<Sheet>().ToList();
+                WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id.Value);
+                var cells = wsPart.Worksheet.Descendants<Cell>();
+                int id = -1;
 
-                foreach (var sheet in sheets)
+                foreach (var cell in cells)
                 {
-                    if (sheet.Id?.Value == null)
+                    if (cell.DataType != null && cell.DataType == CellValues.SharedString)
                     {
-                        continue;
-                    }
-
-                    WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id.Value);
-                    var cells = wsPart.Worksheet.Descendants<Cell>();
-                    int id = -1;
-
-                    foreach (var cell in cells)
-                    {
-                        if (cell.DataType != null && cell.DataType == CellValues.SharedString)
+                        if (Int32.TryParse(cell.InnerText, out id))
                         {
-                            if (Int32.TryParse(cell.InnerText, out id))
+                            string? text = wbPart.SharedStringTablePart?.SharedStringTable.Elements<SharedStringItem>().ElementAt(id).InnerText;
+                            if (text == null)
                             {
-                                string? text = wbPart.SharedStringTablePart?.SharedStringTable.Elements<SharedStringItem>().ElementAt(id).InnerText;
-                                if (text == null)
-                                {
-                                    continue;
-                                }
-
-                                cell.DataType = CellValues.String;
-                                cell.CellValue = new CellValue(subMatches(replacePhrases, text, matcher));
+                                continue;
                             }
-                        }
-                        else if (cell.DataType != null && cell.DataType == CellValues.String)
-                        {
-                            cell.CellValue = new CellValue(subMatches(replacePhrases, cell.InnerText, matcher));
+
+                            cell.DataType = CellValues.String;
+                            cell.CellValue = new CellValue(subMatches(replacePhrases, text, matcher, out currNumOfMatches));
+                            numOfMatches += currNumOfMatches;
                         }
                     }
-
-                    document.Save();
+                    else if (cell.DataType != null && cell.DataType == CellValues.String)
+                    {
+                        cell.CellValue = new CellValue(subMatches(replacePhrases, cell.InnerText, matcher, out currNumOfMatches));
+                        numOfMatches += currNumOfMatches;
+                    }
                 }
-            }, default);
+
+                document.Save();
+            }
+            return numOfMatches;
         }
 
         public static void UpdateOutputFiles(List<SourceFile> files)

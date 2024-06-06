@@ -6,7 +6,10 @@ namespace TextReplace.Core.AhoCorasick
         // delimiters that decide what seperates whole words
         private const string WORD_DELIMITERS = " \t/\\()\"'-:,.;<>~!@#$%^&*|+=[]{}?│";
 
-        public static Func<Dictionary<string, string>, string, AhoCorasickStringSearcher, string>
+        // delegate for return type of SelectSubstituteMatchesMethod
+        public delegate string Foo<T1, T2, T3, T4>(T1 replacePhrases, T2 line, T3 matcher, out T4 numOfMatches);
+
+        public static Foo<Dictionary<string, string>, string, AhoCorasickStringSearcher, int>
             SelectSubstituteMatchesMethod(bool wholeWord, bool preserveCase)
         {
             switch (wholeWord, preserveCase)
@@ -29,11 +32,13 @@ namespace TextReplace.Core.AhoCorasick
         /// <param name="replacePhrases"></param>
         /// <param name="line"></param>
         /// <param name="matcher"></param>
+        /// <param name="numOfMatches"></param>
         private static string SubstituteMatches(Dictionary<string, string> replacePhrases,
-            string line, AhoCorasickStringSearcher matcher)
+            string line, AhoCorasickStringSearcher matcher, out int numOfMatches)
         {
             // search the current line for any text that should be replaced
             var matches = matcher.Search(line);
+            numOfMatches = 0;
 
             // save an offset to remember how much the position of each replacement
             // should be shifted if a replacement was already made on the same line
@@ -41,6 +46,7 @@ namespace TextReplace.Core.AhoCorasick
             string updatedLine = line;
             foreach (var m in matches)
             {
+                numOfMatches += 1;
                 updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
                                          .Insert(m.Position + offset, replacePhrases[m.Text]);
                 offset += replacePhrases[m.Text].Length - m.Text.Length;
@@ -54,11 +60,13 @@ namespace TextReplace.Core.AhoCorasick
         /// <param name="replacePhrases"></param>
         /// <param name="line"></param>
         /// <param name="matcher"></param>
+        /// <param name="numOfMatches"></param>
         private static string SubstituteMatchesWholeWord(Dictionary<string, string> replacePhrases,
-            string line, AhoCorasickStringSearcher matcher)
+            string line, AhoCorasickStringSearcher matcher, out int numOfMatches)
         {
             // search the current line for any text that should be replaced
             var matches = matcher.Search(line);
+            numOfMatches = 0;
 
             // save an offset to remember how much the position of each replacement
             // should be shifted if a replacement was already made on the same line
@@ -70,6 +78,7 @@ namespace TextReplace.Core.AhoCorasick
                 {
                     continue;
                 }
+                numOfMatches += 1;
                 updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
                                          .Insert(m.Position + offset, replacePhrases[m.Text]);
                 offset += replacePhrases[m.Text].Length - m.Text.Length;
@@ -84,11 +93,13 @@ namespace TextReplace.Core.AhoCorasick
         /// <param name="replacePhrases"></param>
         /// <param name="line"></param>
         /// <param name="matcher"></param>
+        /// <param name="numOfMatches"></param>
         private static string SubstituteMatchesPreserveCase(Dictionary<string, string> replacePhrases,
-            string line, AhoCorasickStringSearcher matcher)
+            string line, AhoCorasickStringSearcher matcher, out int numOfMatches)
         {
             // search the current line for any text that should be replaced
             var matches = matcher.Search(line);
+            numOfMatches = 0;
 
             // save an offset to remember how much the position of each replacement
             // should be shifted if a replacement was already made on the same line
@@ -96,6 +107,7 @@ namespace TextReplace.Core.AhoCorasick
             string updatedLine = line;
             foreach (var m in matches)
             {
+                numOfMatches += 1;
                 updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
                                          .Insert(m.Position + offset,
                                                  SetMatchCase(replacePhrases[m.Text], char.IsUpper(updatedLine[m.Position + offset]))
@@ -112,11 +124,13 @@ namespace TextReplace.Core.AhoCorasick
         /// <param name="replacePhrases"></param>
         /// <param name="line"></param>
         /// <param name="matcher"></param>
+        /// <param name="numOfMatches"></param>
         private static string SubstituteMatchesWholeWordPreserveCase(Dictionary<string, string> replacePhrases,
-            string line, AhoCorasickStringSearcher matcher)
+            string line, AhoCorasickStringSearcher matcher, out int numOfMatches)
         {
             // search the current line for any text that should be replaced
             var matches = matcher.Search(line);
+            numOfMatches = 0;
 
             // save an offset to remember how much the position of each replacement
             // should be shifted if a replacement was already made on the same line
@@ -128,6 +142,7 @@ namespace TextReplace.Core.AhoCorasick
                 {
                     continue;
                 }
+                numOfMatches += 1;
                 updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
                                          .Insert(m.Position + offset,
                                                  SetMatchCase(replacePhrases[m.Text], char.IsUpper(updatedLine[m.Position + offset]))

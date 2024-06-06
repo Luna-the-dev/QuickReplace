@@ -102,37 +102,40 @@ namespace TextReplace.MVVM.ViewModel
             SetReplaceButtonClickability();
         }   
 
-        public static string ReplaceAll(bool openFileLocation)
+        public static async Task<string> ReplaceAll(bool openFileLocation)
         {
-            if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
+            return await Task.Run(() =>
             {
-                throw new ApplicationException("Replace file or source files were empty. This should never be reached...");
-            }
+                if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
+                {
+                    throw new ApplicationException("Replace file or source files were empty. This should never be reached...");
+                }
 
-            OutputData.OpenFileLocation = openFileLocation;
+                OutputData.OpenFileLocation = openFileLocation;
 
-            // perform the text replacements
-            bool result = OutputData.PerformReplacements(
-                ReplaceData.ReplacePhrasesDict,
-                SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
-                OutputData.OutputFiles.Select(x => x.FileName).ToList(),
-                OutputData.WholeWord,
-                OutputData.CaseSensitive,
-                OutputData.PreserveCase);
+                // perform the text replacements
+                bool result = OutputData.PerformReplacements(
+                    ReplaceData.ReplacePhrasesDict,
+                    SourceFilesData.SourceFiles.Select(x => x.FileName).ToList(),
+                    OutputData.OutputFiles.Select(x => x.FileName).ToList(),
+                    OutputData.WholeWord,
+                    OutputData.CaseSensitive,
+                    OutputData.PreserveCase);
 
-            Debug.WriteLine("Output file names:");
-            OutputData.OutputFiles.ForEach(o => Debug.WriteLine($"\t{o.FileName}"));
+                Debug.WriteLine("Output file names:");
+                OutputData.OutputFiles.ForEach(o => Debug.WriteLine($"\t{o.FileName}"));
 
-            if (result == false)
-            {
-                Debug.WriteLine("A replacement could not be made.");
-            }
-            else
-            {
-                Debug.WriteLine("Replacements successfully performed.");
-            }
+                if (result == false)
+                {
+                    Debug.WriteLine("A replacement could not be made.");
+                }
+                else
+                {
+                    Debug.WriteLine("Replacements successfully performed.");
+                }
 
-            return OutputData.OutputFiles[0].FileName;
+                return OutputData.OutputFiles[0].FileName;
+            }).ConfigureAwait(false);
         }
 
         private void ToggleCaseSensitive()

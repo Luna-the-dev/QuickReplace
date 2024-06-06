@@ -32,13 +32,25 @@ namespace TextReplace.MVVM.View
 
             OutputViewModel.ReplaceAll(dialog.OpenFileLocation);
 
+            if (dialog.OpenFileLocation == false)
+            {
+                return;
+            }
+
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file
-            string filePath = ((OutputViewModel)DataContext).OutputFiles[0].FileName;
-            if (dialog.OpenFileLocation)
+            string? filePath = null;
+            foreach (var file in ((OutputViewModel)DataContext).OutputFiles)
             {
-                Process.Start("explorer.exe", "/select, " + filePath);
+                // loop through files and select the first successfully generated one
+                if (File.Exists(file.FileName))
+                {
+                    filePath = file.FileName;
+                    break;
+                }
             }
+
+            Process.Start("explorer.exe", "/select, " + filePath);
         }
 
         private void PerformReplacementsOnSelectedFile_OnClick(object sender, RoutedEventArgs e)
@@ -57,13 +69,25 @@ namespace TextReplace.MVVM.View
 
             OutputViewModel.ReplaceSelected(dialog.OpenFileLocation);
 
-            // if the user selected to topen the file location,
-            // open the file explorer and highlight the generated file
-            string filePath = ((OutputViewModel)DataContext).SelectedFile.FileName;
-            if (dialog.OpenFileLocation)
+            if (dialog.OpenFileLocation == false)
             {
-                Process.Start("explorer.exe", "/select, " + filePath);
+                return;
             }
+
+            // if the user selected to topen the file location,
+            // open the file explorer and highlight the first generated file
+            string? filePath = null;
+            foreach (var file in ((OutputViewModel)DataContext).OutputFiles)
+            {
+                // loop through files and select the first successfully generated one
+                if (File.Exists(file.FileName))
+                {
+                    filePath = file.FileName;
+                    break;
+                }
+            }
+
+            Process.Start("explorer.exe", "/select, " + filePath);
         }
 
         private void OpenGlobalFileTypeWindow_OnClick(object sender, RoutedEventArgs e)
