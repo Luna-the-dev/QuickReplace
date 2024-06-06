@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.MVVM.ViewModel;
@@ -13,6 +14,56 @@ namespace TextReplace.MVVM.View
         public OutputView()
         {
             InitializeComponent();
+        }
+
+        private void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Replacify";
+            string body = "Perform replacements on all files.";
+
+            var dialog = new PopupWindows.ReplaceFilesWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == false)
+            {
+                return;
+            }
+
+            OutputViewModel.ReplaceAll(dialog.OpenFileLocation);
+
+            // if the user selected to topen the file location,
+            // open the file explorer and highlight the first generated file
+            string filePath = ((OutputViewModel)DataContext).OutputFiles[0].FileName;
+            if (dialog.OpenFileLocation)
+            {
+                Process.Start("explorer.exe", "/select, " + filePath);
+            }
+        }
+
+        private void PerformReplacementsOnSelectedFile_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Replacify";
+            string body = "Perform replacements on the selected file.";
+
+            var dialog = new PopupWindows.ReplaceFilesWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == false)
+            {
+                return;
+            }
+
+            OutputViewModel.ReplaceSelected(dialog.OpenFileLocation);
+
+            // if the user selected to topen the file location,
+            // open the file explorer and highlight the generated file
+            string filePath = ((OutputViewModel)DataContext).SelectedFile.FileName;
+            if (dialog.OpenFileLocation)
+            {
+                Process.Start("explorer.exe", "/select, " + filePath);
+            }
         }
 
         private void OpenGlobalFileTypeWindow_OnClick(object sender, RoutedEventArgs e)

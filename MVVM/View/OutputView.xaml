@@ -58,7 +58,7 @@
             <Button Grid.Column="1" Grid.Row="0"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsReplacifyEnabled}"
-                    Command="{Binding ReplaceAllCommand}">
+                    Click="PerformReplacementsOnAllFiles_OnClick">
                 <Button.Content>
                     <TextBlock Text="All files"
                                x:Name="replaceAllFilesOption"
@@ -71,7 +71,7 @@
             <Button Grid.Column="1" Grid.Row="1"
                     Style="{StaticResource OptionButtonTheme}"
                     IsEnabled="{Binding IsFileSelected}"
-                    Command="{Binding ReplaceSelectedCommand}">
+                    Click="PerformReplacementsOnSelectedFile_OnClick">
                 <Button.Content>
                     <TextBlock Text="Selected file"
                                x:Name="replaceSelectedFileOption"

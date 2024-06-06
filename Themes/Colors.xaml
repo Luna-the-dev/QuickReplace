@@ -57,6 +57,13 @@
         </SolidColorBrush.Color>
     </SolidColorBrush>
 
+    <SolidColorBrush x:Key="TextGrey">
+        <SolidColorBrush.Color>
+            <!--#B2B2B2-->
+            <Color A="255" R="178" G="178" B="178"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
     <SolidColorBrush x:Key="TextUnclickable">
         <SolidColorBrush.Color>
             <!--#7E7E7F-->

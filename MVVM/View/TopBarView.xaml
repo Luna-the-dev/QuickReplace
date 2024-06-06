@@ -83,7 +83,7 @@
                 FontSize="14"
                 FontWeight="Medium"
                 IsEnabled="{Binding ReplaceIsClickable}"
-                Command="{Binding Replace}"/>
+                Click="PerformReplacementsOnAllFiles_OnClick"/>
 
         <dropdownmenu:DropdownMenu Width="25" Height="15"
                                    Grid.Column="5" HorizontalAlignment="Left"

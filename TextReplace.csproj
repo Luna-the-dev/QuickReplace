@@ -39,6 +39,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="MVVM\View\PopupWindows\Output\ReplaceFilesWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="MVVM\View\PopupWindows\Output\SetFileTypeWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

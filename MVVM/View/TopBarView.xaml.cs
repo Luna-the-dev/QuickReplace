@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -45,6 +46,30 @@ namespace TextReplace.MVVM.View
             if (dialog.BtnOk.IsChecked == true)
             {
                 ((TopBarViewModel)DataContext).SourceFiles(dialog.FullFileNames);
+            }
+        }
+
+        private void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Replacify";
+            string body = "Perform replacements on all files.";
+
+            var dialog = new PopupWindows.ReplaceFilesWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == false)
+            {
+                return;
+            }
+
+            string filePath = TopBarViewModel.ReplaceAll(dialog.OpenFileLocation);
+
+            // if the user selected to topen the file location,
+            // open the file explorer and highlight the first generated file
+            if (dialog.OpenFileLocation)
+            {
+                Process.Start("explorer.exe", "/select, " + filePath);
             }
         }
 

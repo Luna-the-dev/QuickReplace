@@ -70,6 +70,14 @@ namespace TextReplace.MVVM.Model
             }
         }
 
+        private static bool _openFileLocation;
+        public static bool OpenFileLocation
+        {
+            get { return _openFileLocation; }
+            set { _openFileLocation = value; }
+        }
+
+
         /// <summary>
         /// Searches through a list of source files, looking for instances of keys from 
         /// the ReplacePhrases dict, replacing them with the associated value, and then
@@ -433,6 +441,13 @@ namespace TextReplace.MVVM.Model
                                                     OutputFileTypeClass.OutputFileTypeString(fileType, OutputFiles[i].SourceFileName));
             OutputFiles[i].ShortFileName = Path.GetFileName(OutputFiles[i].FileName);
 
+            if (SelectedFile.SourceFileName == sourceFileName)
+            {
+                SelectedFile.FileName = OutputFiles[i].FileName;
+                SelectedFile.ShortFileName = OutputFiles[i].ShortFileName;
+                WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
+            }
+
             WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
 
@@ -449,6 +464,13 @@ namespace TextReplace.MVVM.Model
                                                     Path.GetFileNameWithoutExtension(outputFile.FileName),
                                                     OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.SourceFileName));
                 outputFile.ShortFileName = Path.GetFileName(outputFile.FileName);
+
+                if (SelectedFile.SourceFileName == outputFile.SourceFileName)
+                {
+                    SelectedFile.FileName = outputFile.FileName;
+                    SelectedFile.ShortFileName = outputFile.ShortFileName;
+                    WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
+                }
             }
 
             WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));

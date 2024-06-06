@@ -46,7 +46,6 @@ namespace TextReplace.MVVM.ViewModel
         private bool _replaceIsClickable = false;
 
         // commands
-        public RelayCommand Replace => new RelayCommand(ReplaceCmd);
         public RelayCommand ChangeOutputDirectory => new RelayCommand(ChangeOutputDirectoryCmd);
         public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
         public RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
@@ -101,15 +100,16 @@ namespace TextReplace.MVVM.ViewModel
             }
 
             SetReplaceButtonClickability();
-        }
+        }   
 
-        private void ReplaceCmd()
+        public static string ReplaceAll(bool openFileLocation)
         {
             if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
             {
-                Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
-                return;
+                throw new ApplicationException("Replace file or source files were empty. This should never be reached...");
             }
+
+            OutputData.OpenFileLocation = openFileLocation;
 
             // perform the text replacements
             bool result = OutputData.PerformReplacements(
@@ -131,6 +131,8 @@ namespace TextReplace.MVVM.ViewModel
             {
                 Debug.WriteLine("Replacements successfully performed.");
             }
+
+            return OutputData.OutputFiles[0].FileName;
         }
 
         private void ToggleCaseSensitive()

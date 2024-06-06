@@ -58,8 +58,6 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private bool _isPreserveCase = OutputData.PreserveCase;
 
-        public RelayCommand ReplaceAllCommand => new RelayCommand(ReplaceAll);
-        public RelayCommand ReplaceSelectedCommand => new RelayCommand(ReplaceSelected);
         public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
         public RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
         public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
@@ -71,15 +69,17 @@ namespace TextReplace.MVVM.ViewModel
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
-        private void ReplaceAll()
+        public static void ReplaceAll(bool openFileLocation)
         {
+            OutputData.OpenFileLocation = openFileLocation;
             PerformReplacements(
                 OutputData.OutputFiles.Select(x => x.SourceFileName).ToList(),
                 OutputData.OutputFiles.Select(x => x.FileName).ToList());
         }
 
-        private void ReplaceSelected()
+        public static void ReplaceSelected(bool openFileLocation)
         {
+            OutputData.OpenFileLocation = openFileLocation;
             PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
         }
 

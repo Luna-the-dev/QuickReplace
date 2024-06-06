@@ -15,6 +15,7 @@
                 <ResourceDictionary Source="Themes/InputBarTheme.xaml"/>
                 <ResourceDictionary Source="Themes/ScrollbarTheme.xaml"/>
                 <ResourceDictionary Source="Themes/CustomComboBoxTheme.xaml"/>
+                <ResourceDictionary Source="Themes/CustomCheckBox.xaml"/>
 
                 <!-- Menu themes-->
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuTheme.xaml"/>
@@ -80,6 +81,10 @@
 
             <DataTemplate DataType="{x:Type popupvm:SetOutputFileTypeViewModel}">
                 <popup:SetOutputFileTypeWindow/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type popupvm:ReplaceFilesViewModel}">
+                <popup:ReplaceFilesWindow/>
             </DataTemplate>
 
         </ResourceDictionary>
