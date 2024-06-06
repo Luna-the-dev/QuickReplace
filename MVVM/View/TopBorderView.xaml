@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="TextReplace.MVVM.View.TopBorderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TextReplace.MVVM.View"
              Height="25">
     <Border Background="{StaticResource BackgroundColorDark}"
             MouseDown="Border_MouseDown">
@@ -14,6 +15,7 @@
             <StackPanel HorizontalAlignment="Right"
                         Orientation="Horizontal">
                 <Button Width="25" Height="25"
+                        Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TopBorderView}}, Path=MinimizeButtonVisibility}"
                         Content="🗕"
                         Foreground="{StaticResource TextMedium}"
                         FontWeight="Bold"

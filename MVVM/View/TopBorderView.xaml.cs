@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using TextReplace.UserControls;
 
 namespace TextReplace.MVVM.View
 {
@@ -10,13 +11,30 @@ namespace TextReplace.MVVM.View
     /// </summary>
     public partial class TopBorderView : UserControl
     {
-        public static readonly DependencyProperty _windowNameProperty =
-            DependencyProperty.Register("WindowName", typeof(string), typeof(UserControl), new FrameworkPropertyMetadata(null));
         public string? WindowName
         {
-            get { return (string)GetValue(_windowNameProperty); }
-            set { SetValue(_windowNameProperty, value); }
+            get { return (string)GetValue(WindowNameProperty); }
+            set { SetValue(WindowNameProperty, value); }
         }
+        public static readonly DependencyProperty WindowNameProperty =
+            DependencyProperty.Register(
+                name: "WindowName",
+                propertyType: typeof(string),
+                ownerType: typeof(TopBorderView),
+                typeMetadata: new FrameworkPropertyMetadata(null));
+
+        public Visibility MinimizeButtonVisibility
+        {
+            get { return (Visibility)GetValue(CloseButtonOnlyProperty); }
+            set { SetValue(CloseButtonOnlyProperty, Visibility); }
+        }
+        public static readonly DependencyProperty CloseButtonOnlyProperty =
+            DependencyProperty.Register(
+                name: "CloseButtonOnly",
+                propertyType: typeof(Visibility),
+                ownerType: typeof(TopBorderView),
+                typeMetadata: new PropertyMetadata(Visibility.Collapsed));
+
         public string? TitleText
         {
             get

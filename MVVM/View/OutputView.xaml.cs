@@ -50,6 +50,11 @@ namespace TextReplace.MVVM.View
                 }
             }
 
+            if (filePath == null)
+            {
+                return;
+            }
+
             Process.Start("explorer.exe", "/select, " + filePath);
         }
 
@@ -87,6 +92,11 @@ namespace TextReplace.MVVM.View
                 }
             }
 
+            if (filePath == null)
+            {
+                return;
+            }
+
             Process.Start("explorer.exe", "/select, " + filePath);
         }
 
@@ -94,7 +104,7 @@ namespace TextReplace.MVVM.View
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Output File Type";
-            string body = "Select the type each output file will be converted to.\n" +
+            string body = "Choose the type each output file will be converted to.\n" +
                 "<u>Note:</u> Excel files will not be converted";
 
             var dialog = new PopupWindows.SetOutputFileTypeWindow(window, title, body);
@@ -110,7 +120,7 @@ namespace TextReplace.MVVM.View
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Output File Type";
-            string body = "Select the type that the selected file will be converted to.\n" +
+            string body = "Choose the type that the selected file will be converted to.\n" +
                 "<u>Note:</u> Excel files will not be converted";
 
             var dialog = new PopupWindows.SetOutputFileTypeWindow(window, title, body);

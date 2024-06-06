@@ -49,6 +49,7 @@
                            HorizontalAlignment="Stretch"
                            VerticalAlignment="Center"
                            TextAlignment="Center"
+                           d:Text="Choose the type that the selected output file will be converted to."
                            Name="BodyTextBox"
                            TextWrapping="Wrap"
                            Foreground="{StaticResource TextLight}"

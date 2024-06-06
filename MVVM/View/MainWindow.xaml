@@ -32,7 +32,7 @@
             </Grid.RowDefinitions>
 
             <!-- Top row with close buttons -->
-            <view:TopBorderView Grid.ColumnSpan="2" WindowName="Replacify"/>
+            <view:TopBorderView Grid.ColumnSpan="2" WindowName="Replacify" MinimizeButtonVisibility="Visible"/>
 
             <!-- Replacify text -->
             <TextBlock Grid.Row="1"
