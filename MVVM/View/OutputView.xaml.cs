@@ -39,22 +39,8 @@ namespace TextReplace.MVVM.View
 
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file
-            string? filePath = null;
-            foreach (var file in ((OutputViewModel)DataContext).OutputFiles)
-            {
-                // loop through files and select the first successfully generated one
-                if (File.Exists(file.FileName))
-                {
-                    filePath = file.FileName;
-                    break;
-                }
-            }
-
-            if (filePath == null)
-            {
-                return;
-            }
-
+            string filePath = ((OutputViewModel)DataContext).OutputFiles[0].FileName;
+            Debug.WriteLine(File.Exists(filePath));
             Process.Start("explorer.exe", "/select, " + filePath);
         }
 
@@ -81,22 +67,7 @@ namespace TextReplace.MVVM.View
 
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file
-            string? filePath = null;
-            foreach (var file in ((OutputViewModel)DataContext).OutputFiles)
-            {
-                // loop through files and select the first successfully generated one
-                if (File.Exists(file.FileName))
-                {
-                    filePath = file.FileName;
-                    break;
-                }
-            }
-
-            if (filePath == null)
-            {
-                return;
-            }
-
+            string? filePath = ((OutputViewModel)DataContext).SelectedFile.FileName;
             Process.Start("explorer.exe", "/select, " + filePath);
         }
 

@@ -6,8 +6,7 @@ namespace TextReplace.Core.Enums
     {
         KeepFileType,
         Document,
-        Text,
-        Pdf
+        Text
     }
 
     class OutputFileTypeClass
@@ -19,7 +18,6 @@ namespace TextReplace.Core.Enums
                 OutputFileTypeEnum.KeepFileType => Path.GetExtension(fileName),
                 OutputFileTypeEnum.Text => ".txt",
                 OutputFileTypeEnum.Document => ".docx",
-                OutputFileTypeEnum.Pdf => ".pdf",
                 _ => throw new NotImplementedException($"{fileType} is not implemented in OutputFileTypeString()")
             };
         }

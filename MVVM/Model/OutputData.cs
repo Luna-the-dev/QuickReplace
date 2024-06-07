@@ -455,10 +455,15 @@ namespace TextReplace.MVVM.Model
                 throw new ArgumentException("SetOutputFileType() could not find name");
             }
 
-            OutputFiles[i].FileName = string.Format(@"{0}\{1}{2}",
-                                                    Path.GetDirectoryName(OutputFiles[i].FileName),
-                                                    Path.GetFileNameWithoutExtension(OutputFiles[i].FileName),
-                                                    OutputFileTypeClass.OutputFileTypeString(fileType, OutputFiles[i].SourceFileName));
+            // dont change file type of .xlsx file
+            if (FileValidation.IsExcelFile(OutputFiles[i].FileName))
+            {
+                return;
+            }
+
+            OutputFiles[i].FileName = Path.ChangeExtension(
+                OutputFiles[i].FileName,
+                OutputFileTypeClass.OutputFileTypeString(fileType, OutputFiles[i].SourceFileName));
             OutputFiles[i].ShortFileName = Path.GetFileName(OutputFiles[i].FileName);
 
             if (SelectedFile.SourceFileName == sourceFileName)
@@ -479,10 +484,14 @@ namespace TextReplace.MVVM.Model
         {
             foreach (var outputFile in OutputFiles)
             {
-                outputFile.FileName = string.Format(@"{0}\{1}{2}",
-                                                    Path.GetDirectoryName(outputFile.FileName),
-                                                    Path.GetFileNameWithoutExtension(outputFile.FileName),
-                                                    OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.SourceFileName));
+                // dont change file type of .xlsx file
+                if (FileValidation.IsExcelFile(outputFile.FileName))
+                {
+                    continue;
+                }
+                outputFile.FileName = Path.ChangeExtension(
+                    outputFile.FileName,
+                    OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.SourceFileName));
                 outputFile.ShortFileName = Path.GetFileName(outputFile.FileName);
 
                 if (SelectedFile.SourceFileName == outputFile.SourceFileName)

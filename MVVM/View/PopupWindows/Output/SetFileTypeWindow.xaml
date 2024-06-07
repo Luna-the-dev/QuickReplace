@@ -77,7 +77,6 @@
                         <ComboBoxItem Content="Original file type"/>
                         <ComboBoxItem Content="Document file"/>
                         <ComboBoxItem Content="Text file"/>
-                        <ComboBoxItem Content="PDF file" />
                     </ComboBox>
                 </Grid>
 

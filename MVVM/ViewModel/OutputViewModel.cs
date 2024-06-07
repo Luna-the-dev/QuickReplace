@@ -69,18 +69,18 @@ namespace TextReplace.MVVM.ViewModel
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
-        public static void ReplaceAll(bool openFileLocation)
+        public static async void ReplaceAll(bool openFileLocation)
         {
             OutputData.OpenFileLocation = openFileLocation;
-            PerformReplacements(
+            await PerformReplacements(
                 OutputData.OutputFiles.Select(x => x.SourceFileName).ToList(),
                 OutputData.OutputFiles.Select(x => x.FileName).ToList());
         }
 
-        public static void ReplaceSelected(bool openFileLocation)
+        public static async void ReplaceSelected(bool openFileLocation)
         {
             OutputData.OpenFileLocation = openFileLocation;
-            PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
+            await PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
         }
 
         private void SetSelectedFile(object? file)
@@ -111,7 +111,7 @@ namespace TextReplace.MVVM.ViewModel
             OutputData.PreserveCase = !OutputData.PreserveCase;
         }
 
-        private static async void PerformReplacements(List<string> sourceFiles, List<string> destFiles)
+        private static async Task PerformReplacements(List<string> sourceFiles, List<string> destFiles)
         {
             await Task.Run(() =>
             {
