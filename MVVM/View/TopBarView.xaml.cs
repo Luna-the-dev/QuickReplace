@@ -47,7 +47,7 @@ namespace TextReplace.MVVM.View
             }
         }
 
-        private void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
+        private async void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Replacify";
@@ -61,7 +61,7 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
-            string filePath = TopBarViewModel.ReplaceAll(dialog.OpenFileLocation).Result;
+            string filePath = await TopBarViewModel.ReplaceAll(dialog.OpenFileLocation);
 
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file
