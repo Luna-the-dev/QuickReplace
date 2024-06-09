@@ -6,69 +6,77 @@
     <Border Background="{StaticResource BackgroundColorDark}"
             MouseDown="Border_MouseDown">
         <Grid HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="30" />
+                <ColumnDefinition Width="30" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            
             <Label Name="Title"
                    Foreground="{StaticResource TextMedium}"
                    FontWeight="SemiBold"
-                   Margin="5 2 0 0"
+                   Margin="5 1 0 0"
                    FontFamily="/Fonts/#Poppins-ExtraLight"/>
 
-            <StackPanel HorizontalAlignment="Right"
-                        Orientation="Horizontal">
-                <Button Width="25" Height="25"
-                        Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TopBorderView}}, Path=MinimizeButtonVisibility}"
-                        Content="🗕"
-                        Foreground="{StaticResource TextMedium}"
-                        FontWeight="Bold"
-                        BorderThickness="0"
-                        Padding="0 0 0 2"
-                        Click="MinimizeBtn_Click">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border Background="{TemplateBinding Background}" Padding=" 0 0 0 2">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource BtnDark}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-                <Button Width="25" Height="25"
-                        Content="✕"
-                        Foreground="{StaticResource TextMedium}"
-                        FontWeight="Bold"
-                        BorderThickness="0"
-                        Click="CloseBtn_Click">
-                    <Button.Style>
-                        <Style TargetType="{x:Type Button}">
-                            <Setter Property="Background" Value="Transparent"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="{x:Type Button}">
-                                        <Border Background="{TemplateBinding Background}">
-                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="{DynamicResource BtnDark}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                </Button>
-            </StackPanel>
+            <Button Grid.Column="1"
+                    Visibility="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:TopBorderView}}, Path=MinimizeButtonVisibility}"
+                    Content="🗕"
+                    Foreground="{StaticResource TextMedium}"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Padding="0 0 0 2"
+                    Click="MinimizeBtn_Click">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}" Padding=" 0 0 0 2">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource BtnDark}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
+
+            <Button Grid.Column="2"
+                    Content="✕"
+                    Foreground="{StaticResource TextMedium}"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    Click="CloseBtn_Click">
+                <Button.Style>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource BtnDark}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Button.Style>
+            </Button>
         </Grid>
     </Border>
 </UserControl>

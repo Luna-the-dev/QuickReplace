@@ -31,6 +31,7 @@
     <PackageReference Include="DropdownMenu.WPF" Version="1.0.0" />
     <PackageReference Include="ExcelDataReader.DataSet" Version="3.6.0" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.5" />
+    <PackageReference Include="PixiEditor.ColorPicker" Version="3.4.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,6 +40,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="MVVM\View\PopupWindows\ColorPickerWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="MVVM\View\PopupWindows\Output\SetOutputStylingWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="MVVM\View\PopupWindows\Output\ReplaceFilesWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

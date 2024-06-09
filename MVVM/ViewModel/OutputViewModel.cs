@@ -3,7 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows;
+using System.Windows.Media;
 using TextReplace.Core.Enums;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
@@ -152,6 +154,12 @@ namespace TextReplace.MVVM.ViewModel
         public static void SetAllOutputFileTypes(OutputFileTypeEnum fileType)
         {
             OutputData.SetAllOutputFileTypes(fileType);
+        }
+
+        public static void SetOutputFilesStyling(bool bold, bool italics,
+            bool underline, bool strikethrough, Color highlightColor, Color textColor)
+        {
+            OutputData.OutputFilesStyling = new OutputFileStyling(bold, italics, underline, strikethrough, highlightColor, textColor);
         }
 
         private void SetIsReplacifyEnabled()

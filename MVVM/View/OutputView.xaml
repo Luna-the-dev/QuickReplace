@@ -261,7 +261,8 @@
             </ToggleButton>
 
             <Button Grid.Column="1" Grid.Row="4"
-                    Style="{StaticResource OptionButtonTheme}">
+                    Style="{StaticResource OptionButtonTheme}"
+                    Click="OpenOutputStylingWindow_OnClick">
                 <Button.Content>
                     <TextBlock Text="Styling"
                                x:Name="stylingOption"

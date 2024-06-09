@@ -1,0 +1,243 @@
+﻿<Window x:Class="TextReplace.MVVM.View.PopupWindows.SetOutputStylingWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TextReplace.MVVM.View"
+        xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel.PopupWindows"
+        mc:Ignorable="d"
+        Title="SetOutputStylingWindow"
+        MinHeight="300" MinWidth="450"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="None"
+        ResizeMode="NoResize"
+        Background="Transparent"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.DataContext>
+        <viewModel:SetOutputStylingViewModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <local:TopBorderView x:Name="TopBorder"/>
+
+        <Border Grid.Row="1"
+                Background="{StaticResource BackgroundColor}"
+                BorderThickness="2 0 2 2" BorderBrush="{StaticResource BackgroundColorDark}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="163"/>
+                    <ColumnDefinition Width="163"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="30" MaxHeight="40"/>
+                    <RowDefinition MinHeight="60" Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition MinHeight="40"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="1" Grid.Row="1"
+                           d:Text="Select the styling properties that will be applied to the replacements in the output files.&#x0a;(For Document and Excel files only.)"
+                           Grid.ColumnSpan="2"
+                           HorizontalAlignment="Stretch"
+                           VerticalAlignment="Center"
+                           TextAlignment="Center"
+                           Name="BodyTextBox"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource TextLight}"
+                           FontFamily="/Fonts/#Poppins"
+                           Margin="15 0 15 10" />
+
+                <Grid Grid.Column="1" Grid.Row="2"
+                      Margin="10 10 6 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="86*"/>
+                        <ColumnDefinition Width="14*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="0 0 0 0"
+                               Text="Bold:"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource TextLight}"
+                               FontFamily="/Fonts/#Poppins"/>
+
+                    <Viewbox Grid.Column="1" Margin="0 4"
+                             HorizontalAlignment="Right">
+                        <CheckBox x:Name="boldCheckBox"
+                                  IsChecked="{Binding OutputFilesStyling.Bold}"
+                                  Style="{StaticResource CustomCheckBox}"/>
+                    </Viewbox>
+                </Grid>
+
+                <Grid Grid.Column="2" Grid.Row="2"
+                      Margin="10 10 5 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="86*"/>
+                        <ColumnDefinition Width="14*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="0 0 0 0"
+                               Text="Italics:"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource TextLight}"
+                               FontFamily="/Fonts/#Poppins"/>
+
+                    <Viewbox Grid.Column="1" Margin="0 4"
+                             HorizontalAlignment="Right">
+                        <CheckBox x:Name="italicsCheckBox"
+                                  IsChecked="{Binding OutputFilesStyling.Italics}"
+                                  Style="{StaticResource CustomCheckBox}"/>
+                    </Viewbox>
+                </Grid>
+
+                <Grid Grid.Column="1" Grid.Row="3"
+                      Margin="10 10 5 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="86*"/>
+                        <ColumnDefinition Width="14*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="0 0 0 0"
+                               Text="Underline:"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource TextLight}"
+                               FontFamily="/Fonts/#Poppins"/>
+
+                    <Viewbox Grid.Column="1" Margin="0 4"
+                             HorizontalAlignment="Right">
+                        <CheckBox x:Name="underlineCheckBox"
+                                  IsChecked="{Binding OutputFilesStyling.Underline}"
+                                  Style="{StaticResource CustomCheckBox}"/>
+                    </Viewbox>
+                </Grid>
+
+                <Grid Grid.Column="2" Grid.Row="3"
+                      Margin="10 10 5 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="86*"/>
+                        <ColumnDefinition Width="14*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="0 0 0 0"
+                               Text="Strikethrough:"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource TextLight}"
+                               FontFamily="/Fonts/#Poppins"/>
+
+                    <Viewbox Grid.Column="1" Margin="0 4"
+                             HorizontalAlignment="Right">
+                        <CheckBox x:Name="strikethroughCheckBox"
+                                  IsChecked="{Binding OutputFilesStyling.Strikethrough}"
+                                  Style="{StaticResource CustomCheckBox}"/>
+                    </Viewbox>
+                </Grid>
+
+                <Grid Grid.Column="1" Grid.Row="4"
+                      Margin="10 10 7 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="86*"/>
+                        <ColumnDefinition Width="14*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="0 0 0 0"
+                               Text="Highlight:"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource TextLight}"
+                               FontFamily="/Fonts/#Poppins"/>
+
+                    <Button Grid.Column="1" Margin="1 1 1 6"
+                            x:Name="highlightButton"
+                            HorizontalAlignment="Right"
+                            Cursor="Hand"
+                            Style="{DynamicResource removeButtonHoverEffect}"
+                            Click="SetHighlightColor_OnClick">
+                        <Viewbox>
+                            <Path Fill="{StaticResource TextLight}" Stretch="UniformToFill" Data="M200,840Q167,840 143.5,816.5Q120,793 120,760L120,200Q120,167 143.5,143.5Q167,120 200,120L557,120L477,200L200,200Q200,200 200,200Q200,200 200,200L200,760Q200,760 200,760Q200,760 200,760L760,760Q760,760 760,760Q760,760 760,760L760,482L840,402L840,760Q840,793 816.5,816.5Q793,840 760,840L200,840ZM480,480Q480,480 480,480Q480,480 480,480L480,480Q480,480 480,480Q480,480 480,480L480,480L480,480L480,480L480,480L480,480L480,480Q480,480 480,480Q480,480 480,480ZM360,600L360,430L727,63Q739,51 754,45Q769,39 784,39Q800,39 814.5,45Q829,51 841,63L897,120Q908,132 914,146.5Q920,161 920,176Q920,191 914.5,205.5Q909,220 897,232L530,600L360,600ZM841,176L841,176L785,120L785,120L841,176ZM440,520L496,520L728,288L700,260L671,232L440,463L440,520ZM700,260L671,232L671,232L700,260L728,288L728,288L700,260Z"/>
+                        </Viewbox>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Column="2" Grid.Row="4"
+                      Margin="10 10 7 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="86*"/>
+                        <ColumnDefinition Width="14*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Margin="0 0 0 0"
+                               Text="Text Color:"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="{StaticResource TextLight}"
+                               FontFamily="/Fonts/#Poppins"/>
+
+                    <Button Grid.Column="1" Margin="1 1 1 6"
+                            x:Name="textColorButton"
+                            HorizontalAlignment="Right"
+                            Cursor="Hand"
+                            Style="{DynamicResource removeButtonHoverEffect}"
+                            Click="SetTextColor_OnClick">
+                        <Viewbox>
+                            <Path Fill="{StaticResource TextLight}" Stretch="UniformToFill" Data="M200,840Q167,840 143.5,816.5Q120,793 120,760L120,200Q120,167 143.5,143.5Q167,120 200,120L557,120L477,200L200,200Q200,200 200,200Q200,200 200,200L200,760Q200,760 200,760Q200,760 200,760L760,760Q760,760 760,760Q760,760 760,760L760,482L840,402L840,760Q840,793 816.5,816.5Q793,840 760,840L200,840ZM480,480Q480,480 480,480Q480,480 480,480L480,480Q480,480 480,480Q480,480 480,480L480,480L480,480L480,480L480,480L480,480L480,480Q480,480 480,480Q480,480 480,480ZM360,600L360,430L727,63Q739,51 754,45Q769,39 784,39Q800,39 814.5,45Q829,51 841,63L897,120Q908,132 914,146.5Q920,161 920,176Q920,191 914.5,205.5Q909,220 897,232L530,600L360,600ZM841,176L841,176L785,120L785,120L841,176ZM440,520L496,520L728,288L700,260L671,232L440,463L440,520ZM700,260L671,232L671,232L700,260L728,288L728,288L700,260Z"/>
+                        </Viewbox>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Column="1" Grid.Row="5"
+                      Grid.ColumnSpan="2"
+                      Margin="0 10 0 0" Height="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <ToggleButton Name="BtnOk" Content="Confirm" Grid.Column="0"
+                                  Margin="5 0" Padding="8"
+                                  Style="{StaticResource InputWindowConfirmButtonTheme}" Click="BtnOk_Click" />
+                    <ToggleButton Name="BtnCancel" Content="Cancel" Grid.Column="1"
+                                  Margin="5 0" Padding="8"
+                                  Style="{StaticResource InputWindowCancelButtonTheme}" Click="BtnCancel_Click" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+
+    <Window.Resources>
+        <Style x:Key="removeButtonHoverEffect" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    
+</Window>

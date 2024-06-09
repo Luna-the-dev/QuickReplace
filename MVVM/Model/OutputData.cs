@@ -36,6 +36,14 @@ namespace TextReplace.MVVM.Model
             }
         }
 
+        private static OutputFileStyling _outputFilesStyling = new OutputFileStyling();
+        public static OutputFileStyling OutputFilesStyling
+        {
+            get { return _outputFilesStyling; }
+            set { _outputFilesStyling = value; }
+        }
+
+
         private static bool _wholeWord = false;
         public static bool WholeWord
         {
@@ -556,6 +564,42 @@ namespace TextReplace.MVVM.Model
                                  Path.GetFileNameWithoutExtension(file.FileName),
                                  suffix,
                                  Path.GetExtension(file.FileName));
+        }
+    }
+
+    class OutputFileStyling
+    {
+        public bool Bold { get; set; }
+        public bool Italics { get; set; }
+        public bool Underline { get; set; }
+        public bool Strikethrough { get; set; }
+        public System.Windows.Media.Color HighlightColor { get; set; }
+        public System.Windows.Media.Color TextColor { get; set; }
+
+        public OutputFileStyling()
+        {
+            Bold = false;
+            Italics = false;
+            Underline = false;
+            Strikethrough = false;
+            HighlightColor = new System.Windows.Media.Color();
+            TextColor = new System.Windows.Media.Color();
+        }
+
+        public OutputFileStyling(
+            bool bold,
+            bool italics,
+            bool underline,
+            bool strikethrough,
+            System.Windows.Media.Color highlightColor,
+            System.Windows.Media.Color textColor)
+        {
+            Bold = bold;
+            Italics = italics;
+            Underline = underline;
+            Strikethrough = strikethrough;
+            HighlightColor = highlightColor;
+            TextColor = textColor;
         }
     }
 }

@@ -77,7 +77,14 @@
             <Color A="255" R="39" G="37" B="55"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
-    
+
+    <SolidColorBrush x:Key="BackgroundColorLight">
+        <SolidColorBrush.Color>
+            <!--#36344C-->
+            <Color A="255" R="54" G="52" B="76"/>
+        </SolidColorBrush.Color>
+    </SolidColorBrush>
+
     <SolidColorBrush x:Key="BackgroundColorMedium">
         <SolidColorBrush.Color>
             <!--#1C1A2B-->
@@ -147,4 +154,5 @@
             <Color A="255" R="165" G="117" B="49"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
+
 </ResourceDictionary>

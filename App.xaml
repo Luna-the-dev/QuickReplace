@@ -29,6 +29,13 @@
                 <ResourceDictionary Source="Themes/Buttons/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionToggleButtonTheme.xaml"/>
+                
+                <!-- Color picker themes -->
+                <ResourceDictionary Source="Themes/ColorPicker/ColorPickerStyle.xaml"/>
+                <ResourceDictionary Source="Themes/ColorPicker/TabControlStyle.xaml"/>
+                <ResourceDictionary Source="Themes/ColorPicker/TextBoxStyle.xaml"/>
+                <ResourceDictionary Source="Themes/ColorPicker/ComboBoxStyle.xaml"/>
+                <ResourceDictionary Source="Themes/ColorPicker/RoundedColorDisplayStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <DataTemplate DataType="{x:Type viewModel:ReplaceViewModel}">
@@ -85,6 +92,10 @@
 
             <DataTemplate DataType="{x:Type popupvm:ReplaceFilesViewModel}">
                 <popup:ReplaceFilesWindow/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type popupvm:SetOutputStylingViewModel}">
+                <popup:SetOutputStylingWindow/>
             </DataTemplate>
 
         </ResourceDictionary>

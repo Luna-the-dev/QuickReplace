@@ -40,7 +40,6 @@ namespace TextReplace.MVVM.View
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file
             string filePath = ((OutputViewModel)DataContext).OutputFiles[0].FileName;
-            Debug.WriteLine(File.Exists(filePath));
             Process.Start("explorer.exe", "/select, " + filePath);
         }
 
@@ -100,6 +99,23 @@ namespace TextReplace.MVVM.View
             if (dialog.BtnOk.IsChecked == true)
             {
                 ((OutputViewModel)DataContext).SetSelectedOutputFileType(dialog.OutputFileType);
+            }
+        }
+
+        private void OpenOutputStylingWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Styling";
+            string body = "Select the styling properties that will be applied to the replacements in the output files.\n" +
+                "(For Document and Excel files only.)";
+
+            var dialog = new PopupWindows.SetOutputStylingWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                OutputViewModel.SetOutputFilesStyling(dialog.Bold, dialog.Italics, dialog.Underline,
+                    dialog.Strikethrough, dialog.HighlightColor, dialog.TextColor);
             }
         }
 
