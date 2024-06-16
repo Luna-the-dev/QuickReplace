@@ -356,6 +356,17 @@ namespace TextReplace.Core.AhoCorasick
             return newRuns;
         }
 
+        /// <summary>
+        /// Generates a list of docx runs from a line of text, with custom styling on the replacements.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="replacePhrases"></param>
+        /// <param name="matcher"></param>
+        /// <param name="replaceStyling"></param>
+        /// <param name="wholeWord"></param>
+        /// <param name="preserveCase"></param>
+        /// <param name="numOfMatches"></param>
+        /// <returns>A list of docx runs containing the styled replacements</returns>
         public static List<Wordprocessing.Run> GenerateDocxRunsFromText(
             string text,
             Dictionary<string, string> replacePhrases,
@@ -395,7 +406,7 @@ namespace TextReplace.Core.AhoCorasick
                     var beforeReplaceRun = new Wordprocessing.Run();
                     var beforeReplaceRunProperties = new Wordprocessing.RunProperties();
                     beforeReplaceRun.AppendChild(beforeReplaceRunProperties);
-                    var beforeReplaceRunText = new Wordprocessing.Text(text)
+                    var beforeReplaceRunText = new Wordprocessing.Text(text.Substring(runPtr, lengthBeforeReplacement))
                     {
                         Space = SpaceProcessingModeValues.Preserve
                     };
@@ -430,14 +441,15 @@ namespace TextReplace.Core.AhoCorasick
             int lengthUntilEndOfText = text.Length - runPtr;
 
             // create the last run after the replacements
-            var run = new Wordprocessing.Run();
-            var runProperties = new Wordprocessing.RunProperties();
-            var runText = new Wordprocessing.Text(text.Substring(runPtr, lengthUntilEndOfText))
+            var lastRun = new Wordprocessing.Run();
+            var lastRunProperties = new Wordprocessing.RunProperties();
+            lastRun.AppendChild(lastRunProperties);
+            var lastRunText = new Wordprocessing.Text(text.Substring(runPtr, lengthUntilEndOfText))
             {
                 Space = SpaceProcessingModeValues.Preserve
             };
-            run.AppendChild(runText);
-            newRuns.Add(run);
+            lastRun.AppendChild(lastRunText);
+            newRuns.Add(lastRun);
 
             return newRuns;
         }

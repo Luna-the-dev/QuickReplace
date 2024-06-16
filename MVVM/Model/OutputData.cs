@@ -711,7 +711,6 @@ namespace TextReplace.MVVM.Model
 
             if (style.IsHighlighted)
             {
-                Debug.WriteLine(style.HighlightColorString);
                 runProps.Shading = new Shading()
                 {
                     Fill = style.HighlightColorString,
@@ -722,7 +721,6 @@ namespace TextReplace.MVVM.Model
 
             if (style.IsTextColored)
             {
-                Debug.WriteLine(style.TextColorString);
                 runProps.Color = new Wordprocessing.Color()
                 {
                     Val = style.TextColorString,
