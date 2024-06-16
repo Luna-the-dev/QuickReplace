@@ -63,6 +63,18 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { strikethroughCheckBox.IsChecked = value; }
         }
 
+        public bool isHighlighted
+        {
+            get { return ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsHighlighted; }
+            set { ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsHighlighted = value; }
+        }
+
+        public bool isTextColored
+        {
+            get { return ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsTextColored; }
+            set { ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsTextColored = value; }
+        }
+
         public Color HighlightColor
         {
             get { return ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.HighlightColor; }
@@ -94,7 +106,13 @@ namespace TextReplace.MVVM.View.PopupWindows
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.HighlightColor = dialog.SelectedColor;
+                var viewModel = (SetOutputStylingViewModel)DataContext;
+                viewModel.OutputFilesStyling.HighlightColor = dialog.SelectedColor;
+                viewModel.OutputFilesStyling.IsHighlighted = true;
+            }
+            else if (dialog.BtnReset.IsChecked == true)
+            {
+                ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsHighlighted = false;
             }
         }
 
@@ -108,7 +126,13 @@ namespace TextReplace.MVVM.View.PopupWindows
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.TextColor = dialog.SelectedColor;
+                var viewModel = (SetOutputStylingViewModel)DataContext;
+                viewModel.OutputFilesStyling.TextColor = dialog.SelectedColor;
+                viewModel.OutputFilesStyling.IsTextColored = true;
+            }
+            else if (dialog.BtnReset.IsChecked == true)
+            {
+                ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsTextColored = false;
             }
         }
 

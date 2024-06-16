@@ -157,9 +157,12 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         public static void SetOutputFilesStyling(bool bold, bool italics,
-            bool underline, bool strikethrough, Color highlightColor, Color textColor)
+            bool underline, bool strikethrough, bool isHighlighted, bool isTextColored,
+            Color highlightColor, Color textColor)
         {
-            OutputData.OutputFilesStyling = new OutputFileStyling(bold, italics, underline, strikethrough, highlightColor, textColor);
+            OutputData.OutputFilesStyling = new OutputFileStyling(
+                bold, italics, underline, strikethrough,
+                isHighlighted, isTextColored, highlightColor, textColor);
         }
 
         private void SetIsReplacifyEnabled()

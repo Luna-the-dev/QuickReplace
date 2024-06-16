@@ -37,6 +37,12 @@ namespace TextReplace.MVVM.View.PopupWindows
             Close();
         }
 
+        private void BtnReset_Click(object sender, RoutedEventArgs e)
+        {
+            BtnReset.IsEnabled = true;
+            Close();
+        }
+
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
             BtnCancel.IsChecked = true;

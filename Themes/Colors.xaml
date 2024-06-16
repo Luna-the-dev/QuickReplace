@@ -143,8 +143,8 @@
 
     <SolidColorBrush x:Key="ResetBtn">
         <SolidColorBrush.Color>
-            <!--#E59A39-->
-            <Color A="255" R="229" G="154" B="57"/>
+            <!--#D88F36-->
+            <Color A="255" R="216" G="143" B="54"/>
         </SolidColorBrush.Color>
     </SolidColorBrush>
 

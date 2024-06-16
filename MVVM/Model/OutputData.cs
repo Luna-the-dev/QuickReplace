@@ -9,6 +9,8 @@ using TextReplace.Messages.Replace;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using TextReplace.Core.Enums;
+using System.Windows.Documents;
+using DocumentFormat.OpenXml.Wordprocessing;
 
 namespace TextReplace.MVVM.Model
 {
@@ -169,7 +171,7 @@ namespace TextReplace.MVVM.Model
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        numOfReplacements = ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        numOfReplacements = ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                     }
                     return numOfReplacements;
                 }
@@ -184,9 +186,8 @@ namespace TextReplace.MVVM.Model
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        numOfReplacements = ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        numOfReplacements = ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                     }
-                    Debug.WriteLine(numOfReplacements);
                     return numOfReplacements;
                 }
 
@@ -202,7 +203,7 @@ namespace TextReplace.MVVM.Model
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                Debug.WriteLine(e);
                 Debug.WriteLine($"Failed to write from {src} to {dest}");
                 return -1;
             }
@@ -221,18 +222,14 @@ namespace TextReplace.MVVM.Model
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             int numOfMatches = 0;
-            int currNumOfMatches = 0;
-
-            // decide whhich function should be used to substitute the matches
-            // this is to reduce the number of unneccesary checks in these functions
-            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
 
             using var sw = new StreamWriter(dest);
 
             // write the substitutes to the new file
             foreach (string line in File.ReadLines(src))
             {
-                sw.WriteLine(subMatches(replacePhrases, line, matcher, out currNumOfMatches));
+                sw.WriteLine(AhoCorasickHelper.SubstituteMatches(
+                    replacePhrases, line, matcher, isWholeWord, isPreserveCase, out int currNumOfMatches));
                 numOfMatches += currNumOfMatches;
             }
 
@@ -249,39 +246,58 @@ namespace TextReplace.MVVM.Model
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
         private static int ReadFromTextCsvTsvWriteToDocx(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
+            string src, string dest, AhoCorasickStringSearcher matcher, OutputFileStyling styling, bool isWholeWord, bool isPreserveCase)
         {
             int numOfMatches = 0;
-            int currNumOfMatches = 0;
-
-            // decide whhich function should be used to substitute the matches
-            // this is to reduce the number of unneccesary checks in these functions
-            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+            bool styleReplacements =
+                styling.Bold || styling.Italics || styling.Underline ||
+                styling.Strikethrough || styling.IsHighlighted || styling.IsTextColored;
 
             // create the new document
             using var document = WordprocessingDocument.Create(dest, WordprocessingDocumentType.Document);
             MainDocumentPart mainDocPart = document.AddMainDocumentPart();
-            mainDocPart.Document = new Wordprocessing.Document();
-            var body = mainDocPart.Document.AppendChild(new Wordprocessing.Body());
+            mainDocPart.Document = new Document();
+            var body = mainDocPart.Document.AppendChild(new Body());
 
             foreach (string line in File.ReadLines(src))
             {
+                int currNumOfMatches = 0;
+
                 // create a new paragraph
                 Wordprocessing.Paragraph paragraph = body.AppendChild(new Wordprocessing.Paragraph());
 
-                // start the run within the paragraph
-                var run = paragraph.AppendChild(new Wordprocessing.Run());
+                if (styleReplacements)
+                {
+                    var runs = AhoCorasickHelper.GenerateDocxRunsFromText(line, replacePhrases, matcher,
+                        styling, isWholeWord, isPreserveCase, out currNumOfMatches);
 
-                // set the run properties
-                var runProperties = new Wordprocessing.RunProperties();
-                var font = new Wordprocessing.RunFonts() { Ascii = "Arial" };
-                var color = new Wordprocessing.Color { Val = "000000" };
-                runProperties.Append(font);
-                runProperties.Append(color);
+                    numOfMatches += currNumOfMatches;
 
-                run.PrependChild(runProperties);
+                    // add the new runs into the paragraph
+                    foreach (var run in runs)
+                    {
+                        paragraph.AppendChild(run);
+                    }
+                }
+                else
+                {
+                    // start the run within the paragraph
+                    var run = paragraph.AppendChild(new Wordprocessing.Run());
 
-                run.AppendChild(new Wordprocessing.Text(subMatches(replacePhrases, line, matcher, out currNumOfMatches)));
+                    // set the run properties
+                    var runProperties = new Wordprocessing.RunProperties();
+                    run.AppendChild(runProperties);
+
+                    var runtext = new Wordprocessing.Text(AhoCorasickHelper.SubstituteMatches(
+                        replacePhrases, line, matcher, isWholeWord, isPreserveCase, out currNumOfMatches))
+                    {
+                        Space = SpaceProcessingModeValues.Preserve
+                    };
+
+                    run.AppendChild(runtext);
+                }
+                
+
                 numOfMatches += currNumOfMatches;
             }
 
@@ -303,11 +319,6 @@ namespace TextReplace.MVVM.Model
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             int numOfMatches = 0;
-            int currNumOfMatches = 0;
-
-            // decide whhich function should be used to substitute the matches
-            // this is to reduce the number of unneccesary checks in these functions
-            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
 
             using var sw = new StreamWriter(dest);
 
@@ -318,13 +329,27 @@ namespace TextReplace.MVVM.Model
                 throw new NullReferenceException("ReadFromDocxWriteToTextCsvTsv(): MainDocumentPart or its body is null");
             }
 
-            var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
+            var paragraphs = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Paragraph>();
 
-            foreach (var textNode in textNodes)
+            foreach (var paragraph in paragraphs)
             {
-                sw.WriteLine(subMatches(replacePhrases, textNode.InnerText, matcher, out currNumOfMatches));
+                // list of new runs that make up the paragraph
+                // if there is no custom styling required, combine replacement runs with the run
+                // before them to cut down on the number of resultant runs
+                List<Wordprocessing.Run> newRuns = AhoCorasickHelper.GenerateDocxRunsOriginalStyling(
+                    paragraph, replacePhrases, matcher,
+                    isWholeWord, isPreserveCase, out int currNumOfMatches);
+
                 numOfMatches += currNumOfMatches;
+
+                // add the new runs into the paragraph
+                foreach (var run in newRuns)
+                {
+                    sw.Write(run.InnerText);
+                }
+                sw.WriteLine();
             }
+
             return numOfMatches;
         }
 
@@ -337,15 +362,17 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
-        private static int ReadFromDocxWriteToDocx(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
+        private static int ReadFromDocxWriteToDocx(
+            Dictionary<string, string> replacePhrases,
+            string src, string dest,
+            AhoCorasickStringSearcher matcher,
+            OutputFileStyling styling,
+            bool isWholeWord, bool isPreserveCase)
         {
             int numOfMatches = 0;
-            int currNumOfMatches = 0;
-
-            // decide whhich function should be used to substitute the matches
-            // this is to reduce the number of unneccesary checks in these functions
-            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
+            bool styleReplacements =
+                styling.Bold || styling.Italics || styling.Underline ||
+                styling.Strikethrough || styling.IsHighlighted || styling.IsTextColored;
 
             File.Copy(src, dest, true);
 
@@ -356,14 +383,32 @@ namespace TextReplace.MVVM.Model
                 throw new NullReferenceException("ReadFromDocxWriteToDocx(): MainDocumentPart or its body is null");
             }
 
-            var textNodes = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Text>();
+            var paragraphs = document.MainDocumentPart.Document.Body.Descendants<Wordprocessing.Paragraph>();
 
-            foreach (var textNode in textNodes)
+            foreach (var paragraph in paragraphs)
             {
-                textNode.Text = subMatches(replacePhrases, textNode.InnerText, matcher, out currNumOfMatches);
-                numOfMatches += currNumOfMatches;
-            }
+                int currNumOfMatches = 0;
 
+                // list of new runs that make up the paragraph
+                // if there is no custom styling required, combine replacement runs with the run
+                // before them to cut down on the number of resultant runs
+                List<Wordprocessing.Run> newRuns = (styleReplacements) ?
+                    AhoCorasickHelper.GenerateDocxRuns(paragraph, replacePhrases, matcher,
+                        styling, isWholeWord, isPreserveCase, out currNumOfMatches) :
+                    AhoCorasickHelper.GenerateDocxRunsOriginalStyling(paragraph, replacePhrases, matcher,
+                        isWholeWord, isPreserveCase, out currNumOfMatches);
+                
+                numOfMatches += currNumOfMatches;
+
+                // remove all runs in the paragraph
+                paragraph.RemoveAllChildren<Wordprocessing.Run>();
+
+                // add the new runs into the paragraph
+                foreach (var run in newRuns)
+                {
+                    paragraph.AppendChild(run);
+                }
+            }
             document.MainDocumentPart.Document.Save();
 
             return numOfMatches;
@@ -385,12 +430,6 @@ namespace TextReplace.MVVM.Model
             string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
         {
             int numOfMatches = 0;
-            int currNumOfMatches = 0;
-
-            // decide whhich function should be used to substitute the matches
-            // this is to reduce the number of unneccesary checks in these functions
-            var subMatches = AhoCorasickHelper.SelectSubstituteMatchesMethod(isWholeWord, isPreserveCase);
-
             File.Copy(src, dest, true);
 
             using var document = SpreadsheetDocument.Open(dest, true);
@@ -427,13 +466,15 @@ namespace TextReplace.MVVM.Model
                             }
 
                             cell.DataType = CellValues.String;
-                            cell.CellValue = new CellValue(subMatches(replacePhrases, text, matcher, out currNumOfMatches));
+                            cell.CellValue = new CellValue(AhoCorasickHelper.SubstituteMatches(
+                                replacePhrases, text, matcher, isWholeWord, isPreserveCase, out int currNumOfMatches));
                             numOfMatches += currNumOfMatches;
                         }
                     }
                     else if (cell.DataType != null && cell.DataType == CellValues.String)
                     {
-                        cell.CellValue = new CellValue(subMatches(replacePhrases, cell.InnerText, matcher, out currNumOfMatches));
+                        cell.CellValue = new CellValue(AhoCorasickHelper.SubstituteMatches(
+                            replacePhrases, cell.InnerText, matcher, isWholeWord, isPreserveCase, out int currNumOfMatches));
                         numOfMatches += currNumOfMatches;
                     }
                 }
@@ -567,14 +608,40 @@ namespace TextReplace.MVVM.Model
         }
     }
 
-    class OutputFileStyling
+    public class OutputFileStyling
     {
         public bool Bold { get; set; }
         public bool Italics { get; set; }
         public bool Underline { get; set; }
         public bool Strikethrough { get; set; }
-        public System.Windows.Media.Color HighlightColor { get; set; }
-        public System.Windows.Media.Color TextColor { get; set; }
+        public bool IsHighlighted { get; set; }
+        public bool IsTextColored { get; set; }
+        private System.Windows.Media.Color _highlightColor;
+        public System.Windows.Media.Color HighlightColor
+        {
+            get { return _highlightColor; }
+            set
+            {
+                _highlightColor = value;
+                HighlightColorString = (value.ToString()[0] == '#') ?
+                    value.ToString().Substring(1) :
+                    value.ToString();
+            }
+        }
+        private System.Windows.Media.Color _textColor;
+        public System.Windows.Media.Color TextColor
+        {
+            get { return _textColor; }
+            set
+            {
+                _textColor = value;
+                TextColorString = (value.ToString()[0] == '#') ?
+                    value.ToString().Substring(1) :
+                    value.ToString();
+            }
+        }
+        public string HighlightColorString { get; set; }
+        public string TextColorString { get; set; }
 
         public OutputFileStyling()
         {
@@ -582,8 +649,12 @@ namespace TextReplace.MVVM.Model
             Italics = false;
             Underline = false;
             Strikethrough = false;
+            IsHighlighted = false;
+            IsTextColored = false;
             HighlightColor = new System.Windows.Media.Color();
             TextColor = new System.Windows.Media.Color();
+            HighlightColorString = string.Empty;
+            TextColorString = string.Empty;
         }
 
         public OutputFileStyling(
@@ -591,6 +662,8 @@ namespace TextReplace.MVVM.Model
             bool italics,
             bool underline,
             bool strikethrough,
+            bool isHighlighted,
+            bool isTextColored,
             System.Windows.Media.Color highlightColor,
             System.Windows.Media.Color textColor)
         {
@@ -598,8 +671,67 @@ namespace TextReplace.MVVM.Model
             Italics = italics;
             Underline = underline;
             Strikethrough = strikethrough;
+            IsHighlighted = isHighlighted;
+            IsTextColored = isTextColored;
             HighlightColor = highlightColor;
             TextColor = textColor;
+            HighlightColorString = (highlightColor.ToString()[0] == '#') ?
+                    highlightColor.ToString().Substring(3) :
+                    highlightColor.ToString().Substring(1);
+            TextColorString = (textColor.ToString()[0] == '#') ?
+                    textColor.ToString().Substring(3) :
+                    textColor.ToString().Substring(1);
+        }
+
+        public static Wordprocessing.RunProperties StyleRunProperties(
+            Wordprocessing.RunProperties runProps, OutputFileStyling style)
+        {
+            if (style.Bold)
+            {
+                runProps.Bold = new Wordprocessing.Bold();
+            }
+
+            if (style.Italics)
+            {
+                runProps.Italic = new Wordprocessing.Italic();
+            }
+
+            if (style.Underline)
+            {
+                runProps.Underline = new Wordprocessing.Underline()
+                {
+                    Val = Wordprocessing.UnderlineValues.Single
+                };
+            }
+
+            if (style.Strikethrough)
+            {
+                runProps.Strike = new Wordprocessing.Strike();
+            }
+
+            if (style.IsHighlighted)
+            {
+                Debug.WriteLine(style.HighlightColorString);
+                runProps.Shading = new Shading()
+                {
+                    Fill = style.HighlightColorString,
+                    Val = ShadingPatternValues.Clear,
+                    Color = "auto"
+                };
+            }
+
+            if (style.IsTextColored)
+            {
+                Debug.WriteLine(style.TextColorString);
+                runProps.Color = new Wordprocessing.Color()
+                {
+                    Val = style.TextColorString,
+                    ThemeColor = ThemeColorValues.Accent1,
+                    ThemeShade = "BF"
+                };
+            }
+
+            return runProps;
         }
     }
 }
