@@ -512,21 +512,18 @@ namespace TextReplace.MVVM.Model
                             numOfMatches += currNumOfMatches;
                         }
                     }
+                    // very unlikely that this will ever be entered. Excel seems to always use shared strings
                     else if (cell.DataType != null && cell.DataType == Spreadsheet.CellValues.String)
                     {
-                        Debug.WriteLine("poop!");
-
                         // if the replacements are not styled, then the cell value can stay as a regular string
                         if (styleReplacements == false)
                         {
-                            Debug.WriteLine("1");
                             cell.CellValue = new Spreadsheet.CellValue(AhoCorasickHelper.SubstituteMatches(
                                 replacePhrases, cell.InnerText, matcher, isWholeWord, isPreserveCase, out currNumOfMatches));
 
                             numOfMatches += currNumOfMatches;
                             continue;
                         }
-                        Debug.WriteLine("2");
 
                         int id = wbPart.SharedStringTablePart?.SharedStringTable.Elements<Spreadsheet.SharedStringItem>().Count() ?? 0;
                         cell.DataType = Spreadsheet.CellValues.SharedString;

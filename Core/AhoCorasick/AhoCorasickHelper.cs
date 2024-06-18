@@ -2,6 +2,7 @@
 using TextReplace.MVVM.Model;
 using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
 using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
+using System.Text.RegularExpressions;
 
 namespace TextReplace.Core.AhoCorasick
 {
@@ -29,29 +30,33 @@ namespace TextReplace.Core.AhoCorasick
             out int numOfMatches)
         {
             // search the current line for any text that should be replaced
-            var matches = matcher.Search(line);
+            var matches = matcher.Search(line).ToList();
             numOfMatches = 0;
 
             // save an offset to remember how much the position of each replacement
             // should be shifted if a replacement was already made on the same line
             int offset = 0;
             string updatedLine = line;
-            foreach (var m in matches)
+            for (int i = 0; i < matches.Count; i++)
             {
-                if (wholeWord && IsMatchWholeWord(line, m.Text, m.Position) == false)
+                if (wholeWord && IsMatchWholeWord(line, matches[i].Text, matches[i].Position) == false)
                 {
                     continue;
                 }
 
+                // remove any nested matches
+                matches = RemoveNestedMatches(matches, i);
+
                 numOfMatches += 1;
+
                 string replacement = (preserveCase) ?
-                    SetMatchCase(replacePhrases[m.Text], char.IsUpper(updatedLine[m.Position + offset])) :
-                    replacePhrases[m.Text];
+                    SetMatchCase(replacePhrases[matches[i].Text], char.IsUpper(updatedLine[matches[i].Position + offset])) :
+                    replacePhrases[matches[i].Text];
 
-                updatedLine = updatedLine.Remove(m.Position + offset, m.Text.Length)
-                                         .Insert(m.Position + offset, replacement);
+                updatedLine = updatedLine.Remove(matches[i].Position + offset, matches[i].Text.Length)
+                                         .Insert(matches[i].Position + offset, replacement);
 
-                offset += replacePhrases[m.Text].Length - m.Text.Length;
+                offset += replacePhrases[matches[i].Text].Length - matches[i].Text.Length;
             }
             return updatedLine;
         }
@@ -136,6 +141,9 @@ namespace TextReplace.Core.AhoCorasick
                         matchIndex++;
                         continue;
                     }
+
+                    // remove any nested matches
+                    matches = RemoveNestedMatches(matches, matchIndex);
 
                     numOfMatches++;
 
@@ -288,6 +296,9 @@ namespace TextReplace.Core.AhoCorasick
                         continue;
                     }
 
+                    // remove any nested matches
+                    matches = RemoveNestedMatches(matches, matchIndex);
+
                     numOfMatches++;
 
                     int lengthBeforeReplacement = matches[matchIndex].Position - runPtr;
@@ -392,6 +403,9 @@ namespace TextReplace.Core.AhoCorasick
                 {
                     continue;
                 }
+
+                // remove any nested matches
+                matches = RemoveNestedMatches(matches, i);
 
                 numOfMatches++;
 
@@ -509,6 +523,9 @@ namespace TextReplace.Core.AhoCorasick
                         matchIndex++;
                         continue;
                     }
+
+                    // remove any nested matches
+                    matches = RemoveNestedMatches(matches, matchIndex);
 
                     numOfMatches++;
 
@@ -652,6 +669,9 @@ namespace TextReplace.Core.AhoCorasick
                         continue;
                     }
 
+                    // remove any nested matches
+                    matches = RemoveNestedMatches(matches, matchIndex);
+
                     numOfMatches++;
 
                     int lengthBeforeReplacement = matches[matchIndex].Position - runPtr;
@@ -760,6 +780,39 @@ namespace TextReplace.Core.AhoCorasick
             return (toUppercase) ?
                 char.ToUpper(match[0]) + match.Substring(1) :
                 char.ToLower(match[0]) + match.Substring(1);
+        }
+
+        /// <summary>
+        /// Removes nested matches from a list of StringMatches. This method first checks if any matches are
+        /// nested. If there are nested matches, it will remove the one that comes after the first match.
+        /// If the nexted matches start at the same position, it will remove the shorter one.
+        /// </summary>
+        /// <param name="matches"></param>
+        /// <param name="i"></param>
+        /// <returns>The list of matches with the nested ones removed.</returns>
+        private static List<StringMatch> RemoveNestedMatches(List<StringMatch> matches, int currIndex)
+        {
+            while (currIndex + 1 < matches.Count && matches[currIndex + 1].Position <= matches[currIndex].Position + matches[currIndex].Text.Length)
+            {
+                // remove the duplicate match if it comes after
+                if (matches[currIndex].Position < matches[currIndex + 1].Position)
+                {
+                    matches.RemoveAt(currIndex + 1);
+                    continue;
+                }
+
+                // if the matches start at the same time, remove the smaller one
+                if (matches[currIndex].Text.Length < matches[currIndex + 1].Text.Length)
+                {
+                    matches.RemoveAt(currIndex);
+                }
+                else
+                {
+                    matches.RemoveAt(currIndex + 1);
+                }
+            }
+
+            return matches;
         }
     }
 }
