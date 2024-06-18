@@ -7,10 +7,12 @@
         xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
         xmlns:view="clr-namespace:TextReplace.MVVM.View"
         mc:Ignorable="d"
+        d:Width="1920" d:Height="1032"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
-        ResizeMode="NoResize"
+        ResizeMode="CanResizeWithGrip"
+        MinWidth="920" MinHeight="600"
         WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
@@ -20,8 +22,8 @@
     <Border Background="{StaticResource BackgroundColor}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="175"/>
-                <ColumnDefinition />
+                <ColumnDefinition MinWidth="175"/>
+                <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
@@ -34,7 +36,9 @@
             <view:TopBorderView Grid.ColumnSpan="2"
                                 WindowName="Replacify"
                                 MinimizeButtonVisibility="Visible"
-                                MaximizeButtonVisibility="Visible"/>
+                                MaximizeButtonVisibility="Visible"
+                                MinWindowHeight="600"
+                                MinWindowWidth="920"/>
 
             <!-- Replacify text -->
             <TextBlock Grid.Row="1"
@@ -43,7 +47,7 @@
                        HorizontalAlignment="Left"
                        Foreground="White"
                        FontSize="22"
-                       Margin="20 0 0 0"
+                       Margin="30 0 0 0"
                        FontFamily="/Fonts/#Poppins"/>
             
             <!-- Side bar -->
@@ -59,4 +63,22 @@
             </Border>
         </Grid>
     </Border >
+
+    <Window.Resources>
+        <Style TargetType="{x:Type ResizeGrip}">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ResizeGrip}">
+                        <Border Background="{TemplateBinding Background}"
+                                SnapsToDevicePixels="True"
+                                Width="10"
+                                Height="10"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 </Window>

@@ -26,7 +26,7 @@ namespace TextReplace.MVVM.View
         public Visibility MinimizeButtonVisibility
         {
             get { return (Visibility)GetValue(MinimizeButtonProperty); }
-            set { SetValue(MinimizeButtonProperty, Visibility); }
+            set { SetValue(MinimizeButtonProperty, value); }
         }
         public static readonly DependencyProperty MinimizeButtonProperty =
             DependencyProperty.Register(
@@ -38,7 +38,7 @@ namespace TextReplace.MVVM.View
         public Visibility MaximizeButtonVisibility
         {
             get { return (Visibility)GetValue(MaximizeButtonProperty); }
-            set { SetValue(MaximizeButtonProperty, Visibility); }
+            set { SetValue(MaximizeButtonProperty, value); }
         }
         public static readonly DependencyProperty MaximizeButtonProperty =
             DependencyProperty.Register(
@@ -46,6 +46,30 @@ namespace TextReplace.MVVM.View
                 propertyType: typeof(Visibility),
                 ownerType: typeof(TopBorderView),
                 typeMetadata: new PropertyMetadata(Visibility.Collapsed));
+
+        public int MinWindowHeight
+        {
+            get { return (int)GetValue(MinWindowHeightProperty); }
+            set { SetValue(MinWindowHeightProperty, value); }
+        }
+        public static readonly DependencyProperty MinWindowHeightProperty =
+            DependencyProperty.Register(
+                name: "MinWindowHeight",
+                propertyType: typeof(int),
+                ownerType: typeof(TopBorderView),
+                typeMetadata: new PropertyMetadata(0));
+
+        public int MinWindowWidth
+        {
+            get { return (int)GetValue(MinWindowWidthProperty); }
+            set { SetValue(MinWindowWidthProperty, value); }
+        }
+        public static readonly DependencyProperty MinWindowWidthProperty =
+            DependencyProperty.Register(
+                name: "MinWindowWidth",
+                propertyType: typeof(int),
+                ownerType: typeof(TopBorderView),
+                typeMetadata: new PropertyMetadata(0));
 
         public string? TitleText
         {
@@ -82,6 +106,7 @@ namespace TextReplace.MVVM.View
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
+                Application.Current.MainWindow.WindowState = WindowState.Normal;
                 Window.GetWindow(sender as DependencyObject).DragMove();
             }
         }
@@ -110,7 +135,7 @@ namespace TextReplace.MVVM.View
 
         #region Avoid hiding task bar upon maximalisation
 
-        private static nint WindowProc(
+        private nint WindowProc(
               nint hwnd,
               int msg,
               nint wParam,
@@ -128,13 +153,13 @@ namespace TextReplace.MVVM.View
             return (nint)0;
         }
 
-        private static void Win_SourceInitialized(object? sender, EventArgs e)
+        private void Win_SourceInitialized(object? sender, EventArgs e)
         {
             nint handle = (new WinInterop.WindowInteropHelper(Application.Current.MainWindow)).Handle;
             WinInterop.HwndSource.FromHwnd(handle).AddHook(new WinInterop.HwndSourceHook(WindowProc));
         }
 
-        private static void WmGetMinMaxInfo(nint hwnd, nint lParam)
+        private void WmGetMinMaxInfo(nint hwnd, nint lParam)
         {
             var mmiStructure = Marshal.PtrToStructure(lParam, typeof(MINMAXINFO));
             if (mmiStructure == null)
@@ -158,6 +183,11 @@ namespace TextReplace.MVVM.View
                 mmi.ptMaxPosition.y = Math.Abs(rcWorkArea.top - rcMonitorArea.top);
                 mmi.ptMaxSize.x = Math.Abs(rcWorkArea.right - rcWorkArea.left);
                 mmi.ptMaxSize.y = Math.Abs(rcWorkArea.bottom - rcWorkArea.top);
+                mmi.ptMaxTrackSize.x = Math.Abs(rcWorkArea.Width);
+                mmi.ptMaxTrackSize.y = Math.Abs(rcWorkArea.Height);
+                // minimum size that the window can be resized to
+                mmi.ptMinTrackSize.x = MinWindowWidth;
+                mmi.ptMinTrackSize.y = MinWindowHeight;
             }
 
             Marshal.StructureToPtr(mmi, lParam, true);
@@ -253,10 +283,10 @@ namespace TextReplace.MVVM.View
             /// <summary> Win32 </summary>
             public RECT(RECT rcSrc)
             {
-                this.left = rcSrc.left;
-                this.top = rcSrc.top;
-                this.right = rcSrc.right;
-                this.bottom = rcSrc.bottom;
+                left = rcSrc.left;
+                top = rcSrc.top;
+                right = rcSrc.right;
+                bottom = rcSrc.bottom;
             }
 
             /// <summary> Win32 </summary>
