@@ -7,7 +7,6 @@
         xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
         xmlns:view="clr-namespace:TextReplace.MVVM.View"
         mc:Ignorable="d"
-        Height="600" Width="920"
         WindowStyle="None"
         Background="Transparent"
         AllowsTransparency="True"
@@ -32,7 +31,10 @@
             </Grid.RowDefinitions>
 
             <!-- Top row with close buttons -->
-            <view:TopBorderView Grid.ColumnSpan="2" WindowName="Replacify" MinimizeButtonVisibility="Visible"/>
+            <view:TopBorderView Grid.ColumnSpan="2"
+                                WindowName="Replacify"
+                                MinimizeButtonVisibility="Visible"
+                                MaximizeButtonVisibility="Visible"/>
 
             <!-- Replacify text -->
             <TextBlock Grid.Row="1"

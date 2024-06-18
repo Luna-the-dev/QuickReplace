@@ -40,7 +40,6 @@ namespace TextReplace.UserControls
         public TimeSpan EndAnimationTime
         {
             get { return TimeSpan.FromSeconds(2) + Duration.TimeSpan; }
-            set { }
         }
 
         public RollingText()
