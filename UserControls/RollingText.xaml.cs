@@ -16,14 +16,32 @@ namespace TextReplace.UserControls
             get { return (string)GetValue(TextProperty); }
             set { SetValue(TextProperty, value); }
         }
-        // Using a DependencyProperty as the backing store for TextProperty.
-        // This enables animation, styling, binding, etc...
+
         public static readonly DependencyProperty TextProperty =
             DependencyProperty.Register(
                 name: "Text",
                 propertyType: typeof(string),
                 ownerType: typeof(RollingText),
                 typeMetadata: new PropertyMetadata(string.Empty));
+        
+        public Duration Duration
+        {
+            get { return (Duration)GetValue(DurationProperty); }
+            set { SetValue(DurationProperty, value); }
+        }
+
+        public static readonly DependencyProperty DurationProperty =
+            DependencyProperty.Register(
+                name: "Duration",
+                propertyType: typeof(Duration),
+                ownerType: typeof(RollingText),
+                typeMetadata: new PropertyMetadata(new Duration(TimeSpan.FromSeconds(8))));
+
+        public TimeSpan EndAnimationTime
+        {
+            get { return TimeSpan.FromSeconds(2) + Duration.TimeSpan; }
+            set { }
+        }
 
         public RollingText()
         {

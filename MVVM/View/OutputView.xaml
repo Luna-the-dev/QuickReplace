@@ -316,14 +316,14 @@
                                     <RowDefinition Height="1*"/>
                                     <RowDefinition Height="1*"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Margin="15 10 15 0"
-                                           Text="{Binding ShortFileName}"
-                                           TextWrapping="NoWrap"
-                                           TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins"
-                                           FontSize="15"
-                                           Foreground="{StaticResource TextLight}"
-                                           VerticalAlignment="Center"/>
+
+                                <userControl:RollingText Grid.Row="0" Margin="15 10 15 0"
+                                                         Duration="00:00:2"
+                                                         Text="{Binding ShortFileName}"
+                                                         FontFamily="/Fonts/#Poppins"
+                                                         FontSize="15"
+                                                         Foreground="{StaticResource TextLight}"
+                                                         VerticalAlignment="Center"/>
                                 <TextBlock Grid.Row="1" Margin="15 0 15 7"
                                            Text="{Binding NumOfReplacementsString}"
                                            TextWrapping="NoWrap"

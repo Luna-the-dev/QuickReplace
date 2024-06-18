@@ -2,7 +2,6 @@
 using TextReplace.MVVM.Model;
 using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
 using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
-using System.Text.RegularExpressions;
 
 namespace TextReplace.Core.AhoCorasick
 {

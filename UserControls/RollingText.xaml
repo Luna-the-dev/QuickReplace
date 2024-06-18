@@ -33,10 +33,10 @@
                                           ElementName=rollingText,
                                           Converter={StaticResource NegatingConverter},
                                           ConverterParameter={x:Reference Name=root}}"
-                                     Duration="00:00:8"
+                                     Duration="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=Duration}"
                                      Storyboard.TargetProperty="X"
                                      Storyboard.TargetName="translateText"/>
-                    <DoubleAnimation BeginTime="00:00:10"
+                    <DoubleAnimation BeginTime="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=EndAnimationTime}"
                                      From="{Binding ActualWidth,
                                             ElementName=rollingText,
                                             Converter={StaticResource NegatingConverter},
