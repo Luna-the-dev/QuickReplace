@@ -1,9 +1,7 @@
 ﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Drawing;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System.Diagnostics;
 using TextReplace.MVVM.Model;
 using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
+using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
 
 namespace TextReplace.Core.AhoCorasick
 {
@@ -98,9 +96,9 @@ namespace TextReplace.Core.AhoCorasick
             var runPtrs = new List<int>();
 
             // if there are no runs in the paragraph, return an empty List
-            if (runs.Count() == 0)
+            if (runs.Count == 0)
             {
-                return newRuns;
+                runs.Add(new Wordprocessing.Run(new Wordprocessing.Text(paragraph.InnerText)));
             }
 
             // build out the paragraph text while keeping track of where each run ends
@@ -219,7 +217,6 @@ namespace TextReplace.Core.AhoCorasick
                 runPtr += lengthBeforeNextRun;
             }
 
-
             return newRuns;
         }
 
@@ -250,9 +247,9 @@ namespace TextReplace.Core.AhoCorasick
             var runPtrs = new List<int>();
 
             // if there are no runs in the paragraph, return an empty List
-            if (runs.Count() == 0)
+            if (runs.Count == 0)
             {
-                return newRuns;
+                runs.Add(new Wordprocessing.Run(new Wordprocessing.Text(paragraph.InnerText)));
             }
 
             // build out the paragraph text while keeping track of where each run ends
@@ -343,15 +340,16 @@ namespace TextReplace.Core.AhoCorasick
                 {
                     newRun.Append(newRunProps);
                 }
-                var newRunText = new Wordprocessing.Text(paragraphText.Substring(runPtr, lengthBeforeNextRun));
-                newRunText.Space = SpaceProcessingModeValues.Preserve;
+                var newRunText = new Wordprocessing.Text(paragraphText.Substring(runPtr, lengthBeforeNextRun))
+                {
+                    Space = SpaceProcessingModeValues.Preserve
+                };
                 newRun.AppendChild(newRunText);
                 newRuns.Add(newRun);
 
                 // move the subrun pointer forward the length of this run
                 runPtr += lengthBeforeNextRun;
             }
-
 
             return newRuns;
         }
@@ -454,12 +452,278 @@ namespace TextReplace.Core.AhoCorasick
             return newRuns;
         }
 
+        public static List<Spreadsheet.Run> GenerateExcelRuns(
+            Spreadsheet.SharedStringItem sharedStringItem,
+            Dictionary<string, string> replacePhrases,
+            AhoCorasickStringSearcher matcher,
+            OutputFileStyling replaceStyling,
+            bool wholeWord,
+            bool preserveCase,
+            out int numOfMatches)
+        {
+            var newRuns = new List<Spreadsheet.Run>();
+            numOfMatches = 0;
+
+            string cellText = "";
+            var runs = sharedStringItem.Descendants<Spreadsheet.Run>().ToList();
+            var runPtrs = new List<int>();
+
+            // if there are no runs in the paragraph, return an empty List
+            if (runs.Count == 0)
+            {
+                runs.Add(new Spreadsheet.Run(new Spreadsheet.Text(sharedStringItem.InnerText)));
+            }
+
+            // build out the paragraph text while keeping track of where each run ends
+            foreach (var run in runs)
+            {
+                runPtrs.Add(cellText.Length);
+                cellText += run.InnerText;
+            }
+            // add one final pointer that marks the end of the paragraph text
+            // it makes the algorithm keep working when the main for loop that
+            // iterates through the runs is on its final index
+            runPtrs.Add(cellText.Length);
+
+            // search the paragraph text for any text that should be replaced
+            var matches = matcher.Search(cellText).ToList();
+            if (matches.Count == 0)
+            {
+                return runs.ToList();
+            }
+
+            // this points to the position where the next run should be made
+            int runPtr = 0;
+            int matchIndex = 0;
+
+            // iterate through the runs
+            for (int i = 0; i < runs.Count; i++)
+            {
+                // while there is a match left inside of the current run
+                while (matchIndex < matches.Count && matches[matchIndex].Position < runPtrs[i + 1])
+                {
+                    // if we are looking for whole word matches only,
+                    // check if this match is a whole word
+                    if (wholeWord && IsMatchWholeWord(cellText, matches[matchIndex].Text, matches[matchIndex].Position) == false)
+                    {
+                        matchIndex++;
+                        continue;
+                    }
+
+                    numOfMatches++;
+
+                    int lengthBeforeReplacement = matches[matchIndex].Position - runPtr;
+
+                    // create a new run containing text before the replacement
+                    // unless the replacement is at the start of the run
+                    if (lengthBeforeReplacement > 0)
+                    {
+                        var beforeReplaceRun = new Spreadsheet.Run();
+                        var beforeReplaceRunProps = runs[i].RunProperties?.CloneNode(true);
+                        if (beforeReplaceRunProps != null)
+                        {
+                            beforeReplaceRun.Append(beforeReplaceRunProps);
+                        }
+                        var beforeReplaceRunText = new Spreadsheet.Text(cellText.Substring(runPtr, lengthBeforeReplacement));
+                        beforeReplaceRunText.Space = SpaceProcessingModeValues.Preserve;
+                        beforeReplaceRun.AppendChild(beforeReplaceRunText);
+                        newRuns.Add(beforeReplaceRun);
+
+                        // move the run ptr forward the length of this run
+                        runPtr += lengthBeforeReplacement;
+                    }
+
+                    // create new run containing the text from the replacement
+                    var replaceRun = new Spreadsheet.Run();
+                    var replaceRunProps = runs[i].RunProperties?.CloneNode(true);
+                    // set custom styling properties
+                    var newReplaceRunProps = (replaceRunProps != null) ?
+                        OutputFileStyling.StyleRunProperties((Spreadsheet.RunProperties)replaceRunProps, replaceStyling) :
+                        OutputFileStyling.StyleRunProperties(new Spreadsheet.RunProperties(), replaceStyling);
+                    replaceRun.Append(newReplaceRunProps);
+                    // preserve the original case of the word that is being replaced if that option is set
+                    string replacement = (preserveCase) ?
+                        SetMatchCase(replacePhrases[matches[matchIndex].Text], char.IsUpper(cellText[matches[matchIndex].Position])) :
+                        replacePhrases[matches[matchIndex].Text];
+                    var replaceRunText = new Spreadsheet.Text(replacement)
+                    {
+                        Space = SpaceProcessingModeValues.Preserve
+                    };
+                    replaceRun.AppendChild(replaceRunText);
+                    newRuns.Add(replaceRun);
+
+                    // move the runPtr forward the length of the text before a replacement is made
+                    // since we're not performing the replacement on the paragraphText, just creating a new run
+                    runPtr += matches[matchIndex].Text.Length;
+
+                    // move on to the next replacement match
+                    matchIndex++;
+                }
+
+                // create a run for the text that comes after the last replaced run
+                // if no replacement runs were made (the while loop was never entered), this will always be true
+                // if a replacement run was made but extended beyond the next item in runIndices, this will be false
+
+                // the replacement subrun exceeded the start of the next run
+                if (runPtr >= runPtrs[i + 1])
+                {
+                    continue;
+                }
+
+                // there is still text in this run that should be turned into a subrun
+                int lengthBeforeNextRun = runPtrs[i + 1] - runPtr;
+
+                // create a run with the text after the replacement
+                // (or the full run text if no replacement was made
+                var newRun = new Spreadsheet.Run();
+                var newRunProps = runs[i].RunProperties?.CloneNode(true);
+                if (newRunProps != null)
+                {
+                    newRun.Append(newRunProps);
+                }
+                var newRunText = new Spreadsheet.Text(cellText.Substring(runPtr, lengthBeforeNextRun))
+                {
+                    Space = SpaceProcessingModeValues.Preserve
+                };
+                newRun.AppendChild(newRunText);
+                newRuns.Add(newRun);
+
+                // move the subrun pointer forward the length of this run
+                runPtr += lengthBeforeNextRun;
+            }
+
+            return newRuns;
+        }
+
+        public static List<Spreadsheet.Run> GenerateExcelRunsOriginalStyling(
+            Spreadsheet.SharedStringItem sharedStringItem,
+            Dictionary<string, string> replacePhrases,
+            AhoCorasickStringSearcher matcher,
+            bool wholeWord,
+            bool preserveCase,
+            out int numOfMatches)
+        {
+            var newRuns = new List<Spreadsheet.Run>();
+            numOfMatches = 0;
+
+            string cellText = "";
+            var runs = sharedStringItem.Descendants<Spreadsheet.Run>().ToList();
+            var runPtrs = new List<int>();
+
+            // if there are no runs in the paragraph, return an empty List
+            if (runs.Count == 0)
+            {
+                runs.Add(new Spreadsheet.Run(new Spreadsheet.Text(sharedStringItem.InnerText)));
+            }
+
+            // build out the paragraph text while keeping track of where each run ends
+            foreach (var run in runs)
+            {
+                runPtrs.Add(cellText.Length);
+                cellText += run.InnerText;
+            }
+            // add one final pointer that marks the end of the paragraph text
+            // it makes the algorithm keep working when the main for loop that
+            // iterates through the runs is on its final index
+            runPtrs.Add(cellText.Length);
+
+            // search the paragraph text for any text that should be replaced
+            var matches = matcher.Search(cellText).ToList();
+            if (matches.Count == 0)
+            {
+                return runs.ToList();
+            }
+
+            // this points to the position where the next run should be made
+            int runPtr = 0;
+            int matchIndex = 0;
+
+            // iterate through the runs
+            for (int i = 0; i < runs.Count; i++)
+            {
+                // while there is a match left inside of the current run
+                while (matchIndex < matches.Count && matches[matchIndex].Position < runPtrs[i + 1])
+                {
+                    // if we are looking for whole word matches only,
+                    // check if this match is a whole word
+                    if (wholeWord && IsMatchWholeWord(cellText, matches[matchIndex].Text, matches[matchIndex].Position) == false)
+                    {
+                        matchIndex++;
+                        continue;
+                    }
+
+                    numOfMatches++;
+
+                    int lengthBeforeReplacement = matches[matchIndex].Position - runPtr;
+
+                    // create new run containing the text from the replacement
+                    var replaceRun = new Spreadsheet.Run();
+                    var replaceRunProps = runs[i].RunProperties?.CloneNode(true);
+                    if (replaceRunProps != null)
+                    {
+                        replaceRun.Append(replaceRunProps);
+                    }
+                    string beforeReplacement = (lengthBeforeReplacement > 0) ? cellText.Substring(runPtr, lengthBeforeReplacement) : string.Empty;
+                    // preserve the original case of the word that is being replaced if that option is set
+                    string replacement = (preserveCase) ?
+                        SetMatchCase(replacePhrases[matches[matchIndex].Text], char.IsUpper(cellText[matches[matchIndex].Position])) :
+                        replacePhrases[matches[matchIndex].Text];
+                    var replaceRunText = new Spreadsheet.Text(beforeReplacement + replacement)
+                    {
+                        Space = SpaceProcessingModeValues.Preserve
+                    };
+                    replaceRun.AppendChild(replaceRunText);
+                    newRuns.Add(replaceRun);
+
+                    // move the runPtr forward the length of the text before a replacement is made
+                    // since we're not performing the replacement on the paragraphText, just creating a new run
+                    runPtr += lengthBeforeReplacement + matches[matchIndex].Text.Length;
+
+                    // move on to the next replacement match
+                    matchIndex++;
+                }
+
+                // create a run for the text that comes after the last replaced run
+                // if no replacement runs were made (the while loop was never entered), this will always be true
+                // if a replacement run was made but extended beyond the next item in runIndices, this will be false
+
+                // the replacement subrun exceeded the start of the next run
+                if (runPtr >= runPtrs[i + 1])
+                {
+                    continue;
+                }
+
+                // there is still text in this run that should be turned into a subrun
+                int lengthBeforeNextRun = runPtrs[i + 1] - runPtr;
+
+                // create a run with the text after the replacement
+                // (or the full run text if no replacement was made
+                var newRun = new Spreadsheet.Run();
+                var newRunProps = runs[i].RunProperties?.CloneNode(true);
+                if (newRunProps != null)
+                {
+                    newRun.Append(newRunProps);
+                }
+                var newRunText = new Spreadsheet.Text(cellText.Substring(runPtr, lengthBeforeNextRun))
+                {
+                    Space = SpaceProcessingModeValues.Preserve
+                };
+                newRun.AppendChild(newRunText);
+                newRuns.Add(newRun);
+
+                // move the subrun pointer forward the length of this run
+                runPtr += lengthBeforeNextRun;
+            }
+
+            return newRuns;
+        }
+
         /// <summary>
         /// Checks to see if a match found by the AhoCorasickStringSearcher
         /// Search() method is a whole word.
         /// </summary>
         /// <param name="line"></param>
-        /// <param name="text"></param>
+        /// <param name="match"></param>
         /// <param name="pos"></param>
         /// <returns>False if the character before and after the match exists and isnt a delimiter.</returns>
         private static bool IsMatchWholeWord(string line, string match, int pos)

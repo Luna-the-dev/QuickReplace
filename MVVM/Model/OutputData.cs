@@ -1,16 +1,15 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using DocumentFormat.OpenXml.Packaging;
 using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
+using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.AhoCorasick;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
-using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml;
 using TextReplace.Core.Enums;
-using System.Windows.Documents;
-using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace TextReplace.MVVM.Model
 {
@@ -195,7 +194,7 @@ namespace TextReplace.MVVM.Model
                 // doesnt really make sense to write from excel to docx or something
                 if (FileValidation.IsExcelFile(src))
                 {
-                    numOfReplacements = ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                    numOfReplacements = ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                     return numOfReplacements;
                 }
 
@@ -256,8 +255,8 @@ namespace TextReplace.MVVM.Model
             // create the new document
             using var document = WordprocessingDocument.Create(dest, WordprocessingDocumentType.Document);
             MainDocumentPart mainDocPart = document.AddMainDocumentPart();
-            mainDocPart.Document = new Document();
-            var body = mainDocPart.Document.AppendChild(new Body());
+            mainDocPart.Document = new Wordprocessing.Document();
+            var body = mainDocPart.Document.AppendChild(new Wordprocessing.Body());
 
             foreach (string line in File.ReadLines(src))
             {
@@ -427,9 +426,17 @@ namespace TextReplace.MVVM.Model
         /// <param name="isWholeWord"></param>
         /// <param name="isPreserveCase"></param>
         private static int ReadFromExcelWriteToExcel(Dictionary<string, string> replacePhrases,
-            string src, string dest, AhoCorasickStringSearcher matcher, bool isWholeWord, bool isPreserveCase)
+            string src, string dest, AhoCorasickStringSearcher matcher, OutputFileStyling styling, bool isWholeWord, bool isPreserveCase)
         {
             int numOfMatches = 0;
+            bool styleReplacements =
+                styling.Bold || styling.Italics || styling.Underline ||
+                styling.Strikethrough || styling.IsHighlighted || styling.IsTextColored;
+
+            // this keeps track of the shared string item that have been visited
+            // key is the sharedstringitem id, value is the number of replacements made in it
+            var visitedSharedStringItems = new Dictionary<int, int>();
+
             File.Copy(src, dest, true);
 
             using var document = SpreadsheetDocument.Open(dest, true);
@@ -440,7 +447,7 @@ namespace TextReplace.MVVM.Model
             }
 
             WorkbookPart wbPart = document.WorkbookPart;
-            List<Sheet> sheets = wbPart.Workbook.Sheets.Elements<Sheet>().ToList();
+            List<Spreadsheet.Sheet> sheets = wbPart.Workbook.Sheets.Elements<Spreadsheet.Sheet>().ToList();
 
             foreach (var sheet in sheets)
             {
@@ -450,31 +457,99 @@ namespace TextReplace.MVVM.Model
                 }
 
                 WorksheetPart wsPart = (WorksheetPart)wbPart.GetPartById(sheet.Id.Value);
-                var cells = wsPart.Worksheet.Descendants<Cell>();
-                int id = -1;
+                var cells = wsPart.Worksheet.Descendants<Spreadsheet.Cell>();
 
                 foreach (var cell in cells)
                 {
-                    if (cell.DataType != null && cell.DataType == CellValues.SharedString)
+                    int currNumOfMatches = 0;
+
+                    if (cell.DataType != null && cell.DataType == Spreadsheet.CellValues.SharedString)
                     {
-                        if (Int32.TryParse(cell.InnerText, out id))
+                        if (Int32.TryParse(cell.InnerText, out int id))
                         {
-                            string? text = wbPart.SharedStringTablePart?.SharedStringTable.Elements<SharedStringItem>().ElementAt(id).InnerText;
-                            if (text == null)
+                            var sharedStringItem = wbPart.SharedStringTablePart?.SharedStringTable.Elements<Spreadsheet.SharedStringItem>().ElementAt(id);
+                            if (string.IsNullOrEmpty(sharedStringItem?.InnerText))
                             {
                                 continue;
                             }
 
-                            cell.DataType = CellValues.String;
-                            cell.CellValue = new CellValue(AhoCorasickHelper.SubstituteMatches(
-                                replacePhrases, text, matcher, isWholeWord, isPreserveCase, out int currNumOfMatches));
+                            // if the shared string item id has already been visited, then replacements do not need to be made again
+                            if (visitedSharedStringItems.TryGetValue(id, out currNumOfMatches ))
+                            {
+                                numOfMatches += currNumOfMatches;
+
+                                // highlight the cell if highlighting is specified and a replacement was made
+                                if (styling.IsHighlighted && currNumOfMatches > 0)
+                                {
+                                    uint cellFormatId = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + styling.HighlightColorString);
+                                    cell.StyleIndex = cellFormatId;
+                                }
+
+                                continue;
+                            }
+
+                            var newRuns = (styleReplacements) ?
+                                AhoCorasickHelper.GenerateExcelRuns(
+                                    sharedStringItem, replacePhrases, matcher, styling,
+                                    isWholeWord, isPreserveCase, out currNumOfMatches) :
+                                AhoCorasickHelper.GenerateExcelRunsOriginalStyling(
+                                    sharedStringItem, replacePhrases, matcher,
+                                    isWholeWord, isPreserveCase, out currNumOfMatches);
+
+                            var newSharedStringItem = GenerateSharedStringItemFromRuns(newRuns);
+
+                            // replace the old shared string with the new one
+                            wbPart.SharedStringTablePart?.SharedStringTable.ReplaceChild(newSharedStringItem, sharedStringItem);
+
+                            // highlight the cell if highlighting is specified and a replacement was made
+                            if (styling.IsHighlighted && currNumOfMatches > 0)
+                            {
+                                uint cellFormatId = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + styling.HighlightColorString);
+                                cell.StyleIndex = cellFormatId;
+                            }
+
+                            visitedSharedStringItems[id] = currNumOfMatches;
                             numOfMatches += currNumOfMatches;
                         }
                     }
-                    else if (cell.DataType != null && cell.DataType == CellValues.String)
+                    else if (cell.DataType != null && cell.DataType == Spreadsheet.CellValues.String)
                     {
-                        cell.CellValue = new CellValue(AhoCorasickHelper.SubstituteMatches(
-                            replacePhrases, cell.InnerText, matcher, isWholeWord, isPreserveCase, out int currNumOfMatches));
+                        Debug.WriteLine("poop!");
+
+                        // if the replacements are not styled, then the cell value can stay as a regular string
+                        if (styleReplacements == false)
+                        {
+                            Debug.WriteLine("1");
+                            cell.CellValue = new Spreadsheet.CellValue(AhoCorasickHelper.SubstituteMatches(
+                                replacePhrases, cell.InnerText, matcher, isWholeWord, isPreserveCase, out currNumOfMatches));
+
+                            numOfMatches += currNumOfMatches;
+                            continue;
+                        }
+                        Debug.WriteLine("2");
+
+                        int id = wbPart.SharedStringTablePart?.SharedStringTable.Elements<Spreadsheet.SharedStringItem>().Count() ?? 0;
+                        cell.DataType = Spreadsheet.CellValues.SharedString;
+                        cell.CellValue = new Spreadsheet.CellValue(id);
+
+                        var sharedStringItem = new Spreadsheet.SharedStringItem(new Spreadsheet.Text(cell.InnerText));
+                        var runs = AhoCorasickHelper.GenerateExcelRuns(
+                            sharedStringItem, replacePhrases, matcher, styling,
+                            isWholeWord, isPreserveCase, out currNumOfMatches);
+
+                        var newSharedStringItem = GenerateSharedStringItemFromRuns(runs);
+
+                        // insert the new shared string item into the table
+                        wbPart.SharedStringTablePart?.SharedStringTable.AppendChild(newSharedStringItem);
+
+                        // highlight the cell if highlighting is specified and a replacement was made
+                        if (styling.IsHighlighted && currNumOfMatches > 0)
+                        {
+                            uint cellFormatId = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + styling.HighlightColorString);
+                            cell.StyleIndex = cellFormatId;
+                        }
+                        
+                        visitedSharedStringItems[id] = currNumOfMatches;
                         numOfMatches += currNumOfMatches;
                     }
                 }
@@ -482,6 +557,98 @@ namespace TextReplace.MVVM.Model
                 document.Save();
             }
             return numOfMatches;
+        }
+
+        public static Spreadsheet.SharedStringItem GenerateSharedStringItemFromRuns(List<Spreadsheet.Run> runs)
+        {
+            var sharedStringItem = new Spreadsheet.SharedStringItem();
+
+            foreach (var run in runs)
+            {
+                sharedStringItem.Append(run);
+            }
+            
+            return sharedStringItem;
+        }
+
+        /// <summary>
+        /// Appends a cell format onto the spreadsheet that highlights a cell with the given color
+        /// </summary>
+        /// <param name="wbPart"></param>
+        /// <param name="argbBackground"></param>
+        /// <returns>The id of the cell format that was created.</returns>
+        public static uint AppendSpreadSheetCellFormatHighlighting(WorkbookPart wbPart, string argbBackground)
+        {
+            // get the style sheet or create one if it does not exist
+            var workStylePart = wbPart.WorkbookStylesPart;
+            Spreadsheet.Stylesheet stylesheet;
+            if (workStylePart == null)
+            {
+                workStylePart = wbPart.AddNewPart<WorkbookStylesPart>();
+                workStylePart.Stylesheet = new Spreadsheet.Stylesheet();
+                stylesheet = workStylePart.Stylesheet;
+            }
+            else
+            {
+                stylesheet = workStylePart.Stylesheet;
+            }
+
+            // create the background for the cell
+            var fill = new Spreadsheet.Fill();
+
+            var patternFill = new Spreadsheet.PatternFill() { PatternType = Spreadsheet.PatternValues.Solid };
+            var foregroundColor = new Spreadsheet.ForegroundColor() { Rgb = argbBackground };
+            var backgroundColor = new Spreadsheet.BackgroundColor() { Indexed = (UInt32Value)64U };
+
+            patternFill.Append(foregroundColor);
+            patternFill.Append(backgroundColor);
+            fill.Append(patternFill);
+
+            // if the cell didnt have a fills child, create one and append it to the stylesheet
+            var fills = stylesheet.GetFirstChild<Spreadsheet.Fills>();
+            if (fills == null)
+            {
+                fills = new Spreadsheet.Fills();
+                fills.Append(fill);
+                stylesheet.AppendChild(fills);
+            }
+            else
+            {
+                fills.Append(fill);
+            }
+
+            // add the cell format onto the stylesheet
+            var cellFormats = stylesheet.GetFirstChild<Spreadsheet.CellFormats>();
+            var cellFormat1 = new Spreadsheet.CellFormat()
+            {
+                FontId = 0,
+                FillId = 0,
+                BorderId = 0
+            };
+            var cellFormat2 = new Spreadsheet.CellFormat()
+            {
+                FillId = 2,
+                ApplyFill = true
+            };
+
+            uint count;
+            if (cellFormats == null)
+            {
+                cellFormats = new Spreadsheet.CellFormats();
+                count = cellFormats.Count ?? 0;
+                cellFormats.Count = count + 1;
+                cellFormats.Append(cellFormat1);
+                cellFormats.Append(cellFormat1);
+                stylesheet.AppendChild(cellFormats);
+            }
+            else
+            {
+                count = cellFormats.Count ?? 0;
+                cellFormats.Count = count + 1;
+                cellFormats.Append(cellFormat2);
+            }
+
+            return cellFormats.Count;
         }
 
         public static void UpdateOutputFiles(List<SourceFile> files)
@@ -711,10 +878,10 @@ namespace TextReplace.MVVM.Model
 
             if (style.IsHighlighted)
             {
-                runProps.Shading = new Shading()
+                runProps.Shading = new Wordprocessing.Shading()
                 {
                     Fill = style.HighlightColorString,
-                    Val = ShadingPatternValues.Clear,
+                    Val = Wordprocessing.ShadingPatternValues.Clear,
                     Color = "auto"
                 };
             }
@@ -724,9 +891,49 @@ namespace TextReplace.MVVM.Model
                 runProps.Color = new Wordprocessing.Color()
                 {
                     Val = style.TextColorString,
-                    ThemeColor = ThemeColorValues.Accent1,
+                    ThemeColor = Wordprocessing.ThemeColorValues.Accent1,
                     ThemeShade = "BF"
                 };
+            }
+
+            return runProps;
+        }
+
+        public static Spreadsheet.RunProperties StyleRunProperties(
+            Spreadsheet.RunProperties runProps, OutputFileStyling style)
+        {
+            if (style.Bold)
+            {
+                runProps.AppendChild(new Spreadsheet.Bold());
+            }
+
+            if (style.Italics)
+            {
+                runProps.AppendChild(new Spreadsheet.Italic());
+            }
+
+            if (style.Underline)
+            {
+                runProps.AppendChild(new Spreadsheet.Underline()
+                {
+                    Val = Spreadsheet.UnderlineValues.Single
+                });
+            }
+
+            if (style.Strikethrough)
+            {
+                runProps.AppendChild(new Spreadsheet.Strike());
+            }
+
+            // Excel spreadsheet highlighting has to be done on a cell rather than on a run,
+            // so the method that constructs or edits the cells should set the highlighting value
+
+            if (style.IsTextColored)
+            {
+                runProps.AppendChild(new Spreadsheet.Color()
+                {
+                    Rgb = "FF" + style.TextColorString
+                });
             }
 
             return runProps;
