@@ -87,6 +87,14 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.TextColor = value; }
         }
 
+        public SetOutputStylingWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            BodyText = string.Empty;
+        }
+
         public SetOutputStylingWindow(Window owner, string title, string body)
         {
             InitializeComponent();

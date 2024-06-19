@@ -6,6 +6,7 @@
              xmlns:view="clr-namespace:TextReplace.MVVM.View"
              xmlns:popup="clr-namespace:TextReplace.MVVM.View.PopupWindows"
              xmlns:popupvm="clr-namespace:TextReplace.MVVM.ViewModel.PopupWindows"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              StartupUri="MVVM/View/MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -36,7 +37,18 @@
                 <ResourceDictionary Source="Themes/ColorPicker/TextBoxStyle.xaml"/>
                 <ResourceDictionary Source="Themes/ColorPicker/ComboBoxStyle.xaml"/>
                 <ResourceDictionary Source="Themes/ColorPicker/RoundedColorDisplayStyle.xaml"/>
+                
+                <!-- Mah Apps themes -->
+                <ResourceDictionary Source="Themes/MahApps/WindowTitleBarThemes.xaml"/>
+
+                <!-- default mah apps resources -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
+
+            <!--window title properties-->
+            
 
             <DataTemplate DataType="{x:Type viewModel:ReplaceViewModel}">
                 <view:ReplaceView/>
@@ -97,6 +109,8 @@
             <DataTemplate DataType="{x:Type popupvm:SetOutputStylingViewModel}">
                 <popup:SetOutputStylingWindow/>
             </DataTemplate>
+            
+            
 
         </ResourceDictionary>
     </Application.Resources>

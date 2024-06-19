@@ -10,7 +10,7 @@ namespace TextReplace.MVVM.View.PopupWindows
     /// <summary>
     /// Interaction logic for DoubleInputWindow.xaml
     /// </summary>
-    public partial class AddPhraseDoubleInputWindow : Window
+    public partial class AddPhraseDoubleInputWindow
     {
         public string WindowName
         {
@@ -81,6 +81,17 @@ namespace TextReplace.MVVM.View.PopupWindows
             {
                 ((AddPhraseDoubleInputViewModel)DataContext).InsertAt = (int)value;
             }
+        }
+
+        public AddPhraseDoubleInputWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            DefaultBodyText = string.Empty;
+            BodyText = string.Empty;
+            TopInputWatermarkText = string.Empty;
+            BottomInputWatermarkText = string.Empty;
         }
 
         public AddPhraseDoubleInputWindow(Window owner, string title, string body, string topWatermark, string bottomWatermark)

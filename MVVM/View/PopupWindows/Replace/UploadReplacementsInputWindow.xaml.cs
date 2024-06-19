@@ -46,6 +46,15 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { ((UploadReplacementsInputViewModel)DataContext).FullFileName = value; }
         }
 
+        public UploadReplacementsInputWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            DefaultBodyText = string.Empty;
+            BodyText = string.Empty;
+        }
+
         public UploadReplacementsInputWindow(Window owner, string title, string body)
         {
             InitializeComponent();

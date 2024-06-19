@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 using TextReplace.MVVM.Model;
@@ -9,7 +10,7 @@ namespace TextReplace.MVVM.View.PopupWindows
     /// <summary>
     /// Interaction logic for InputWindow.xaml
     /// </summary>
-    public partial class SetSuffixInputResetWindow : Window
+    public partial class SetSuffixInputResetWindow
     {
         public string WindowName
         {
@@ -54,6 +55,17 @@ namespace TextReplace.MVVM.View.PopupWindows
             {
                 InputTextBox.Text = value;
             }
+        }
+
+        public SetSuffixInputResetWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            DefaultBodyText = string.Empty;
+            BodyText = string.Empty;
+            InputWatermarkText = string.Empty;
+            InputText = string.Empty;
         }
 
         public SetSuffixInputResetWindow(Window owner, string title, string body, string watermark, string inputText = "")

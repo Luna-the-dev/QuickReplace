@@ -8,7 +8,7 @@ namespace TextReplace.MVVM.View.PopupWindows
     /// <summary>
     /// Interaction logic for UploadSourceFilesInputWindow.xaml
     /// </summary>
-    public partial class UploadSourceFilesInputWindow : Window
+    public partial class UploadSourceFilesInputWindow
     {
         public string WindowName
         {
@@ -42,6 +42,15 @@ namespace TextReplace.MVVM.View.PopupWindows
         {
             get { return ((UploadSourceFilesInputViewModel)DataContext).FullFileNames; }
             set { ((UploadSourceFilesInputViewModel)DataContext).FullFileNames = value; }
+        }
+
+        public UploadSourceFilesInputWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            DefaultBodyText = string.Empty;
+            BodyText = string.Empty;
         }
 
         public UploadSourceFilesInputWindow(Window owner, string title, string body)

@@ -11,7 +11,7 @@ namespace TextReplace.MVVM.View.PopupWindows
     /// <summary>
     /// Interaction logic for UploadReplacementsInputWindow.xaml
     /// </summary>
-    public partial class SetOutputDirectoryWindow : Window
+    public partial class SetOutputDirectoryWindow
     {
         public string WindowName
         {
@@ -47,6 +47,15 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { DirectoryNameTextBox.Text = value; }
         }
 
+
+        public SetOutputDirectoryWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            DefaultBodyText = string.Empty;
+            BodyText = string.Empty;
+        }
 
         public SetOutputDirectoryWindow(Window owner, string title, string body)
         {

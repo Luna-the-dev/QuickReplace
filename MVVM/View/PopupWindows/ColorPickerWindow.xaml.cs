@@ -20,15 +20,20 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { colorPicker.SelectedColor = value; }
         }
 
+        public ColorPickerWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            SelectedColor = new Color();
+        }
+
         public ColorPickerWindow(Window owner, string title, Color color = new Color())
         {
             InitializeComponent();
             Owner = owner;
             WindowName = title;
-            if (color != default)
-            {
-                SelectedColor = color;
-            }
+            SelectedColor = color;
         }
 
         private void BtnOk_Click(object sender, RoutedEventArgs e)

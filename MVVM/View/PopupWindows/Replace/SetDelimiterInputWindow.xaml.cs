@@ -54,6 +54,16 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
+        public SetDelimiterInputWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            DefaultBodyText = string.Empty;
+            BodyText = string.Empty;
+            InputWatermarkText = string.Empty;
+        }
+
         public SetDelimiterInputWindow(Window owner, string title, string body, string watermark)
         {
             InitializeComponent();

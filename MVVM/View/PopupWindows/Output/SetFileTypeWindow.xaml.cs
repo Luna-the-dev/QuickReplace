@@ -50,6 +50,14 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
+        public SetOutputFileTypeWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            BodyText = string.Empty;
+        }
+
         public SetOutputFileTypeWindow(Window owner, string title, string body)
         {
             InitializeComponent();

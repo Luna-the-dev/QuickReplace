@@ -73,6 +73,20 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
+        public EditPhraseDoubleInputWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            DefaultBodyText = string.Empty;
+            BodyText = string.Empty;
+            TopInputWatermarkText = string.Empty;
+            BottomInputWatermarkText = string.Empty;
+            DefaultTopInputText = string.Empty;
+            TopInputText = string.Empty;
+            BottomInputText = string.Empty;
+        }
+
         public EditPhraseDoubleInputWindow(Window owner, string title, string body,
             string topWatermark, string bottomWatermark, string topInputText, string bottomInputText)
         {

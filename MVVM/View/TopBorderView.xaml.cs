@@ -96,8 +96,8 @@ namespace TextReplace.MVVM.View
             // exception from being thrown at design time for this user control's caller
             try
             {
-                Application.Current.MainWindow.SourceInitialized += new EventHandler(Win_SourceInitialized);
-                Application.Current.MainWindow.WindowState = WindowState.Maximized;
+                /*Application.Current.MainWindow.SourceInitialized += new EventHandler(Win_SourceInitialized);
+                Application.Current.MainWindow.WindowState = WindowState.Maximized;*/
             }
             catch { }
         }

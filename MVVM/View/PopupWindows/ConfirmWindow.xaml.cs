@@ -37,6 +37,14 @@ namespace TextReplace.MVVM.View.PopupWindows
             }
         }
 
+        public ConfirmWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            BodyText = string.Empty;
+        }
+
         public ConfirmWindow(Window owner, string title, string body)
         {
             InitializeComponent();

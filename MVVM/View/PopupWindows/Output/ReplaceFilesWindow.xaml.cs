@@ -43,6 +43,14 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { fileLocationCheckBox.IsChecked = value; }
         }
 
+        public ReplaceFilesWindow()
+        {
+            InitializeComponent();
+            Owner = new Window();
+            WindowName = string.Empty;
+            BodyText = string.Empty;
+        }
+
         public ReplaceFilesWindow(Window owner, string title, string body)
         {
             InitializeComponent();
