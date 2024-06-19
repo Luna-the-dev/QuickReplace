@@ -12,7 +12,6 @@
         Background="Transparent"
         AllowsTransparency="True"
         ResizeMode="CanResizeWithGrip"
-        MinWidth="920" MinHeight="600"
         WindowStartupLocation="CenterScreen">
 
     <Window.DataContext>
