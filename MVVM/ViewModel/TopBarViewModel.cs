@@ -8,6 +8,8 @@ using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Sources;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
+using TextReplace.Messages;
+using TextReplace.Core.Enums;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -184,6 +186,26 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
+        public static void SetActiveContentView(string viewName)
+        {
+            if (viewName == "replace")
+            {
+                WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(new ReplaceViewModel()));
+            }
+            else if (viewName == "sources")
+            {
+                WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(new SourcesViewModel()));
+            }
+            else if (viewName == "output")
+            {
+                WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(new OutputViewModel()));
+            }
+            else
+            {
+                throw new NotImplementedException($"{viewName}: view model does not exist");
+            }
+        }
+
         /// <summary>
         /// Sets the replace button visibility based on whether replace/source files were successfully uploaded.
         /// </summary>
@@ -201,13 +223,11 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(WholeWordMsg message)
         {
             WholeWord = (message.Value) ? Visibility.Visible : Visibility.Hidden;
-            Debug.WriteLine(message.Value);
         }
 
         public void Receive(CaseSensitiveMsg message)
         {
             CaseSensitive = (message.Value) ? Visibility.Visible : Visibility.Hidden;
-            Debug.WriteLine(message.Value);
         }
 
         public void Receive(ReplacePhrasesMsg message)

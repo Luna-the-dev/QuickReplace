@@ -29,6 +29,7 @@ namespace TextReplace.MVVM.View
             if (dialog.BtnOk.IsChecked == true)
             {
                 ((TopBarViewModel)DataContext).SetNewReplaceFile(dialog.FullFileName);
+                TopBarViewModel.SetActiveContentView("replace");
             }
         }
 
@@ -44,6 +45,7 @@ namespace TextReplace.MVVM.View
             if (dialog.BtnOk.IsChecked == true)
             {
                 ((TopBarViewModel)DataContext).SourceFiles(dialog.FullFileNames);
+                TopBarViewModel.SetActiveContentView("sources");
             }
         }
 
@@ -56,19 +58,21 @@ namespace TextReplace.MVVM.View
             var dialog = new PopupWindows.ReplaceFilesWindow(window, title, body);
             dialog.ShowDialog();
 
-            if (dialog.BtnOk.IsChecked == false)
+            if (dialog.BtnCancel.IsChecked == false)
             {
                 return;
             }
 
             string filePath = await TopBarViewModel.ReplaceAll(dialog.OpenFileLocation);
 
-            // if the user selected to topen the file location,
+            // if the user selected to open the file location,
             // open the file explorer and highlight the first generated file
             if (dialog.OpenFileLocation)
             {
                 Process.Start("explorer.exe", "/select, " + filePath);
             }
+
+            TopBarViewModel.SetActiveContentView("output");
         }
 
         private void OpenFileSuffixInputWindow(object sender, RoutedEventArgs e)

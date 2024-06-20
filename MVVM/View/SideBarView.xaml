@@ -27,7 +27,7 @@
 
             <RadioButton Content="Replacify"
                          Style="{StaticResource MenuButtonTheme}"
-                         Command="{Binding PerformReplaceViewCommand}"/>
+                         Command="{Binding OutputViewCommand}"/>
         </StackPanel>
     </Border>
 </UserControl>
