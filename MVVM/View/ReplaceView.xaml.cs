@@ -135,8 +135,10 @@ namespace TextReplace.MVVM.View
             if (viewModel.IsNewFile)
             {
                 OpenSaveAsWindow_OnClick(sender, e);
+                return;
             }
-            else if (FileValidation.IsTextFile(viewModel.FileName))
+
+            if (FileValidation.IsTextFile(viewModel.FileName))
             {
                 // get a new delimiter
                 var window = Window.GetWindow(sender as DependencyObject);
@@ -154,11 +156,10 @@ namespace TextReplace.MVVM.View
                 }
 
                 viewModel.SavePhrasesToFile(newDelimiter: delimiterDialog.InputText);
+                return;
             }
-            else
-            {
-                viewModel.SavePhrasesToFile();
-            }
+
+            viewModel.SavePhrasesToFile();
         }
 
         private void OpenSaveAsWindow_OnClick(object sender, RoutedEventArgs e)
@@ -221,7 +222,10 @@ namespace TextReplace.MVVM.View
                     return;
                 }
 
+                Debug.WriteLine("hey! " + delimiterDialog.InputText);
+
                 viewModel.SavePhrasesToFile(dialog.FileName, delimiterDialog.InputText);
+                return;
             }
 
             // save the replace phrases to the new file name
