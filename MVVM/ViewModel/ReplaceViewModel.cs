@@ -37,6 +37,13 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private ObservableCollection<ReplacePhraseWrapper> _replacePhrases =
             new ObservableCollection<ReplacePhraseWrapper>(ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase));
+        partial void OnReplacePhrasesChanged(ObservableCollection<ReplacePhraseWrapper> value)
+        {
+            DoesReplacePhraseExist = value.Count > 0;
+        }
+
+        [ObservableProperty]
+        private bool _doesReplacePhraseExist = (ReplaceData.ReplacePhrasesList.Count > 0);
 
         [ObservableProperty]
         private bool _sortReplacePhrases = ReplaceData.IsSorted;
@@ -255,6 +262,8 @@ namespace TextReplace.MVVM.ViewModel
             {
                 ReplaceData.SelectedPhrase = new ReplacePhrase();
             }
+
+            DoesReplacePhraseExist = ReplacePhrases.Count > 0;
         }
 
         /// <summary>

@@ -30,14 +30,14 @@
                 <ResourceDictionary Source="Themes/Buttons/MenuButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionButtonTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Buttons/OptionToggleButtonTheme.xaml"/>
-                
+
                 <!-- Color picker themes -->
                 <ResourceDictionary Source="Themes/ColorPicker/ColorPickerStyle.xaml"/>
                 <ResourceDictionary Source="Themes/ColorPicker/TabControlStyle.xaml"/>
                 <ResourceDictionary Source="Themes/ColorPicker/TextBoxStyle.xaml"/>
                 <ResourceDictionary Source="Themes/ColorPicker/ComboBoxStyle.xaml"/>
                 <ResourceDictionary Source="Themes/ColorPicker/RoundedColorDisplayStyle.xaml"/>
-                
+
                 <!-- Mah Apps themes -->
                 <ResourceDictionary Source="Themes/MahApps/WindowTitleBarThemes.xaml"/>
 
@@ -46,9 +46,6 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!--window title properties-->
-            
 
             <DataTemplate DataType="{x:Type viewModel:ReplaceViewModel}">
                 <view:ReplaceView/>
@@ -109,8 +106,6 @@
             <DataTemplate DataType="{x:Type popupvm:SetOutputStylingViewModel}">
                 <popup:SetOutputStylingWindow/>
             </DataTemplate>
-            
-            
 
         </ResourceDictionary>
     </Application.Resources>

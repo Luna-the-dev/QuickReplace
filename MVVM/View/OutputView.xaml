@@ -34,7 +34,7 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Foreground="{StaticResource TextLight}"
-                   FontSize="18"
+                   FontSize="20"
                    FontFamily="/Fonts/#Poppins"/>
 
         <!-- Left side options -->
@@ -310,7 +310,7 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Border x:Name="border" Background="{StaticResource BtnLight}"
-                                CornerRadius="4" Height="80" Margin="8 4 14 4">
+                                CornerRadius="4" Height="100" Margin="8 4 14 4">
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="1*"/>
@@ -321,7 +321,7 @@
                                                          Duration="00:00:2"
                                                          Text="{Binding ShortFileName}"
                                                          FontFamily="/Fonts/#Poppins"
-                                                         FontSize="15"
+                                                         FontSize="18"
                                                          Foreground="{StaticResource TextLight}"
                                                          VerticalAlignment="Center"/>
                                 <TextBlock Grid.Row="1" Margin="15 0 15 7"
@@ -329,7 +329,7 @@
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
                                            FontFamily="/Fonts/#Poppins"
-                                           FontSize="12"
+                                           FontSize="14"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
                             </Grid>

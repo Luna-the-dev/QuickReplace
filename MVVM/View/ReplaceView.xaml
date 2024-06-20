@@ -33,7 +33,7 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Foreground="{StaticResource TextLight}"
-                   FontSize="18"
+                   FontSize="20"
                    FontFamily="/Fonts/#Poppins"/>
 
         <TextBlock Grid.Column="1" Grid.Row="1"
@@ -109,40 +109,76 @@
         </Grid>
 
         <!-- Replace phrases view -->
-        <ScrollViewer Grid.Column="1" Grid.Row="2"
-                      Style="{DynamicResource ScrollViewerTheme}"
-                      Background="{StaticResource BackgroundColor}"
-                      PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
-            <ListBox x:Name="listBox" Margin="0 4" Background="Transparent"
-                     BorderThickness="0" ItemsSource="{Binding ReplacePhrases}"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="{x:Type ListBoxItem}">
-                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                    <ContentPresenter />
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </ListBox.ItemContainerStyle>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <RadioButton Command="{Binding Path=DataContext.SetSelectedPhraseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                     CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
-                                     Style="{DynamicResource ReplacePhraseTheme}">
-                            <RadioButton.IsChecked>
-                                <Binding Path="IsSelected"
-                                         RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
-                                         Mode="TwoWay"/>
-                            </RadioButton.IsChecked>
-                        </RadioButton>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
+        <Border Grid.Column="1" Grid.Row="2"
+                Background="{StaticResource BackgroundColor}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Column="0" Grid.Row="0"
+                           Margin="22.5 0 0 4"
+                           Text="Original"
+                           Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           d:Visibility="Visible"
+                           FontFamily="/Fonts/#Poppins" FontSize="16"
+                           Foreground="{StaticResource TextLight}"
+                           VerticalAlignment="Center"/>
+                <TextBlock Grid.Column="1" Grid.Row="0"
+                           Margin="-3 0 0 4"
+                           Text="Replacement"
+                           Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}"
+                           d:Visibility="Visible"
+                           FontFamily="/Fonts/#Poppins" FontSize="16"
+                           Foreground="{StaticResource TextLight}"
+                           VerticalAlignment="Center"/>
+                <Border Grid.ColumnSpan="2" Grid.Row="0"
+                        Margin="15 0 15 8"
+                        Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}"
+                        d:Visibility="Visible"
+                        BorderBrush="{StaticResource BackgroundColorDark}"
+                        BorderThickness="0 0 0 2"/>
+                <ScrollViewer Grid.ColumnSpan="2" Grid.Row="1"
+                              Style="{DynamicResource ScrollViewerTheme}"
+                              PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
+                    <ListBox x:Name="listBox" Margin="0 4" Background="Transparent"
+                             BorderThickness="0" ItemsSource="{Binding ReplacePhrases}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <ContentPresenter />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <RadioButton Command="{Binding Path=DataContext.SetSelectedPhraseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                             CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
+                                             Style="{DynamicResource ReplacePhraseTheme}">
+                                    <RadioButton.IsChecked>
+                                        <Binding Path="IsSelected"
+                                                 RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
+                                                 Mode="TwoWay"/>
+                                    </RadioButton.IsChecked>
+                                </RadioButton>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </ScrollViewer>
+            </Grid>
+        </Border>
 
         <!-- Search bar -->
         <AdornerDecorator Grid.Column="2" Grid.Row="1" Width="140" Height="30">
@@ -258,8 +294,8 @@
                     <Setter Property="Foreground" Value="{StaticResource TextUnclickable}"/>
                 </Trigger>
             </Style.Triggers>
-        </Style>        
-        
+        </Style>
+
         <!-- Style for the middle replacements scrollviewer -->
         <Style x:Key="ScrollViewerTheme" TargetType="{x:Type ScrollViewer}">
             <Setter Property="Template">
@@ -294,22 +330,31 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Border x:Name="border" Background="{StaticResource BtnLight}"
-                                CornerRadius="4" Height="30" Margin="8 2 14 2" Padding="10 0">
+                                CornerRadius="4" Height="35" Margin="8 2 14 2">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1"/>
                                     <ColumnDefinition Width="1*"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="{Binding Item1}"
+                                <TextBlock Grid.Column="0"
+                                           Margin="15 0 25 0"
+                                           Text="{Binding Item1}"
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="14"
+                                           FontFamily="/Fonts/#Poppins" FontSize="16"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Item2}"
+                                <Border Grid.Column="1"
+                                        Margin="-15 5"
+                                        BorderBrush="{StaticResource TextUnclickable}"
+                                        BorderThickness="1 0 0 0"/>
+                                <TextBlock Grid.Column="2"
+                                           Margin="0 0 10 0"
+                                           Text="{Binding Item2}"
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="14"
+                                           FontFamily="/Fonts/#Poppins" FontSize="16"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
                             </Grid>

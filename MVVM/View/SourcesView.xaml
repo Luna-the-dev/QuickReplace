@@ -34,7 +34,7 @@
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Foreground="{StaticResource TextLight}"
-                   FontSize="18"
+                   FontSize="20"
                    FontFamily="/Fonts/#Poppins"/>
 
         <!-- Left side options -->
@@ -300,7 +300,7 @@
                                            Text="{Binding ShortFileName}"
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="14"
+                                           FontFamily="/Fonts/#Poppins" FontSize="18"
                                            Foreground="{StaticResource TextLight}"
                                            VerticalAlignment="Center"/>
                                 <Border Grid.Row="1"
@@ -317,14 +317,14 @@
 
                                         <Grid Grid.Row="0" Margin="0 0 0 5">
                                             <TextBlock Text="Directory: "
-                                                       FontSize="13"
+                                                       FontSize="14"
                                                        FontFamily="/Fonts/#Poppins"
                                                        Foreground="{StaticResource TextLight}"
                                                        VerticalAlignment="Center"/>
                                             <userControl:RollingText Margin="68 0 0 0"
                                                                      Text="{Binding OutputDirectoryText}"
                                                                      Foreground="{StaticResource TextLight}"
-                                                                     FontSize="13"
+                                                                     FontSize="14"
                                                                      FontFamily="/Fonts/#Poppins"/>
                                         </Grid>
 
@@ -332,7 +332,7 @@
                                                    Text="{Binding SuffixText, StringFormat=Suffix:  {0}}"
                                                    TextWrapping="NoWrap"
                                                    TextTrimming="CharacterEllipsis"
-                                                   FontFamily="/Fonts/#Poppins" FontSize="13"
+                                                   FontFamily="/Fonts/#Poppins" FontSize="14"
                                                    Foreground="{StaticResource TextLight}"
                                                    VerticalAlignment="Center"/>
 
