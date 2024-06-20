@@ -1,8 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Input;
-using TextReplace.Core.Validation;
 using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.MVVM.View.PopupWindows
@@ -66,11 +64,9 @@ namespace TextReplace.MVVM.View.PopupWindows
 
         private void BtnUpload_OnClick(object sender, RoutedEventArgs e)
         {
-            string filter = "All files (*.*)|*.*|" +
-                "CSV File (*.csv)|*.csv|" +
-                "TSV File (*.tsv)|*.tsv|" +
-                "Excel File (*.xlsx)|*.xlsx|" +
-                "Text Document (*.txt)|*.txt";
+            string filter =
+                "Excel (*.xlsx), CSV (*.csv), TSV (*.tsv), Text Document (*.txt)|" +
+                "*.xlsx;*.csv;*.tsv;*.txt";
             // configure open file dialog box
             var dialog = new Microsoft.Win32.OpenFileDialog
             {
