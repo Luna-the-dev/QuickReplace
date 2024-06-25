@@ -16,18 +16,24 @@
     <Border Padding="4 8 4 0"
             Background="{StaticResource SideBarBackground}">
         <StackPanel>
+            <StackPanel.Resources>
+                <local:ActiveViewConverter x:Key="ActiveViewConverter" />
+            </StackPanel.Resources>
+
             <RadioButton Content="Replacements"
-                         IsChecked="True"
                          Style="{StaticResource MenuButtonTheme}"
-                         Command="{Binding ReplaceViewCommand}"/>
+                         Command="{Binding ReplaceViewCommand}"
+                         IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.ReplaceView}}"/>
 
             <RadioButton Content="Sources"
                          Style="{StaticResource MenuButtonTheme}"
-                         Command="{Binding SourcesViewCommand}"/>
+                         Command="{Binding SourcesViewCommand}"
+                         IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.SourcesView}}"/>
 
             <RadioButton Content="Replacify"
                          Style="{StaticResource MenuButtonTheme}"
-                         Command="{Binding OutputViewCommand}"/>
+                         Command="{Binding OutputViewCommand}"
+                         IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.OutputView}}"/>
         </StackPanel>
     </Border>
 </UserControl>

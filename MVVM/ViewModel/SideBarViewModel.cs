@@ -9,42 +9,48 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<ActiveContentViewMsg>
     {
         [ObservableProperty]
-        [NotifyCanExecuteChangedFor(nameof(ReplaceViewCommand))]
-        [NotifyCanExecuteChangedFor(nameof(SourcesViewCommand))]
-        [NotifyCanExecuteChangedFor(nameof(OutputViewCommand))]
-        private object _selectedView;
+        private SelectedViewEnum _selectedView = SelectedViewEnum.ReplaceView;
 
-        public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
-        public SourcesViewModel SourcesVm = new SourcesViewModel();
-        public OutputViewModel OutputVm = new OutputViewModel();
+        public static RelayCommand ReplaceViewCommand => new RelayCommand(ReplaceView);
+        public static RelayCommand SourcesViewCommand => new RelayCommand(SourcesView);
+        public static RelayCommand OutputViewCommand => new RelayCommand(OutputView);
 
         public SideBarViewModel()
         {
-            SelectedView = ReplaceVm;
             WeakReferenceMessenger.Default.Register(this);
         }
 
-        [RelayCommand]
-        private void ReplaceView()
+        public static void ReplaceView()
         {
-            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(ReplaceVm));
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(new ReplaceViewModel()));
         }
 
-        [RelayCommand]
-        private void SourcesView()
+        public static void SourcesView()
         {
-            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(SourcesVm));
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(new SourcesViewModel()));
         }
 
-        [RelayCommand]
-        private void OutputView()
+        public static void OutputView()
         {
-            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(OutputVm));
+            WeakReferenceMessenger.Default.Send(new ActiveContentViewMsg(new OutputViewModel()));
         }
 
         public void Receive(ActiveContentViewMsg message)
         {
-            SelectedView = message.Value;
+            SelectedView = message.Value switch
+            {
+                ReplaceViewModel => SelectedViewEnum.ReplaceView,
+                SourcesViewModel => SelectedViewEnum.SourcesView,
+                OutputViewModel => SelectedViewEnum.OutputView,
+                _ => throw new NotImplementedException("SelectedViewEnum does not contain the class supplied by ActiveContentViewMsg")
+            };
         }
+    }
+
+    public enum SelectedViewEnum
+    {
+        ReplaceView,
+        SourcesView,
+        OutputView
     }
 }

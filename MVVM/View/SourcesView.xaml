@@ -17,9 +17,9 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MaxWidth="250"/>
+            <ColumnDefinition Width="1*" MaxWidth="275"/>
             <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*" MaxWidth="250"/>
+            <ColumnDefinition Width="1*" MaxWidth="275"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -275,9 +275,9 @@
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Background="{TemplateBinding Background}">
                             <Path Stretch="Uniform"
-                    Margin="4"
-                    Fill="{StaticResource BackgroundColorDark}"
-                    Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
+                                  Margin="4"
+                                  Fill="{StaticResource BackgroundColorDark}"
+                                  Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -289,14 +289,16 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Border x:Name="border" Background="{StaticResource BtnLight}"
-                                CornerRadius="4" Height="110" Margin="8 4 14 4">
+                        <Border x:Name="border" 
+                                Height="159"
+                                Margin="8 4 14 4"
+                                CornerRadius="4" >
                             <Grid>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="2*"/>
                                     <RowDefinition Height="3*"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Margin="10 0"
+                                <TextBlock Grid.Row="0" Margin="10 0 30 0"
                                            Text="{Binding ShortFileName}"
                                            TextWrapping="NoWrap"
                                            TextTrimming="CharacterEllipsis"
@@ -305,9 +307,9 @@
                                            VerticalAlignment="Center"/>
                                 <Border Grid.Row="1"
                                         x:Name="innerBorder"
-                                        Margin="6 0 6 7" Padding="6 10"
+                                        Margin="6 0 6 7" Padding="10"
                                         CornerRadius="4"
-                                        VerticalAlignment="Bottom"
+                                        VerticalAlignment="Stretch"
                                         BorderThickness="0">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -317,14 +319,14 @@
 
                                         <Grid Grid.Row="0" Margin="0 0 0 5">
                                             <TextBlock Text="Directory: "
-                                                       FontSize="14"
+                                                       FontSize="15"
                                                        FontFamily="/Fonts/#Poppins"
                                                        Foreground="{StaticResource TextLight}"
                                                        VerticalAlignment="Center"/>
-                                            <userControl:RollingText Margin="68 0 0 0"
+                                            <userControl:RollingText Margin="78 0 0 0"
                                                                      Text="{Binding OutputDirectoryText}"
                                                                      Foreground="{StaticResource TextLight}"
-                                                                     FontSize="14"
+                                                                     FontSize="15"
                                                                      FontFamily="/Fonts/#Poppins"/>
                                         </Grid>
 
@@ -332,10 +334,10 @@
                                                    Text="{Binding SuffixText, StringFormat=Suffix:  {0}}"
                                                    TextWrapping="NoWrap"
                                                    TextTrimming="CharacterEllipsis"
-                                                   FontFamily="/Fonts/#Poppins" FontSize="14"
+                                                   FontSize="15"
+                                                   FontFamily="/Fonts/#Poppins"
                                                    Foreground="{StaticResource TextLight}"
                                                    VerticalAlignment="Center"/>
-
                                     </Grid>
                                 </Border>
                             </Grid>
@@ -347,7 +349,7 @@
                             </Trigger>
                             <Trigger Property="RadioButton.IsChecked" Value="False">
                                 <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}"/>
-                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnDark}"/>
+                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnExtraDark}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

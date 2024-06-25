@@ -47,7 +47,7 @@
                     <Condition Property="IsPressed" Value="True"/>
                     <Condition Property="IsChecked" Value="False"/>
                 </MultiTrigger.Conditions>
-                <Setter Property="Foreground" Value="#E3E3E5"/>
+                <Setter Property="Foreground" Value="{StaticResource TextGrey}"/>
                 <Setter Property="Background" Value="{DynamicResource BtnDark}"/>
             </MultiTrigger>
 
@@ -67,7 +67,6 @@
                 <Setter Property="FontFamily" Value="/Fonts/#Poppins"/>
                 <Setter Property="Foreground" Value="{DynamicResource TextUnclickable}"/>
                 <Setter Property="Background" Value="{DynamicResource BtnUnclickable}"/>
-                <Setter Property="Margin" Value="0 4"/>
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type ToggleButton}">
