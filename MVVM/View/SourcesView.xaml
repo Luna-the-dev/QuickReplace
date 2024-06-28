@@ -7,6 +7,7 @@
              xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
              xmlns:userControl="clr-namespace:TextReplace.UserControls"
              xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800"
              d:Background="{StaticResource BackgroundColorMedium}">
@@ -76,14 +77,26 @@
         </Grid>
 
         <!-- Source files view -->
-        <ScrollViewer Grid.Column="1" Grid.Row="2"
-                      Style="{DynamicResource ScrollViewerTheme}"
-                      Background="{StaticResource BackgroundColor}"
-                      PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
-            <ListBox x:Name="listBox" Margin="0 4"
-                     Background="Transparent" BorderThickness="0"
+        <Border Grid.Column="1" Grid.Row="2"
+                Background="{StaticResource BackgroundColor}">
+            <ListBox Grid.Column="1" Grid.Row="2"
+                     x:Name="listBox" Margin="0 4"
+                     BorderThickness="0"
                      ItemsSource="{Binding SourceFiles}"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     VirtualizingPanel.ScrollUnit="Pixel"
+                     dd:DragDrop.IsDragSource="True"
+                     dd:DragDrop.IsDropTarget="True"
+                     dd:DragDrop.DropScrollingMode="VerticalOnly"
+                     dd:DragDrop.DropHandler="{Binding}">
+                <ListBox.Template>
+                    <ControlTemplate>
+                        <ScrollViewer Style="{DynamicResource ScrollViewerTheme}"
+                                      PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
+                            <ItemsPresenter/>
+                        </ScrollViewer>
+                    </ControlTemplate>
+                </ListBox.Template>
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
                         <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
@@ -119,7 +132,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </ScrollViewer>
+        </Border>
 
         <!-- Search bar -->
         <AdornerDecorator Grid.Column="2" Grid.Row="1"
@@ -290,7 +303,7 @@
                 <Setter.Value>
                     <ControlTemplate>
                         <Border x:Name="border" 
-                                Height="159"
+                                Height="158"
                                 Margin="8 4 14 4"
                                 CornerRadius="4" >
                             <Grid>

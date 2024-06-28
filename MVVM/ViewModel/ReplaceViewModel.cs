@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using GongSolutions.Wpf.DragDrop;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -17,7 +18,8 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<ReplacePhrasesMsg>,
         IRecipient<SelectedReplacePhraseMsg>,
         IRecipient<IsReplaceFileUnsavedMsg>,
-        IRecipient<AreReplacePhrasesSortedMsg>
+        IRecipient<AreReplacePhrasesSortedMsg>,
+        IDropTarget
     {
         [ObservableProperty]
         private string _fullFileName = ReplaceData.FileName;
@@ -100,7 +102,6 @@ namespace TextReplace.MVVM.ViewModel
             }
             ReplacePhraseWrapper p = (ReplacePhraseWrapper)phrase;
             ReplaceData.SelectedPhrase = ReplacePhraseWrapper.UnwrapReplacePhrase(p);
-            
         }
 
         /// <summary>
@@ -305,6 +306,34 @@ namespace TextReplace.MVVM.ViewModel
         {
             ReplaceData.IsUnsaved = false;
             ReplaceData.CreateNewReplaceFile();
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = System.Windows.DragDropEffects.Copy;
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            var droppedItem = (ReplacePhraseWrapper)dropInfo.Data;
+
+            // grab the old index of the replace phrase
+            int oldIndex = ReplacePhrases.IndexOf(droppedItem);
+            if (oldIndex < 0)
+            {
+                Debug.WriteLine("Dropped item does not exist.");
+                return;
+            }
+
+            // the item was dropped into the same position was it was in before. do nothing
+            if (dropInfo.InsertIndex == oldIndex || dropInfo.InsertIndex == oldIndex + 1)
+            {
+                return;
+            }
+
+            ReplaceData.MoveReplacePhrase(oldIndex, dropInfo.InsertIndex);
+            UpdateReplacePhrasesView(SelectedPhrase.Item1);
         }
 
         // Message receivers

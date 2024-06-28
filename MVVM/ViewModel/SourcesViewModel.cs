@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using GongSolutions.Wpf.DragDrop;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
@@ -13,7 +14,8 @@ namespace TextReplace.MVVM.ViewModel
     partial class SourcesViewModel : ObservableRecipient,
         IRecipient<SourceFilesMsg>,
         IRecipient<SelectedSourceFileMsg>,
-        IRecipient<DefaultSourceFileOptionsMsg>
+        IRecipient<DefaultSourceFileOptionsMsg>,
+        IDropTarget
     {
         [ObservableProperty]
         private ObservableCollection<SourceFileWrapper> _sourceFiles =
@@ -164,6 +166,33 @@ namespace TextReplace.MVVM.ViewModel
         public static bool AddNewSourceFiles(List<string> fileNames)
         {
             return SourceFilesData.AddNewSourceFiles(fileNames);
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = System.Windows.DragDropEffects.Copy;
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            var droppedItem = (SourceFileWrapper)dropInfo.Data;
+
+            // grab the old index of the replace phrase
+            int oldIndex = SourceFiles.IndexOf(droppedItem);
+            if (oldIndex < 0)
+            {
+                Debug.WriteLine("Dropped item does not exist.");
+                return;
+            }
+
+            // the item was dropped into the same position was it was in before. do nothing
+            if (dropInfo.InsertIndex == oldIndex || dropInfo.InsertIndex == oldIndex + 1)
+            {
+                return;
+            }
+
+            SourceFilesData.MoveSourceFile(oldIndex, dropInfo.InsertIndex);
         }
 
         public void Receive(SourceFilesMsg message)

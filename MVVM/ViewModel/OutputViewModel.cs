@@ -1,10 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using GongSolutions.Wpf.DragDrop;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Security.Cryptography.X509Certificates;
-using System.Windows;
 using System.Windows.Media;
 using TextReplace.Core.Enums;
 using TextReplace.Messages.Replace;
@@ -19,7 +18,8 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<SourceFilesMsg>,
         IRecipient<WholeWordMsg>,
         IRecipient<CaseSensitiveMsg>,
-        IRecipient<PreserveCaseMsg>
+        IRecipient<PreserveCaseMsg>,
+        IDropTarget
     {
         [ObservableProperty]
         private ObservableCollection<OutputFileWrapper> _outputFiles =
@@ -42,9 +42,9 @@ namespace TextReplace.MVVM.ViewModel
         private string _filesNeededText = string.Empty;
 
         [ObservableProperty]
-        private Visibility _isFilesNeededVisible = Visibility.Hidden;
+        private bool _areFilesNeeded = false;
         [ObservableProperty]
-        private Visibility _areOutputFilesVisible = Visibility.Hidden;
+        private bool _doOutputFilesExist = false;
 
         [ObservableProperty]
         private string _searchText = string.Empty;
@@ -188,13 +188,13 @@ namespace TextReplace.MVVM.ViewModel
             if (areFilesNeeded)
             {
                 IsReplacifyEnabled = false;
-                IsFilesNeededVisible = Visibility.Visible;
-                AreOutputFilesVisible = Visibility.Hidden;
+                AreFilesNeeded = true;
+                DoOutputFilesExist = false;
                 return;
             }
             IsReplacifyEnabled = true;
-            IsFilesNeededVisible = Visibility.Hidden;
-            AreOutputFilesVisible = Visibility.Visible;
+            AreFilesNeeded = false;
+            DoOutputFilesExist = true;
         }
 
         /// <summary>
@@ -220,6 +220,33 @@ namespace TextReplace.MVVM.ViewModel
             {
                 OutputData.SelectedFile = new OutputFile();
             }
+        }
+
+        public void DragOver(IDropInfo dropInfo)
+        {
+            dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
+            dropInfo.Effects = System.Windows.DragDropEffects.Copy;
+        }
+
+        public void Drop(IDropInfo dropInfo)
+        {
+            var droppedItem = (OutputFileWrapper)dropInfo.Data;
+
+            // grab the old index of the replace phrase
+            int oldIndex = OutputFiles.IndexOf(droppedItem);
+            if (oldIndex < 0)
+            {
+                Debug.WriteLine("Dropped item does not exist.");
+                return;
+            }
+
+            // the item was dropped into the same position was it was in before. do nothing
+            if (dropInfo.InsertIndex == oldIndex || dropInfo.InsertIndex == oldIndex + 1)
+            {
+                return;
+            }
+
+            OutputData.MoveOutputFile(oldIndex, dropInfo.InsertIndex);
         }
 
         public void Receive(OutputFilesMsg message)

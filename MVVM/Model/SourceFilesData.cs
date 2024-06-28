@@ -41,6 +41,37 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
+        /// Moves a source file in the SourceFiles list from its current position to a new index
+        /// Updates the Output Files to reflect this as well
+        /// </summary>
+        /// <param name="oldIndex"></param>
+        /// <param name="newIndex"></param>
+        public static void MoveSourceFile(int oldIndex, int newIndex)
+        {
+            try
+            {
+                var sourceFile = SourceFiles[oldIndex];
+
+                SourceFiles.RemoveAt(oldIndex);
+
+                // shift the new index due to the removal if needed
+                if (newIndex > oldIndex)
+                {
+                    newIndex--;
+                }
+
+                SourceFiles.Insert(newIndex, sourceFile);
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+
+            WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
+            OutputData.UpdateOutputFiles(SourceFiles);
+        }
+
+        /// <summary>
         /// Opens a file dialogue and replaces the SourceFilesData list with whatever the user selects (if valid)
         /// </summary>
         /// <param name="fileNames"></param>

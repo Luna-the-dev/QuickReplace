@@ -222,8 +222,6 @@ namespace TextReplace.MVVM.View
                     return;
                 }
 
-                Debug.WriteLine("hey! " + delimiterDialog.InputText);
-
                 viewModel.SavePhrasesToFile(dialog.FileName, delimiterDialog.InputText);
                 return;
             }

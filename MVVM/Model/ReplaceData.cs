@@ -269,6 +269,33 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
+        /// Moves a replace phrase in the ReplacePhrasesList from its current position to a new index
+        /// </summary>
+        /// <param name="oldIndex"></param>
+        /// <param name="newIndex"></param>
+        public static void MoveReplacePhrase(int oldIndex, int newIndex)
+        {
+            try
+            {
+                var replacePhrase = ReplacePhrasesList[oldIndex];
+
+                ReplacePhrasesList.RemoveAt(oldIndex);
+
+                // shift the new index due to the removal if needed
+                if (newIndex > oldIndex)
+                {
+                    newIndex--;
+                }
+
+                ReplacePhrasesList.Insert(newIndex, replacePhrase);
+            }
+            catch (IndexOutOfRangeException e)
+            {
+                Debug.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
         /// Adds a replace phrase to the ReplacePhrases dictionary and list at a specified
         /// index. Sends a message that the replace phrases list was updated as well.
         /// </summary>
@@ -291,7 +318,6 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList.Insert(index, new ReplacePhrase(item1, item2));
-            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             SelectedPhrase = new ReplacePhrase(item1, item2);
             return true;
         }
@@ -319,7 +345,6 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList[index] = new ReplacePhrase(item1, item2);
-            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -353,7 +378,6 @@ namespace TextReplace.MVVM.Model
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList[index] = new ReplacePhrase(item1, item2);
-            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -381,7 +405,6 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesList.RemoveAt(index);
-            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
     }

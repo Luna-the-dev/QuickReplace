@@ -137,8 +137,6 @@ namespace TextReplace.MVVM.Model
                 Debug.WriteLine($"replacements: {numOfReplacements}");
             }
 
-            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
-
             return didEverythingSucceed;
         }
 
@@ -654,6 +652,20 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
+        /// Moves an output file in the OutputFiles list from its current position to a new index.
+        /// Updates the Source Files to be reflect this as well
+        /// </summary>
+        /// <param name="oldIndex"></param>
+        /// <param name="newIndex"></param>
+        public static void MoveOutputFile(int oldIndex, int newIndex)
+        {
+            // perform the move on the source files first. this method will automatically
+            // update the output files list. this is done because the source files list
+            // is what generates the output files list
+            SourceFilesData.MoveSourceFile(oldIndex, newIndex);
+        }
+
+        /// <summary>
         /// Sets the file type of an output file by the name of its source file
         /// (Since fileName is not unique)
         /// </summary>
@@ -683,10 +695,7 @@ namespace TextReplace.MVVM.Model
             {
                 SelectedFile.FileName = OutputFiles[i].FileName;
                 SelectedFile.ShortFileName = OutputFiles[i].ShortFileName;
-                WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
             }
-
-            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
 
         /// <summary>
@@ -711,11 +720,8 @@ namespace TextReplace.MVVM.Model
                 {
                     SelectedFile.FileName = outputFile.FileName;
                     SelectedFile.ShortFileName = outputFile.ShortFileName;
-                    WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
                 }
             }
-
-            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
     }
 

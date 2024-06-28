@@ -17,7 +17,7 @@
                 <ResourceDictionary Source="Themes/ScrollbarTheme.xaml"/>
                 <ResourceDictionary Source="Themes/CustomComboBoxTheme.xaml"/>
                 <ResourceDictionary Source="Themes/CustomCheckBox.xaml"/>
-
+                
                 <!-- Menu themes-->
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuTheme.xaml"/>
                 <ResourceDictionary Source="Themes/Menus/DropdownMenuRightOffsetTheme.xaml"/>
