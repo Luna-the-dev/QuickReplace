@@ -9,24 +9,25 @@ using TextReplace.Messages.Sources;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using TextReplace.Messages;
-using TextReplace.Core.Enums;
 
 namespace TextReplace.MVVM.ViewModel
 {
     partial class TopBarViewModel : ObservableObject,
         IRecipient<WholeWordMsg>,
         IRecipient<CaseSensitiveMsg>,
+        IRecipient<PreserveCaseMsg>,
         IRecipient<DefaultSourceFileOptionsMsg>,
         IRecipient<ReplacePhrasesMsg>,
         IRecipient<SourceFilesMsg>
     {
         [ObservableProperty]
-        private Visibility _caseSensitive =
-            (OutputData.CaseSensitive) ? Visibility.Visible : Visibility.Hidden;
+        private bool _wholeWord = OutputData.WholeWord;
 
         [ObservableProperty]
-        private Visibility _wholeWord =
-            (OutputData.WholeWord) ? Visibility.Visible : Visibility.Hidden;
+        private bool _caseSensitive = OutputData.CaseSensitive;
+
+        [ObservableProperty]
+        private bool _preserveCase = OutputData.PreserveCase;
 
         [ObservableProperty]
         private string _suffix = SourceFilesData.DefaultSourceFileOptions.Suffix ?? "";
@@ -37,24 +38,40 @@ namespace TextReplace.MVVM.ViewModel
 
         // visibility flags for top bar components
         [ObservableProperty]
-        private Visibility _replaceFileReadSuccess = Visibility.Hidden;
+        private bool _replaceFileReadSuccess = false;
         [ObservableProperty]
-        private Visibility _replaceFileReadFail = Visibility.Hidden;
+        private bool _replaceFileReadFail = false;
         [ObservableProperty]
-        private Visibility _sourceFileReadSuccess = Visibility.Hidden;
+        private bool _sourceFileReadSuccess = false;
         [ObservableProperty]
-        private Visibility _sourceFileReadFail = Visibility.Hidden;
+        private bool _sourceFileReadFail = false;
         [ObservableProperty]
         private bool _replaceIsClickable = false;
 
         // commands
         public RelayCommand ChangeOutputDirectory => new RelayCommand(ChangeOutputDirectoryCmd);
-        public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
         public RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
+        public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
+        public RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
 
         public TopBarViewModel()
         {
             WeakReferenceMessenger.Default.RegisterAll(this);
+        }
+
+        private void ToggleWholeWord()
+        {
+            OutputData.WholeWord = !OutputData.WholeWord;
+        }
+
+        private void ToggleCaseSensitive()
+        {
+            OutputData.CaseSensitive = !OutputData.CaseSensitive;
+        }
+
+        private void TogglePreserveCase()
+        {
+            OutputData.PreserveCase = !OutputData.PreserveCase;
         }
 
         /// <summary>
@@ -69,14 +86,14 @@ namespace TextReplace.MVVM.ViewModel
 
             if (result)
             {
-                ReplaceFileReadSuccess = Visibility.Visible;
-                ReplaceFileReadFail = Visibility.Hidden;
+                ReplaceFileReadSuccess = true;
+                ReplaceFileReadFail = false;
             }
             else
             {
                 Debug.WriteLine("ReplaceFile either could not be read or parsed.");
-                ReplaceFileReadSuccess = Visibility.Hidden;
-                ReplaceFileReadFail = Visibility.Visible;
+                ReplaceFileReadSuccess = false;
+                ReplaceFileReadFail = true;
             }
 
             SetReplaceButtonClickability();
@@ -91,14 +108,14 @@ namespace TextReplace.MVVM.ViewModel
 
             if (result == true)
             {
-                SourceFileReadSuccess = Visibility.Visible;
-                SourceFileReadFail = Visibility.Hidden;
+                SourceFileReadSuccess = true;
+                SourceFileReadFail = false;
             }
             else
             {
                 Debug.WriteLine("SourceFile could not be read.");
-                SourceFileReadSuccess = Visibility.Hidden;
-                SourceFileReadFail = Visibility.Visible;
+                SourceFileReadSuccess = false;
+                SourceFileReadFail = true;
             }
 
             SetReplaceButtonClickability();
@@ -138,16 +155,6 @@ namespace TextReplace.MVVM.ViewModel
 
                 return OutputData.OutputFiles[0].FileName;
             }).ConfigureAwait(false);
-        }
-
-        private void ToggleCaseSensitive()
-        {
-            OutputData.CaseSensitive = !OutputData.CaseSensitive;
-        }
-
-        private void ToggleWholeWord()
-        {
-            OutputData.WholeWord = !OutputData.WholeWord;
         }
 
         private void ChangeOutputDirectoryCmd()
@@ -211,8 +218,8 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         private void SetReplaceButtonClickability()
         {
-            ReplaceIsClickable = (ReplaceFileReadSuccess == Visibility.Visible &&
-                                  SourceFileReadSuccess == Visibility.Visible);
+            ReplaceIsClickable = (ReplaceFileReadSuccess == true &&
+                                  SourceFileReadSuccess == true);
         }
 
         public void Receive(DefaultSourceFileOptionsMsg message)
@@ -222,25 +229,30 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(WholeWordMsg message)
         {
-            WholeWord = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+            WholeWord = message.Value;
         }
 
         public void Receive(CaseSensitiveMsg message)
         {
-            CaseSensitive = (message.Value) ? Visibility.Visible : Visibility.Hidden;
+            CaseSensitive = message.Value;
+        }
+
+        public void Receive(PreserveCaseMsg message)
+        {
+            PreserveCase = message.Value;
         }
 
         public void Receive(ReplacePhrasesMsg message)
         {
             if (message.Value.Count > 0)
             {
-                ReplaceFileReadSuccess = Visibility.Visible;
-                ReplaceFileReadFail = Visibility.Hidden;
+                ReplaceFileReadSuccess = true;
+                ReplaceFileReadFail = false;
                 SetReplaceButtonClickability();
                 return;
             }
-            ReplaceFileReadSuccess = Visibility.Hidden;
-            ReplaceFileReadFail = Visibility.Visible;
+            ReplaceFileReadSuccess = false;
+            ReplaceFileReadFail = true;
             SetReplaceButtonClickability();
         }
 
@@ -248,13 +260,13 @@ namespace TextReplace.MVVM.ViewModel
         {
             if (message.Value.Count > 0)
             {
-                SourceFileReadSuccess = Visibility.Visible;
-                SourceFileReadFail = Visibility.Hidden;
+                SourceFileReadSuccess = true;
+                SourceFileReadFail = false;
                 SetReplaceButtonClickability();
                 return;
             }
-            SourceFileReadSuccess = Visibility.Hidden;
-            SourceFileReadFail = Visibility.Visible;
+            SourceFileReadSuccess = false;
+            SourceFileReadFail = true;
             SetReplaceButtonClickability();
         }
     }

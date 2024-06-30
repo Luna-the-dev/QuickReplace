@@ -42,13 +42,13 @@
 
         <Viewbox Width="25" Height="25" Grid.Column="1"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
-                 Visibility="{Binding ReplaceFileReadSuccess}">
+                 Visibility="{Binding ReplaceFileReadSuccess, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Path Fill="#4EFF91" Data="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM9.29,16.29L5.7,12.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L10,14.17l6.88,-6.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-7.59,7.59c-0.38,0.39 -1.02,0.39 -1.41,0z"/>
         </Viewbox>
 
         <Viewbox Width="25" Height="25" Grid.Column="1"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
-                 Visibility="{Binding ReplaceFileReadFail}">
+                 Visibility="{Binding ReplaceFileReadFail, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
         </Viewbox>
 
@@ -64,13 +64,13 @@
 
         <Viewbox Width="25" Height="25" Grid.Column="3"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
-                 Visibility="{Binding SourceFileReadSuccess}">
+                 Visibility="{Binding SourceFileReadSuccess, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Path Fill="#4EFF91" Data="M12,2C6.48,2 2,6.48 2,12s4.48,10 10,10 10,-4.48 10,-10S17.52,2 12,2zM9.29,16.29L5.7,12.7c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L10,14.17l6.88,-6.88c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41l-7.59,7.59c-0.38,0.39 -1.02,0.39 -1.41,0z"/>
         </Viewbox>
 
         <Viewbox Width="25" Height="25" Grid.Column="3"
                  HorizontalAlignment="Left" Margin="0 0 0 3"
-                 Visibility="{Binding SourceFileReadFail}">
+                 Visibility="{Binding SourceFileReadFail, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Path Fill="#FF5661" Data="M12,2C6.47,2 2,6.47 2,12s4.47,10 10,10 10,-4.47 10,-10S17.53,2 12,2zM16.3,16.3c-0.39,0.39 -1.02,0.39 -1.41,0L12,13.41 9.11,16.3c-0.39,0.39 -1.02,0.39 -1.41,0 -0.39,-0.39 -0.39,-1.02 0,-1.41L10.59,12 7.7,9.11c-0.39,-0.39 -0.39,-1.02 0,-1.41 0.39,-0.39 1.02,-0.39 1.41,0L12,10.59l2.89,-2.89c0.39,-0.39 1.02,-0.39 1.41,0 0.39,0.39 0.39,1.02 0,1.41L13.41,12l2.89,2.89c0.38,0.38 0.38,1.02 0,1.41z"/>
         </Viewbox>
         
@@ -85,7 +85,7 @@
                 IsEnabled="{Binding ReplaceIsClickable}"
                 Click="PerformReplacementsOnAllFiles_OnClick"/>
 
-        <dropdownmenu:DropdownMenu Width="25" Height="15"
+        <dropdownmenu:DropdownMenu Width="25" Height="30"
                                    Grid.Column="5" HorizontalAlignment="Left"
                                    Style="{StaticResource DropdownMenuRightOffsetTheme}">
             <Border BorderBrush="{DynamicResource BtnDark}" BorderThickness="2">
@@ -102,7 +102,7 @@
                                            FontFamily="/Fonts/#Poppins" FontSize="12"
                                            FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
                                 <TextBlock Grid.Column="1" HorizontalAlignment="Right"
-                                           Text="✓" Visibility="{Binding WholeWord}"
+                                           Text="✓" Visibility="{Binding WholeWord, Converter={StaticResource BooleanToVisibilityConverter}}"
                                            FontFamily="/Fonts/#Poppins" FontSize="12"
                                            FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
                             </Grid>
@@ -117,42 +117,78 @@
                                     <ColumnDefinition/>
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Case sensitive" Padding="0 0 15 0"
-                                   FontFamily="/Fonts/#Poppins" FontSize="12"
-                                   FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
+                                <TextBlock Text="Match case" Padding="0 0 15 0"
+                                           FontFamily="/Fonts/#Poppins" FontSize="12"
+                                           FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
                                 <TextBlock Grid.Column="1" HorizontalAlignment="Right"
-                                   Text="✓" Visibility="{Binding CaseSensitive}"
-                                   FontFamily="/Fonts/#Poppins" FontSize="12"
-                                   FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
+                                           Text="✓" Visibility="{Binding CaseSensitive, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                           FontFamily="/Fonts/#Poppins" FontSize="12"
+                                           FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
                             </Grid>
                         </Button.Content>
                     </Button>
 
-                    <!--Output directory option-->
-                    <Button Command="{Binding ChangeOutputDirectory}">
+                    <!--Case sensitive option-->
+                    <Button Command="{Binding TogglePreserveCaseCommand}">
+                        <Button.Content>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="20"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Preserve case" Padding="0 0 15 0"
+                                           FontFamily="/Fonts/#Poppins" FontSize="12"
+                                           FontWeight="Medium" Foreground="{StaticResource TextLight}"/>
+                                <TextBlock Grid.Column="1" HorizontalAlignment="Right"
+                                           Text="✓" Visibility="{Binding PreserveCase, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                           FontFamily="/Fonts/#Poppins" FontSize="12"
+                                           FontWeight="Heavy" Foreground="{StaticResource TextLight}"/>
+                            </Grid>
+                        </Button.Content>
+                    </Button>
+
+                    <!--Set file type option-->
+                    <Button Click="OpenGlobalFileTypeWindow_OnClick">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="Change output directory" Padding="0 0 15 0"
+                                <TextBlock Text="Set file type" Padding="0 0 15 0"
                                            FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
+                                <Button Grid.Column="1" Margin="9 0 -4 0"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Cursor="Hand"
+                                        Style="{DynamicResource removeButtonHoverEffect}">
+                                    <Viewbox>
+                                        <Path Fill="{StaticResource TextLight}" Stretch="UniformToFill" Data="M720,840L880,680L824,624L760,688L760,521L680,521L680,688L616,624L560,680L720,840ZM560,960L560,880L880,880L880,960L560,960ZM240,800Q207,800 183.5,776.5Q160,753 160,720L160,160Q160,127 183.5,103.5Q207,80 240,80L520,80L760,320L760,441L680,441L680,360L480,360L480,160L240,160Q240,160 240,160Q240,160 240,160L240,720Q240,720 240,720Q240,720 240,720L480,720L480,800L240,800ZM240,720L240,441L240,441L240,360L240,160L240,160Q240,160 240,160Q240,160 240,160L240,720Q240,720 240,720Q240,720 240,720Z"/>
+                                    </Viewbox>
+                                </Button>
                             </Grid>
                         </Button.Content>
                     </Button>
 
-                    <!--Output file suffix option-->
-                    <Button Click="OpenFileSuffixInputWindow">
+                    <!--Set styling option-->
+                    <Button Click="OpenOutputStylingWindow_OnClick">
                         <Button.Content>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition />
                                     <ColumnDefinition Width="20"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock x:Name="suffixMenuOption" Text="Output file suffix" 
-                                           Padding="0 0 15 0" FontFamily="/Fonts/#Poppins"
-                                           Foreground="{StaticResource TextLight}"/>
+                                <TextBlock Text="Set replacement styling" Padding="0 0 15 0"
+                                           FontFamily="/Fonts/#Poppins" Foreground="{StaticResource TextLight}"/>
+                                <Button Grid.Column="1" Margin="9 0 -4 0"
+                                        HorizontalAlignment="Right"
+                                        Background="Transparent"
+                                        Cursor="Hand"
+                                        Style="{DynamicResource removeButtonHoverEffect}">
+                                    <Viewbox>
+                                        <Path Fill="{StaticResource TextLight}" Stretch="UniformToFill" Data="M480,880Q398,880 325,848.5Q252,817 197.5,762.5Q143,708 111.5,635Q80,562 80,480Q80,397 112.5,324Q145,251 200.5,197Q256,143 330,111.5Q404,80 488,80Q568,80 639,107.5Q710,135 763.5,183.5Q817,232 848.5,298.5Q880,365 880,442Q880,557 810,618.5Q740,680 640,680L566,680Q557,680 553.5,685Q550,690 550,696Q550,708 565,730.5Q580,753 580,782Q580,832 552.5,856Q525,880 480,880ZM480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480L480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480Q480,480 480,480ZM260,520Q286,520 303,503Q320,486 320,460Q320,434 303,417Q286,400 260,400Q234,400 217,417Q200,434 200,460Q200,486 217,503Q234,520 260,520ZM380,360Q406,360 423,343Q440,326 440,300Q440,274 423,257Q406,240 380,240Q354,240 337,257Q320,274 320,300Q320,326 337,343Q354,360 380,360ZM580,360Q606,360 623,343Q640,326 640,300Q640,274 623,257Q606,240 580,240Q554,240 537,257Q520,274 520,300Q520,326 537,343Q554,360 580,360ZM700,520Q726,520 743,503Q760,486 760,460Q760,434 743,417Q726,400 700,400Q674,400 657,417Q640,434 640,460Q640,486 657,503Q674,520 700,520ZM480,800Q489,800 494.5,795Q500,790 500,782Q500,768 485,749Q470,730 470,692Q470,650 499,625Q528,600 570,600L640,600Q706,600 753,561.5Q800,523 800,442Q800,321 707.5,240.5Q615,160 488,160Q352,160 256,253Q160,346 160,480Q160,613 253.5,706.5Q347,800 480,800Z"/>
+                                    </Viewbox>
+                                </Button>
                             </Grid>
                         </Button.Content>
                     </Button>
@@ -160,4 +196,20 @@
             </Border>
         </dropdownmenu:DropdownMenu>
     </Grid>
+
+    <UserControl.Resources>
+        <Style x:Key="removeButtonHoverEffect" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <ContentPresenter />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
 </UserControl>

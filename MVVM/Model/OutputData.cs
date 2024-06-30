@@ -134,7 +134,7 @@ namespace TextReplace.MVVM.Model
                     continue;
                 }
                 OutputFiles[i].NumOfReplacements = numOfReplacements;
-                Debug.WriteLine($"replacements: {numOfReplacements}");
+                Debug.WriteLine($"replacements for {Path.GetFileName(srcFiles[i])}: {numOfReplacements}");
             }
 
             return didEverythingSucceed;

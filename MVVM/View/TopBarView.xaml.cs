@@ -75,31 +75,40 @@ namespace TextReplace.MVVM.View
             TopBarViewModel.SetActiveContentView("output");
         }
 
-        private void OpenFileSuffixInputWindow(object sender, RoutedEventArgs e)
+        private void OpenGlobalFileTypeWindow_OnClick(object sender, RoutedEventArgs e)
         {
-            var viewModel = (TopBarViewModel)(DataContext);
-            TextInfo textInfo = new CultureInfo("en-US", false).TextInfo;
-
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = textInfo.ToTitleCase(suffixMenuOption.Text);
-            string body;
-            if (viewModel.Suffix != string.Empty)
-            {
-                body = $"<u>Current suffix:</u> {viewModel.Suffix}";
-            }
-            else
-            {
-                body = "Enter suffix which will be appended onto the output file names.\n" +
-                    "<u>Note:</u> This defaults to \"-replacify\"";
-            }
-            string watermark = "-replacify";
+            string title = "Output File Type";
+            string body = "Choose the type each output file will be converted to.\n" +
+                "<u>Note:</u> Excel files will not be converted";
 
-            var dialog = new PopupWindows.SetSuffixInputResetWindow(window, title, body, watermark);
+            var dialog = new PopupWindows.SetOutputFileTypeWindow(window, title, body);
             dialog.ShowDialog();
 
-            if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
+            if (dialog.BtnOk.IsChecked == true)
             {
-                viewModel.SetSuffix(dialog.InputText);
+                // yes i know calling another VM from this view is bad.
+                // ill come up with a better solution if i need to add more of this
+                OutputViewModel.SetAllOutputFileTypes(dialog.OutputFileType);
+            }
+        }
+
+        private void OpenOutputStylingWindow_OnClick(object sender, RoutedEventArgs e)
+        {
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Styling";
+            string body = "Select the styling properties that will be applied to the replacements in the output files.\n" +
+                "(For Document and Excel files only.)";
+
+            var dialog = new PopupWindows.SetOutputStylingWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
+            {
+                // yes i know calling another VM from this view is bad.
+                // ill come up with a better solution if i need to add more of this
+                OutputViewModel.SetOutputFilesStyling(dialog.Bold, dialog.Italics, dialog.Underline,
+                    dialog.Strikethrough, dialog.isHighlighted, dialog.isTextColored, dialog.HighlightColor, dialog.TextColor);
             }
         }
     }
