@@ -288,6 +288,7 @@ namespace TextReplace.MVVM.Model
                 }
 
                 ReplacePhrasesList.Insert(newIndex, replacePhrase);
+                WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             }
             catch (IndexOutOfRangeException e)
             {
@@ -319,6 +320,7 @@ namespace TextReplace.MVVM.Model
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList.Insert(index, new ReplacePhrase(item1, item2));
             SelectedPhrase = new ReplacePhrase(item1, item2);
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -345,6 +347,7 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList[index] = new ReplacePhrase(item1, item2);
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -378,6 +381,7 @@ namespace TextReplace.MVVM.Model
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesDict[item1] = item2;
             ReplacePhrasesList[index] = new ReplacePhrase(item1, item2);
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
         }
 
@@ -405,7 +409,18 @@ namespace TextReplace.MVVM.Model
 
             ReplacePhrasesDict.Remove(item1);
             ReplacePhrasesList.RemoveAt(index);
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
             return true;
+        }
+
+        /// <summary>
+        /// Clears the ReplacePhrases list and dictionary
+        /// </summary>
+        public static void RemoveAllReplacePhrases()
+        {
+            ReplacePhrasesDict.Clear();
+            ReplacePhrasesList.Clear();
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
         }
     }
 

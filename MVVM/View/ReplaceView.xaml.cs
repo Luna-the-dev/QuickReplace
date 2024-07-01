@@ -35,36 +35,19 @@ namespace TextReplace.MVVM.View
             }
         }
 
-        private void OpenCreateWindow_OnClick(object sender, RoutedEventArgs e)
+        private void OpenRemoveAllWindow_OnClick(object sender, RoutedEventArgs e)
         {
-            var viewModel = (ReplaceViewModel)DataContext;
+            var window = Window.GetWindow(sender as DependencyObject);
+            string title = "Remove All";
+            string body = "Are you sure you would like to remove all replacement phrases?";
 
-            if (viewModel.IsUnsaved)
+            var dialog = new PopupWindows.ConfirmWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnOk.IsChecked == true)
             {
-                var window = Window.GetWindow(sender as DependencyObject);
-                string title = "Save Changes";
-                string body = "There are unsaved changes to the replace phrases. Would you " +
-                    "like to save them before creating a new file or discard the unsaved changes?";
-
-                var dialog = new PopupWindows.UnsavedChangesConfirmWindow(window, title, body);
-                dialog.ShowDialog();
-
-                if (dialog.BtnSave.IsChecked == true)
-                {
-                    // if this was a new file, open "save as" dialog
-                    if (viewModel.IsNewFile)
-                    {
-                        OpenSaveAsWindow_OnClick(sender, e);
-                    }
-                    // else save the phrases to the file
-                    else
-                    {
-                        viewModel.SavePhrasesToFile();
-                    }
-                }
+                ReplaceViewModel.RemoveAllPhrases();
             }
-
-            viewModel.CreateNewReplaceFile();
         }
 
         private void OpenEditWindow_OnClick(object sender, RoutedEventArgs e)
@@ -124,6 +107,11 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
+                // if no file is selected, create a new one
+                if (viewModel.IsFileSelected == false)
+                {
+                    viewModel.CreateNewReplaceFile();
+                }
                 viewModel.AddNewPhrase(dialog.TopInputText, dialog.BottomInputText, dialog.InsertReplacePhraseAt);
             }
         }

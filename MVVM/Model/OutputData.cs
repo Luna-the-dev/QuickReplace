@@ -9,7 +9,6 @@ using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using DocumentFormat.OpenXml;
 using TextReplace.Core.Enums;
-using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace TextReplace.MVVM.Model
 {

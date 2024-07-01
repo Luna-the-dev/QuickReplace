@@ -72,8 +72,6 @@ namespace TextReplace.MVVM.ViewModel
         
         public ReplaceViewModel()
         {
-            // highlight the previously selected phrase
-            UpdateReplacePhrasesView(ReplaceData.SelectedPhrase.Item1);
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
@@ -224,6 +222,11 @@ namespace TextReplace.MVVM.ViewModel
             ReplaceData.IsUnsaved = true;
         }
 
+        public static void RemoveAllPhrases()
+        {
+            ReplaceData.RemoveAllReplacePhrases();
+        }
+
         /// <summary>
         /// Updates the replace phrases view by whether or not it should be sorted or
         /// if the user is searching for a specific phrase. Pass an empty string to deselect the phrase
@@ -351,6 +354,7 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(ReplacePhrasesMsg message)
         {
             ReplacePhrases = new ObservableCollection<ReplacePhraseWrapper>(message.Value.Select(ReplacePhraseWrapper.WrapReplacePhrase));
+            UpdateReplacePhrasesView(ReplaceData.SelectedPhrase.Item1);
         }
 
         public void Receive(SelectedReplacePhraseMsg message)
