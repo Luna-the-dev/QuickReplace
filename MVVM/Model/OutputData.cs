@@ -486,13 +486,21 @@ namespace TextReplace.MVVM.Model
                                 continue;
                             }
 
+                            bool wereReplacementsMade;
+
                             var newRuns = (styleReplacements) ?
                                 AhoCorasickHelper.GenerateExcelRuns(
                                     sharedStringItem, replacePhrases, matcher, styling,
-                                    isWholeWord, isPreserveCase, out currNumOfMatches) :
+                                    isWholeWord, isPreserveCase, out currNumOfMatches, out wereReplacementsMade) :
                                 AhoCorasickHelper.GenerateExcelRunsOriginalStyling(
                                     sharedStringItem, replacePhrases, matcher,
-                                    isWholeWord, isPreserveCase, out currNumOfMatches);
+                                    isWholeWord, isPreserveCase, out currNumOfMatches, out wereReplacementsMade);
+
+                            // dont change the sharedstringitem if no replacements were made
+                            if (wereReplacementsMade == false)
+                            {
+                                continue;
+                            }
 
                             var newSharedStringItem = GenerateSharedStringItemFromRuns(newRuns);
 
@@ -530,7 +538,13 @@ namespace TextReplace.MVVM.Model
                         var sharedStringItem = new Spreadsheet.SharedStringItem(new Spreadsheet.Text(cell.InnerText));
                         var runs = AhoCorasickHelper.GenerateExcelRuns(
                             sharedStringItem, replacePhrases, matcher, styling,
-                            isWholeWord, isPreserveCase, out currNumOfMatches);
+                            isWholeWord, isPreserveCase, out currNumOfMatches, out bool wereReplacementsMade);
+
+                        // dont change the sharedstringitem if no replacements were made
+                        if (wereReplacementsMade == false)
+                        {
+                            continue;
+                        }
 
                         var newSharedStringItem = GenerateSharedStringItemFromRuns(runs);
 

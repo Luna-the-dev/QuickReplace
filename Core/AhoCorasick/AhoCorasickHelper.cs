@@ -465,6 +465,18 @@ namespace TextReplace.Core.AhoCorasick
             return newRuns;
         }
 
+        /// <summary>
+        /// Generates a list of excel runs from a sharedstringitem, with custom styling on the replacements.
+        /// </summary>
+        /// <param name="sharedStringItem"></param>
+        /// <param name="replacePhrases"></param>
+        /// <param name="matcher"></param>
+        /// <param name="replaceStyling"></param>
+        /// <param name="wholeWord"></param>
+        /// <param name="preserveCase"></param>
+        /// <param name="numOfMatches"></param>
+        /// <param name="wereReplacementsMade"></param>
+        /// <returns>A list of excel runs containing the styled replacements.</returns>
         public static List<Spreadsheet.Run> GenerateExcelRuns(
             Spreadsheet.SharedStringItem sharedStringItem,
             Dictionary<string, string> replacePhrases,
@@ -472,7 +484,8 @@ namespace TextReplace.Core.AhoCorasick
             OutputFileStyling replaceStyling,
             bool wholeWord,
             bool preserveCase,
-            out int numOfMatches)
+            out int numOfMatches,
+            out bool wereReplacementsMade)
         {
             var newRuns = new List<Spreadsheet.Run>();
             numOfMatches = 0;
@@ -481,7 +494,7 @@ namespace TextReplace.Core.AhoCorasick
             var runs = sharedStringItem.Descendants<Spreadsheet.Run>().ToList();
             var runPtrs = new List<int>();
 
-            // if there are no runs in the paragraph, return an empty List
+            // if there are somehow no runs in the paragraph, create a run
             if (runs.Count == 0)
             {
                 runs.Add(new Spreadsheet.Run(new Spreadsheet.Text(sharedStringItem.InnerText)));
@@ -500,10 +513,15 @@ namespace TextReplace.Core.AhoCorasick
 
             // search the paragraph text for any text that should be replaced
             var matches = matcher.Search(cellText).ToList();
+
+            // if no replacements were made, return an empty list and set the
+            // wereReplacementsMade flag to false
             if (matches.Count == 0)
             {
-                return runs.ToList();
+                wereReplacementsMade = false;
+                return [];
             }
+            wereReplacementsMade = true;
 
             // this points to the position where the next run should be made
             int runPtr = 0;
@@ -611,13 +629,25 @@ namespace TextReplace.Core.AhoCorasick
             return newRuns;
         }
 
+        /// <summary>
+        /// Performs the same processing as GenerateExcelRuns, except this combines the replacement runs with the
+        /// run before them in order to cut down on the number or runs that are returned.
+        /// </summary>
+        /// <param name="sharedStringItem"></param>
+        /// <param name="replacePhrases"></param>
+        /// <param name="matcher"></param>
+        /// <param name="wholeWord"></param>
+        /// <param name="preserveCase"></param>
+        /// <param name="numOfMatches"></param>
+        /// <returns>A list of excel runs containing the styled replacements.</returns>
         public static List<Spreadsheet.Run> GenerateExcelRunsOriginalStyling(
             Spreadsheet.SharedStringItem sharedStringItem,
             Dictionary<string, string> replacePhrases,
             AhoCorasickStringSearcher matcher,
             bool wholeWord,
             bool preserveCase,
-            out int numOfMatches)
+            out int numOfMatches,
+            out bool wereReplacementsMade)
         {
             var newRuns = new List<Spreadsheet.Run>();
             numOfMatches = 0;
@@ -645,10 +675,15 @@ namespace TextReplace.Core.AhoCorasick
 
             // search the paragraph text for any text that should be replaced
             var matches = matcher.Search(cellText).ToList();
+
+            // if no replacements were made, return an empty list and set the
+            // wereReplacementsMade flag to false
             if (matches.Count == 0)
             {
-                return runs.ToList();
+                wereReplacementsMade = false;
+                return [];
             }
+            wereReplacementsMade = true;
 
             // this points to the position where the next run should be made
             int runPtr = 0;
