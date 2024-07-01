@@ -710,6 +710,8 @@ namespace TextReplace.MVVM.Model
                 SelectedFile.FileName = OutputFiles[i].FileName;
                 SelectedFile.ShortFileName = OutputFiles[i].ShortFileName;
             }
+
+            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
 
         /// <summary>
@@ -736,6 +738,8 @@ namespace TextReplace.MVVM.Model
                     SelectedFile.ShortFileName = outputFile.ShortFileName;
                 }
             }
+
+            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
     }
 
