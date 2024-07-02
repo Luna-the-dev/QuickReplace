@@ -27,7 +27,7 @@
     <Border Background="{StaticResource BackgroundColor}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="175"/>
+                <ColumnDefinition MinWidth="175" MaxWidth="250"/>
                 <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
 
