@@ -17,57 +17,14 @@
         </Style>
     </UserControl.Resources>
 
-    <Grid x:Name="root">
+    <Grid x:Name="rootGrid" SizeChanged="UpdateAnimation_OnSizeChanged">
         <StackPanel Orientation="Horizontal" x:Name="stack">
-            <StackPanel.Resources>
-                <local:NegatingConverter x:Key="NegatingConverter" />
-                <Storyboard x:Key="slide" RepeatBehavior="Forever">
-                    <DoubleAnimation From="0"
-                                     To="0"
-                                     Duration="00:00:2"
-                                     Storyboard.TargetProperty="X"
-                                     Storyboard.TargetName="translateText"/>
-                    <DoubleAnimation BeginTime="00:00:2"
-                                     From="0"
-                                     To="{Binding ActualWidth,
-                                          ElementName=rollingText,
-                                          Converter={StaticResource NegatingConverter},
-                                          ConverterParameter={x:Reference Name=root}}"
-                                     Duration="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=Duration}"
-                                     Storyboard.TargetProperty="X"
-                                     Storyboard.TargetName="translateText"/>
-                    <DoubleAnimation BeginTime="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=EndAnimationTime}"
-                                     From="{Binding ActualWidth,
-                                            ElementName=rollingText,
-                                            Converter={StaticResource NegatingConverter},
-                                            ConverterParameter={x:Reference Name=root}}"
-                                     To="{Binding ActualWidth,
-                                          ElementName=rollingText,
-                                          Converter={StaticResource NegatingConverter},
-                                          ConverterParameter={x:Reference Name=root}}"
-                                     Duration="00:00:2"
-                                     Storyboard.TargetProperty="X"
-                                     Storyboard.TargetName="translateText"/>
-                </Storyboard>
-            </StackPanel.Resources>
-
             <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=Text}"
                        x:Name="rollingText" 
                        Canvas.Left="0"                       
                        HorizontalAlignment="Stretch"
-                       VerticalAlignment="Center">
-                <TextBlock.Triggers>
-                    <EventTrigger RoutedEvent="Label.Loaded">
-                        <BeginStoryboard Storyboard="{StaticResource slide}"/>
-                    </EventTrigger>
-                    <EventTrigger RoutedEvent="Label.SizeChanged">
-                        <BeginStoryboard Storyboard="{StaticResource slide}"/>
-                    </EventTrigger>
-                </TextBlock.Triggers>
-                <TextBlock.RenderTransform>
-                    <TranslateTransform x:Name="translateText" X="0"/>
-                </TextBlock.RenderTransform>
-            </TextBlock>
+                       VerticalAlignment="Center"
+                       SizeChanged="UpdateAnimation_OnSizeChanged"/>
         </StackPanel>
     </Grid>
 

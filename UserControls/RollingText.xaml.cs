@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace TextReplace.UserControls
 {
@@ -46,30 +46,73 @@ namespace TextReplace.UserControls
         {
             InitializeComponent();
         }
-    }
 
-    public class NegatingConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        public int counter = 0;
+
+        private void UpdateAnimation_OnSizeChanged(object sender, RoutedEventArgs e)
         {
-            if (parameter is Grid par && value is double val)
+            rollingText.RenderTransform = new TranslateTransform
             {
-                // if the length of the label is shorter than the parent grid, dont animate
-                if (-val + (double)par.ActualWidth > 0)
-                {
-                    return 0;
-                }
+                X = 0,
+            };
 
-                // animate to the difference between the width of the parent element and the text
-                return -val + (double)par.ActualWidth;
-            }
-
-            return value;
+            var storyboard = CreateAnimation();
+            storyboard.Begin();
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        private Storyboard CreateAnimation()
         {
-            throw new NotImplementedException("ConvertBack not implemented.");
+            double animationWidth = CalculateAnimationWidth(rootGrid.ActualWidth, rollingText.ActualWidth);
+
+            var sb = new Storyboard();
+            sb.RepeatBehavior = RepeatBehavior.Forever;
+
+            var begin = new DoubleAnimation
+            {
+                From = 0,
+                To = 0,
+                Duration = new Duration(TimeSpan.FromSeconds(2))
+            };
+            sb.Children.Add(begin);
+            Storyboard.SetTarget(begin, rollingText);
+            Storyboard.SetTargetProperty(begin, new PropertyPath("RenderTransform.X"));
+
+            var middle = new DoubleAnimation
+            {
+                BeginTime = TimeSpan.FromSeconds(2),
+                From = 0,
+                To = animationWidth,
+                Duration = Duration,
+
+            };
+            sb.Children.Add(middle);
+            Storyboard.SetTarget(middle, rollingText);
+            Storyboard.SetTargetProperty(middle, new PropertyPath("RenderTransform.X"));
+
+            var end = new DoubleAnimation
+            {
+                BeginTime = EndAnimationTime,
+                From = animationWidth,
+                To = animationWidth,
+                Duration = new Duration(TimeSpan.FromSeconds(2))
+            };
+            sb.Children.Add(end);
+            Storyboard.SetTarget(end, rollingText);
+            Storyboard.SetTargetProperty(end, new PropertyPath("RenderTransform.X"));
+
+            return sb;
+        }
+
+        private static double CalculateAnimationWidth(double gridWidth, double textWidth)
+        {
+            // if the length of the label is shorter than the parent grid, dont animate
+            if (-textWidth + gridWidth > 0)
+            {
+                return 0;
+            }
+
+            // animate to the difference between the width of the parent element and the text
+            return -textWidth + gridWidth;
         }
     }
 }
