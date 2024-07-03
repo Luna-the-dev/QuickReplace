@@ -14,7 +14,7 @@ namespace TextReplace.Core.Validation
         {
             try
             {
-                File.Open(fileName, FileMode.Open, FileAccess.Read).Dispose();
+                File.Exists(fileName);
                 return true;
             }
             catch (ArgumentException)
