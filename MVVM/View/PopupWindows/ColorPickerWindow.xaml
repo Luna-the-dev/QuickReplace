@@ -46,7 +46,8 @@
                                         x:Name="colorPicker"
                                         Style="{StaticResource ColorPickerStyle}"
                                         ShowAlpha="False"
-                                        ShowFractionalPart="False"/>
+                                        ShowFractionalPart="False"
+                                        />
 
                 <Grid Grid.Column="1" Grid.Row="2"
                       Margin="0 10 0 0">

@@ -40,7 +40,10 @@ namespace TextReplace.MVVM.Model
         public static OutputFileStyling OutputFilesStyling
         {
             get { return _outputFilesStyling; }
-            set { _outputFilesStyling = value; }
+            set
+            {
+                _outputFilesStyling = value;
+            }
         }
 
 

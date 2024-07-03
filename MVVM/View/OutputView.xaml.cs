@@ -115,7 +115,7 @@ namespace TextReplace.MVVM.View
             if (dialog.BtnOk.IsChecked == true)
             {
                 OutputViewModel.SetOutputFilesStyling(dialog.Bold, dialog.Italics, dialog.Underline,
-                    dialog.Strikethrough, dialog.isHighlighted, dialog.isTextColored, dialog.HighlightColor, dialog.TextColor);
+                    dialog.Strikethrough, dialog.IsHighlighted, dialog.IsTextColored, dialog.HighlightColor, dialog.TextColor);
             }
         }
 

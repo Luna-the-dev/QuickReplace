@@ -1,7 +1,5 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Forms;
 using System.Windows.Media;
 using TextReplace.MVVM.ViewModel.PopupWindows;
 
@@ -63,28 +61,28 @@ namespace TextReplace.MVVM.View.PopupWindows
             set { strikethroughCheckBox.IsChecked = value; }
         }
 
-        public bool isHighlighted
+        public bool IsHighlighted
         {
-            get { return ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsHighlighted; }
-            set { ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsHighlighted = value; }
+            get { return ((SetOutputStylingViewModel)DataContext).IsHighlighted; }
+            set { ((SetOutputStylingViewModel)DataContext).IsHighlighted = value; }
         }
 
-        public bool isTextColored
+        public bool IsTextColored
         {
-            get { return ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsTextColored; }
-            set { ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsTextColored = value; }
+            get { return ((SetOutputStylingViewModel)DataContext).IsTextColored; }
+            set { ((SetOutputStylingViewModel)DataContext).IsTextColored = value; }
         }
 
         public Color HighlightColor
         {
-            get { return ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.HighlightColor; }
-            set { ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.HighlightColor = value; }
+            get { return ((SetOutputStylingViewModel)DataContext).HighlightColor; }
+            set { ((SetOutputStylingViewModel)DataContext).HighlightColor = value; }
         }
 
         public Color TextColor
         {
-            get { return ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.TextColor; }
-            set { ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.TextColor = value; }
+            get { return ((SetOutputStylingViewModel)DataContext).TextColor; }
+            set { ((SetOutputStylingViewModel)DataContext).TextColor = value; }
         }
 
         public SetOutputStylingWindow()
@@ -105,42 +103,49 @@ namespace TextReplace.MVVM.View.PopupWindows
 
         private void SetHighlightColor_OnClick(object sender, RoutedEventArgs e)
         {
+            var viewModel = (SetOutputStylingViewModel)DataContext;
+
             var window = GetWindow(sender as DependencyObject);
             string title = "Color Picker";
-            Color color = ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.HighlightColor;
+            Color color = viewModel.HighlightColor;
+            color.A = 0xFF;
 
             var dialog = new ColorPickerWindow(window, title, color);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                var viewModel = (SetOutputStylingViewModel)DataContext;
-                viewModel.OutputFilesStyling.HighlightColor = dialog.SelectedColor;
-                viewModel.OutputFilesStyling.IsHighlighted = true;
+                viewModel.HighlightColor = dialog.SelectedColor;
+                viewModel.IsHighlighted = true;
             }
             else if (dialog.BtnReset.IsChecked == true)
             {
-                ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsHighlighted = false;
+                viewModel.HighlightColor = new Color();
+                viewModel.IsHighlighted = false;
             }
         }
 
         private void SetTextColor_OnClick(object sender, RoutedEventArgs e)
         {
+            var viewModel = (SetOutputStylingViewModel)DataContext;
+
             var window = GetWindow(sender as DependencyObject);
             string title = "Color Picker";
+            Color color = viewModel.TextColor;
+            color.A = 0xFF;
 
-            var dialog = new ColorPickerWindow(window, title);
+            var dialog = new ColorPickerWindow(window, title, color);
             dialog.ShowDialog();
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                var viewModel = (SetOutputStylingViewModel)DataContext;
-                viewModel.OutputFilesStyling.TextColor = dialog.SelectedColor;
-                viewModel.OutputFilesStyling.IsTextColored = true;
+                viewModel.TextColor = dialog.SelectedColor;
+                viewModel.IsTextColored = true;
             }
             else if (dialog.BtnReset.IsChecked == true)
             {
-                ((SetOutputStylingViewModel)DataContext).OutputFilesStyling.IsTextColored = false;
+                viewModel.TextColor = new Color();
+                viewModel.IsTextColored = false;
             }
         }
 

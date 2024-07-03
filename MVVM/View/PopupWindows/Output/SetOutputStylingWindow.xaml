@@ -167,6 +167,16 @@
                                Foreground="{StaticResource TextLight}"
                                FontFamily="/Fonts/#Poppins"/>
 
+                    <Border Margin="0 0 8 3"
+                            Height="17" Width="17"
+                            Visibility="{Binding IsHighlighted, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            d:Visibility="Visible"
+                            Background="{DynamicResource HighlightColorBrush}"
+                            HorizontalAlignment="Right"
+                            BorderThickness="2"
+                            BorderBrush="{StaticResource TextLight}"
+                            CornerRadius="2"/>
+
                     <Button Grid.Column="1" Margin="1 1 1 6"
                             x:Name="highlightButton"
                             HorizontalAlignment="Right"
@@ -193,6 +203,16 @@
                                FontSize="13"
                                Foreground="{StaticResource TextLight}"
                                FontFamily="/Fonts/#Poppins"/>
+
+                    <Border Margin="0 0 8 3"
+                            Height="17" Width="17"
+                            Visibility="{Binding IsTextColored, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            d:Visibility="Visible"
+                            Background="{DynamicResource TextColorBrush}"
+                            HorizontalAlignment="Right"
+                            BorderThickness="2"
+                            BorderBrush="{StaticResource TextLight}"
+                            CornerRadius="2"/>
 
                     <Button Grid.Column="1" Margin="1 1 1 6"
                             x:Name="textColorButton"
@@ -225,6 +245,9 @@
     </Grid>
 
     <Window.Resources>
+        <SolidColorBrush x:Key="HighlightColorBrush" Color="{Binding HighlightColor}"/>
+        <SolidColorBrush x:Key="TextColorBrush" Color="{Binding TextColor}"/>
+
         <Style x:Key="removeButtonHoverEffect" TargetType="{x:Type Button}">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0"/>
