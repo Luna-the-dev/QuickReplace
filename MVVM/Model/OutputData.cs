@@ -149,6 +149,7 @@ namespace TextReplace.MVVM.Model
                 Debug.WriteLine($"replacements for {Path.GetFileName(srcFiles[i])}: {numOfReplacements}");
             }
 
+            WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
             return didEverythingSucceed;
         }
 

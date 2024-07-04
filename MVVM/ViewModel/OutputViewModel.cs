@@ -76,18 +76,24 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
-        public static async void ReplaceAll(bool openFileLocation)
+        public static async Task ReplaceAll(bool openFileLocation)
         {
-            OutputData.OpenFileLocation = openFileLocation;
-            await PerformReplacements(
-                OutputData.OutputFiles.Select(x => x.SourceFileName).ToList(),
-                OutputData.OutputFiles.Select(x => x.FileName).ToList());
+            await Task.Run(() =>
+            {
+                OutputData.OpenFileLocation = openFileLocation;
+                PerformReplacements(
+                    OutputData.OutputFiles.Select(x => x.SourceFileName).ToList(),
+                    OutputData.OutputFiles.Select(x => x.FileName).ToList());
+            });
         }
 
-        public static async void ReplaceSelected(bool openFileLocation)
+        public static async Task ReplaceSelected(bool openFileLocation)
         {
-            OutputData.OpenFileLocation = openFileLocation;
-            await PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
+            await Task.Run(() =>
+            {
+                OutputData.OpenFileLocation = openFileLocation;
+                PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
+            });
         }
 
         private void SetSelectedFile(object? file)
@@ -118,34 +124,31 @@ namespace TextReplace.MVVM.ViewModel
             OutputData.PreserveCase = !OutputData.PreserveCase;
         }
 
-        private static async Task PerformReplacements(List<string> sourceFiles, List<string> destFiles)
+        private static void PerformReplacements(List<string> sourceFiles, List<string> destFiles)
         {
-            await Task.Run(() =>
+            if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
             {
-                if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
-                {
-                    Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
-                    return;
-                }
+                Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
+                return;
+            }
 
-                // perform the text replacements
-                bool result = OutputData.PerformReplacements(
-                    ReplaceData.ReplacePhrasesDict,
-                    sourceFiles,
-                    destFiles,
-                    OutputData.WholeWord,
-                    OutputData.CaseSensitive,
-                    OutputData.PreserveCase);
+            // perform the text replacements
+            bool result = OutputData.PerformReplacements(
+                ReplaceData.ReplacePhrasesDict,
+                sourceFiles,
+                destFiles,
+                OutputData.WholeWord,
+                OutputData.CaseSensitive,
+                OutputData.PreserveCase);
 
-                if (result == false)
-                {
-                    Debug.WriteLine("A replacement could not be made.");
-                }
-                else
-                {
-                    Debug.WriteLine("Replacements successfully performed.");
-                }
-            });
+            if (result == false)
+            {
+                Debug.WriteLine("A replacement could not be made.");
+            }
+            else
+            {
+                Debug.WriteLine("Replacements successfully performed.");
+            }
         }
 
         public void SetSelectedOutputFileType(OutputFileTypeEnum fileType)

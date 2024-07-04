@@ -24,7 +24,7 @@ namespace TextReplace.MVVM.View
             }
         }
 
-        private void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
+        private async void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Replacify";
@@ -38,7 +38,7 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
-            OutputViewModel.ReplaceAll(dialog.OpenFileLocation);
+            await OutputViewModel.ReplaceAll(dialog.OpenFileLocation);
 
             if (dialog.OpenFileLocation == false)
             {
@@ -66,7 +66,7 @@ namespace TextReplace.MVVM.View
             }
         }
 
-        private void PerformReplacementsOnSelectedFile_OnClick(object sender, RoutedEventArgs e)
+        private async void PerformReplacementsOnSelectedFile_OnClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Replacify";
@@ -80,7 +80,7 @@ namespace TextReplace.MVVM.View
                 return;
             }
 
-            OutputViewModel.ReplaceSelected(dialog.OpenFileLocation);
+            await OutputViewModel.ReplaceSelected(dialog.OpenFileLocation);
 
             if (dialog.OpenFileLocation == false)
             {
