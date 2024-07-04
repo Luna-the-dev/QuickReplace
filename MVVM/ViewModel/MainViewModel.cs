@@ -20,6 +20,8 @@ namespace TextReplace.MVVM.ViewModel
         public TopBarViewModel TopBarVm = new TopBarViewModel();
         public SideBarViewModel SideBarVm = new SideBarViewModel();
 
+        public static bool isRegistered = false;
+
         public MainViewModel()
         {
             // set the home view as default
@@ -28,7 +30,10 @@ namespace TextReplace.MVVM.ViewModel
             _topBarView = TopBarVm;
             _sideBarView = SideBarVm;
 
-            WeakReferenceMessenger.Default.Register(this);
+            if (isRegistered == false)
+            {
+                WeakReferenceMessenger.Default.Register(this);
+            }
         }
 
         public void Receive(ActiveContentViewMsg message)

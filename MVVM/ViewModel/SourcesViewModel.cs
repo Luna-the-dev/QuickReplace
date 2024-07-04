@@ -50,9 +50,14 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
 
+        public static bool isRegistered = false;
+
         public SourcesViewModel()
         {
-            WeakReferenceMessenger.Default.RegisterAll(this);
+            if (isRegistered == false)
+            {
+                WeakReferenceMessenger.Default.RegisterAll(this);
+            }
         }
 
         private void SetSelectedFile(object? file)

@@ -65,10 +65,15 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
         public RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
 
+        public static bool isRegistered = false;
+
         public OutputViewModel()
         {
             SetIsReplacifyEnabled();
-            WeakReferenceMessenger.Default.RegisterAll(this);
+            if (isRegistered == false)
+            {
+                WeakReferenceMessenger.Default.RegisterAll(this);
+            }
         }
 
         public static async void ReplaceAll(bool openFileLocation)
@@ -132,9 +137,6 @@ namespace TextReplace.MVVM.ViewModel
                     OutputData.CaseSensitive,
                     OutputData.PreserveCase);
 
-                Debug.WriteLine("Output file names:");
-                destFiles.ForEach(o => Debug.WriteLine($"\t{o}"));
-
                 if (result == false)
                 {
                     Debug.WriteLine("A replacement could not be made.");
@@ -195,6 +197,11 @@ namespace TextReplace.MVVM.ViewModel
             IsReplacifyEnabled = true;
             AreFilesNeeded = false;
             DoOutputFilesExist = true;
+        }
+
+        public static void SetRetryReplacementsOnFile(bool retryReplacementsOnFile)
+        {
+            OutputData.RetryReplacementsOnFile = retryReplacementsOnFile;
         }
 
         /// <summary>

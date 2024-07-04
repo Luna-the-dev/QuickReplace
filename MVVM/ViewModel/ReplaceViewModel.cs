@@ -69,10 +69,15 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
+
+        public static bool isRegistered = false;
         
         public ReplaceViewModel()
         {
-            WeakReferenceMessenger.Default.RegisterAll(this);
+            if (isRegistered == false)
+            {
+                WeakReferenceMessenger.Default.RegisterAll(this);
+            }
         }
 
         /// <summary>
@@ -343,6 +348,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(ReplaceFileNameMsg message)
         {
+            Debug.WriteLine($"{message.Value}");
             FullFileName = message.Value;
         }
 

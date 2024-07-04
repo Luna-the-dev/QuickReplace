@@ -46,6 +46,9 @@
     <Compile Update="MVVM\View\PopupWindows\ColorPickerWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="MVVM\View\PopupWindows\Output\SkipOutputFileWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="MVVM\View\PopupWindows\Output\SetOutputStylingWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -54,9 +54,14 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
         public RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
 
+        public static bool isRegistered = false;
+
         public TopBarViewModel()
         {
-            WeakReferenceMessenger.Default.RegisterAll(this);
+            if (isRegistered == false)
+            {
+                WeakReferenceMessenger.Default.RegisterAll(this);
+            }
         }
 
         private void ToggleWholeWord()

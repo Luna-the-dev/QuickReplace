@@ -15,9 +15,14 @@ namespace TextReplace.MVVM.ViewModel
         public static RelayCommand SourcesViewCommand => new RelayCommand(SourcesView);
         public static RelayCommand OutputViewCommand => new RelayCommand(OutputView);
 
+        public static bool isRegistered = false;
+
         public SideBarViewModel()
         {
-            WeakReferenceMessenger.Default.Register(this);
+            if (isRegistered == false)
+            {
+                WeakReferenceMessenger.Default.Register(this);
+            }
         }
 
         public static void ReplaceView()

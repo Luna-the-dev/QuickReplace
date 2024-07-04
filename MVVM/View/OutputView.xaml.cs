@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using TextReplace.Messages.Output;
 using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
@@ -9,11 +10,18 @@ namespace TextReplace.MVVM.View
     /// <summary>
     /// Interaction logic for OutputView.xaml
     /// </summary>
-    public partial class OutputView : UserControl
+    public partial class OutputView : UserControl,
+        IRecipient<SkipOutputFileMsg>
     {
+        public static bool isRegistered = false;
+
         public OutputView()
         {
             InitializeComponent();
+            if (isRegistered == false)
+            {
+                WeakReferenceMessenger.Default.RegisterAll(this);
+            }
         }
 
         private void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
@@ -39,8 +47,23 @@ namespace TextReplace.MVVM.View
 
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file
-            string filePath = ((OutputViewModel)DataContext).OutputFiles[0].FileName;
-            Process.Start("explorer.exe", "/select, " + filePath);
+            var viewModel = (OutputViewModel)DataContext;
+            string filePath = "";
+
+            foreach (var file in viewModel.OutputFiles)
+            {
+                // if there was an error when writing to the file, dont attempt to open it
+                if (file.NumOfReplacements < 0)
+                {
+                    continue;
+                }
+                filePath = file.FileName;
+            }
+
+            if (filePath != string.Empty)
+            {
+                Process.Start("explorer.exe", "/select, " + filePath);
+            }
         }
 
         private void PerformReplacementsOnSelectedFile_OnClick(object sender, RoutedEventArgs e)
@@ -66,7 +89,15 @@ namespace TextReplace.MVVM.View
 
             // if the user selected to topen the file location,
             // open the file explorer and highlight the first generated file
-            string? filePath = ((OutputViewModel)DataContext).SelectedFile.FileName;
+            var viewModel = (OutputViewModel)DataContext;
+
+            // if there was an error when writing to the file, dont attempt to open it
+            if (viewModel.SelectedFile.NumOfReplacements < 0)
+            {
+                return;
+            }
+
+            string? filePath = viewModel.SelectedFile.FileName;
             Process.Start("explorer.exe", "/select, " + filePath);
         }
 
@@ -117,6 +148,43 @@ namespace TextReplace.MVVM.View
                 OutputViewModel.SetOutputFilesStyling(dialog.Bold, dialog.Italics, dialog.Underline,
                     dialog.Strikethrough, dialog.IsHighlighted, dialog.IsTextColored, dialog.HighlightColor, dialog.TextColor);
             }
+        }
+
+        private void OpenSkipOutputFileWindow(string fileName, bool fileIsInUse)
+        {
+            var window = Window.GetWindow(this);
+            string title = "Error";
+            string body;
+            
+            if (fileIsInUse)
+            {
+                body = $"Replacements could not be performed on <u>{fileName}</u> because the file is already in use.";
+            }
+            else
+            {
+                body = $"There was an unexpected error while performing the replacements on <u>{fileName}</u>.";
+            }
+
+            var dialog = new PopupWindows.SkipOutputFileWindow(window, title, body);
+            dialog.ShowDialog();
+
+            if (dialog.BtnRetry.IsChecked == true)
+            {
+                OutputViewModel.SetRetryReplacementsOnFile(true);
+            }
+            else if (dialog.BtnSkip.IsChecked == true)
+            {
+                OutputViewModel.SetRetryReplacementsOnFile(false);
+            }
+        }
+
+        void IRecipient<SkipOutputFileMsg>.Receive(SkipOutputFileMsg message)
+        {
+            // this is needed because this message is likely sent from another thread
+            Dispatcher.Invoke(() =>
+            {
+                OpenSkipOutputFileWindow(fileName: message.Value.Item1, fileIsInUse: message.Value.Item2);
+            });
         }
 
         /// <summary>

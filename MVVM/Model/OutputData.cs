@@ -9,6 +9,7 @@ using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
 using DocumentFormat.OpenXml;
 using TextReplace.Core.Enums;
+using TextReplace.Messages.Output;
 
 namespace TextReplace.MVVM.Model
 {
@@ -87,6 +88,15 @@ namespace TextReplace.MVVM.Model
             set { _openFileLocation = value; }
         }
 
+        // flag used in PerformReplacements() to determine whether to skip the file or retry
+        // the replacements after an exception was thrown
+        private static bool _retryReplacementsOnFile = false;
+        public static bool RetryReplacementsOnFile
+        {
+            get { return _retryReplacementsOnFile; }
+            set { _retryReplacementsOnFile = value; }
+        }
+
 
         /// <summary>
         /// Searches through a list of source files, looking for instances of keys from 
@@ -143,8 +153,8 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
-        /// A wrapper function for MatchAndWrite() and MatchAndWriteWholeWord() in order
-        /// to cut down on the number of if/else checks inside of loops.
+        /// Continually attempts to perform the replacements on a source file and write it to a destination file.
+        /// Will keep attempting until it is either successful or the RetryReplacementsOnFile flag is false.
         /// </summary>
         /// <param name="replacePhrases"></param>
         /// <param name="src"></param>
@@ -152,8 +162,33 @@ namespace TextReplace.MVVM.Model
         /// <param name="matcher"></param>
         /// <param name="wholeWord"></param>
         /// <param name="preserveCase"></param>
-        /// <returns>False is some exception was thrown.</returns>
+        /// <returns>The number of replacements that were made. Returns -1 if the replacements could not be made.</returns>
         private static int WriteReplacementsToFile(Dictionary<string, string> replacePhrases,
+            string src, string dest, AhoCorasickStringSearcher matcher, bool wholeWord, bool preserveCase)
+        {
+            int numOfReplacements;
+
+            do
+            {
+                // will be -1 if an error was thrown
+                numOfReplacements = TryWriteReplacementsToFile(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+            }
+            while (numOfReplacements == -1 && RetryReplacementsOnFile);
+
+            return numOfReplacements;
+        }
+
+        /// <summary>
+        /// Attempts to perform the replacements on a source file and write it to a destination file.
+        /// </summary>
+        /// <param name="replacePhrases"></param>
+        /// <param name="src"></param>
+        /// <param name="dest"></param>
+        /// <param name="matcher"></param>
+        /// <param name="wholeWord"></param>
+        /// <param name="preserveCase"></param>
+        /// <returns>The number of replacements that were made. Returns -1 if an exception was thrown.</returns>
+        private static int TryWriteReplacementsToFile(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool wholeWord, bool preserveCase)
         {
             int numOfReplacements = -1;
@@ -200,10 +235,22 @@ namespace TextReplace.MVVM.Model
 
                 throw new NotSupportedException($"Replace operation not supported for file type {Path.GetExtension(src)}");
             }
+            catch (IOException e)
+            {
+                Debug.WriteLine(e);
+                Debug.WriteLine($"Failed to write from {src} to {dest}");
+                // the true is a flag for whether the exception is caused due to the file already being in use
+                var message = (Path.GetFileName(dest), true);
+                WeakReferenceMessenger.Default.Send(new SkipOutputFileMsg(message));
+                return -1;
+            }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
                 Debug.WriteLine($"Failed to write from {src} to {dest}");
+                // the false is a flag for whether the exception is caused due to the file already being in use
+                var message = (Path.GetFileName(dest), false);
+                WeakReferenceMessenger.Default.Send(new SkipOutputFileMsg(message));
                 return -1;
             }
         }
