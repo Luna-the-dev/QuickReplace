@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextReplace", "TextReplace\TextReplace.csproj", "{6CAC15A4-E87C-49B6-A005-8020EE9D8027}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextReplace.Tests", "TextReplace.Test\TextReplace.Tests.csproj", "{8C4BF8E1-B0CE-4B91-B5F2-4CCEC20C0994}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6CAC15A4-E87C-49B6-A005-8020EE9D8027}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CAC15A4-E87C-49B6-A005-8020EE9D8027}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CAC15A4-E87C-49B6-A005-8020EE9D8027}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CAC15A4-E87C-49B6-A005-8020EE9D8027}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C4BF8E1-B0CE-4B91-B5F2-4CCEC20C0994}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C4BF8E1-B0CE-4B91-B5F2-4CCEC20C0994}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C4BF8E1-B0CE-4B91-B5F2-4CCEC20C0994}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C4BF8E1-B0CE-4B91-B5F2-4CCEC20C0994}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C33824DE-3684-4174-993F-7C80B9F45653}
+	EndGlobalSection
+EndGlobal
