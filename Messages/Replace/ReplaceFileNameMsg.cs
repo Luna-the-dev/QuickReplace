@@ -2,7 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class ReplaceFileNameMsg(string value) : ValueChangedMessage<string>(value)
+    public class ReplaceFileNameMsg(string value) : ValueChangedMessage<string>(value)
     {
     }
 }

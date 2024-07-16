@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using DocumentFormat.OpenXml.EMMA;
 using GongSolutions.Wpf.DragDrop;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -12,7 +13,7 @@ using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class ReplaceViewModel : ObservableRecipient,
+    public partial class ReplaceViewModel : ObservableRecipient,
         IRecipient<ReplaceFileNameMsg>,
         IRecipient<IsNewReplacementsFileMsg>,
         IRecipient<ReplacePhrasesMsg>,
@@ -154,23 +155,31 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
-        public void AddNewPhrase(string item1, string item2, InsertReplacePhraseAtEnum insertAt)
+        /// <summary>
+        /// Adds a new replace phrase to the ReplacePhrases List/Dict, and updates the SelectedPhrase to this phrase.
+        /// </summary>
+        /// <param name="item1"></param>
+        /// <param name="item2"></param>
+        /// <param name="insertAt"></param>
+        /// <returns>True is successful, false if something went wrong.</returns>
+        public bool AddNewPhrase(string item1, string item2, InsertReplacePhraseAtEnum insertAt)
         {
             int index = InsertReplacePhraseIndex(insertAt);
             if (index == -1)
             {
                 Debug.WriteLine("Selected phrase index could not be found, new phrase not added.");
-                return;
+                return false;
             }
 
             bool res = ReplaceData.AddReplacePhrase(item1, item2, index);
             if (res == false)
             {
                 Debug.WriteLine("New phrase could not be added.");
-                return;
+                return false;
             }
             UpdateReplacePhrasesView(item1);
             ReplaceData.IsUnsaved = true;
+            return true;
         }
 
         /// <summary>
@@ -178,12 +187,13 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         /// <param name="item1"></param>
         /// <param name="item2"></param>
-        public void EditSelectedPhrase(string item1, string item2)
+        /// <returns>True is successful, false if something went wrong.</returns>
+        public bool EditSelectedPhrase(string item1, string item2)
         {
             if (item1 == string.Empty)
             {
                 Debug.WriteLine("Item1 from EditSelectedPhrase() is empty.");
-                return;
+                return false;
             }
 
             bool res;
@@ -203,33 +213,61 @@ namespace TextReplace.MVVM.ViewModel
             if (res == false)
             {
                 Debug.WriteLine("Phrase could not be edited.");
-                return;
+                return false;
             }
+            ReplaceData.SelectedPhrase = new ReplacePhrase(item1, item2);
             UpdateReplacePhrasesView(item1);
             ReplaceData.IsUnsaved = true;
+            return true;
         }
 
-        public void RemoveSelectedPhrase()
+        /// <summary>
+        /// Removes the selected phrase from the ReplacePhrases List/Dict
+        /// </summary>
+        /// <returns>True is successful, false if something went wrong.</returns>
+        public bool RemoveSelectedPhrase()
         {
             if (string.IsNullOrEmpty(SelectedPhrase.Item1))
             {
                 Debug.WriteLine("Selected phrase is empty");
-                return;
+                return false;
             }
 
             bool res = ReplaceData.RemoveReplacePhrase(SelectedPhrase.Item1);
             if (res == false)
             {
                 Debug.WriteLine("Phrase could not be removed.");
-                return;
+                return false;
             }
+            ReplaceData.SelectedPhrase = new ReplacePhrase();
             UpdateReplacePhrasesView("");
             ReplaceData.IsUnsaved = true;
+            return true;
         }
 
+        /// <summary>
+        /// Removes all phrases from the ReplacePhrases List/Dict
+        /// </summary>
         public static void RemoveAllPhrases()
         {
             ReplaceData.RemoveAllReplacePhrases();
+        }
+
+        /// <summary>
+        /// Moves a replace phrase in the ReplacePhrasesList from its current position to a new index
+        /// </summary>
+        /// <param name="oldIndex"></param>
+        /// <param name="newIndex"></param>
+        public void MoveReplacePhrase(int oldIndex, int newIndex)
+        {
+            // the item was dropped into the same position was it was in before. do nothing
+            if (newIndex == oldIndex || newIndex == oldIndex + 1)
+            {
+                return;
+            }
+
+            ReplaceData.MoveReplacePhrase(oldIndex, newIndex);
+            UpdateReplacePhrasesView(SelectedPhrase.Item1);
         }
 
         /// <summary>
@@ -334,21 +372,13 @@ namespace TextReplace.MVVM.ViewModel
                 return;
             }
 
-            // the item was dropped into the same position was it was in before. do nothing
-            if (dropInfo.InsertIndex == oldIndex || dropInfo.InsertIndex == oldIndex + 1)
-            {
-                return;
-            }
-
-            ReplaceData.MoveReplacePhrase(oldIndex, dropInfo.InsertIndex);
-            UpdateReplacePhrasesView(SelectedPhrase.Item1);
+            MoveReplacePhrase(oldIndex, dropInfo.InsertIndex);
         }
 
         // Message receivers
 
         public void Receive(ReplaceFileNameMsg message)
         {
-            Debug.WriteLine($"{message.Value}");
             FullFileName = message.Value;
         }
 
@@ -387,7 +417,7 @@ namespace TextReplace.MVVM.ViewModel
     /// <param name="item1"></param>
     /// <param name="item2"></param>
     /// <param name="isSelected"></param>
-    class ReplacePhraseWrapper
+    public class ReplacePhraseWrapper
     {
         public string Item1 { get; set; }
         public string Item2 { get; set; }

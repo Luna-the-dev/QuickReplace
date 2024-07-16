@@ -14,7 +14,7 @@ using ClosedXML.Excel;
 
 namespace TextReplace.MVVM.Model
 {
-    class ReplaceData
+    public class ReplaceData
     {
         private static string _fileName = string.Empty;
         public static string FileName

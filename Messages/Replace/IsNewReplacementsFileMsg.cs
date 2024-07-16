@@ -2,7 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class IsNewReplacementsFileMsg(bool value) : ValueChangedMessage<bool>(value)
+    public class IsNewReplacementsFileMsg(bool value) : ValueChangedMessage<bool>(value)
     {
     }
 }
