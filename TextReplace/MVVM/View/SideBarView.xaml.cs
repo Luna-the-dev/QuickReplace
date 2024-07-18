@@ -1,5 +1,6 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Data;
+using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
 {
@@ -11,6 +12,10 @@ namespace TextReplace.MVVM.View
         public SideBarView()
         {
             InitializeComponent();
+
+            var viewModel = (SideBarViewModel)DataContext;
+            Loaded += (s, e) => viewModel.IsActive = true;
+            Unloaded += (s, e) => viewModel.IsActive = false;
         }
     }
 

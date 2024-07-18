@@ -216,7 +216,7 @@ namespace TextReplace.MVVM.Model
         }
     }
 
-    class SourceFile
+    public class SourceFile
     {
         public string FileName { get; set; }
         public string ShortFileName { get; set; }

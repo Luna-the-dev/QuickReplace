@@ -13,15 +13,13 @@ namespace TextReplace.MVVM.View
     public partial class OutputView : UserControl,
         IRecipient<SkipOutputFileMsg>
     {
-        public static bool isRegistered = false;
-
         public OutputView()
         {
             InitializeComponent();
-            if (isRegistered == false)
-            {
-                WeakReferenceMessenger.Default.RegisterAll(this);
-            }
+
+            var viewModel = (OutputViewModel)DataContext;
+            Loaded += (s, e) => viewModel.IsActive = true;
+            Unloaded += (s, e) => viewModel.IsActive = false;
         }
 
         private async void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)

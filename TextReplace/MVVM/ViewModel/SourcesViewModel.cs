@@ -11,7 +11,7 @@ using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class SourcesViewModel : ObservableRecipient,
+    public partial class SourcesViewModel : ObservableRecipient,
         IRecipient<SourceFilesMsg>,
         IRecipient<SelectedSourceFileMsg>,
         IRecipient<DefaultSourceFileOptionsMsg>,
@@ -50,14 +50,9 @@ namespace TextReplace.MVVM.ViewModel
 
         public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
 
-        public static bool isRegistered = false;
-
-        public SourcesViewModel()
+        protected override void OnActivated()
         {
-            if (isRegistered == false)
-            {
-                WeakReferenceMessenger.Default.RegisterAll(this);
-            }
+            WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
         private void SetSelectedFile(object? file)
@@ -216,7 +211,7 @@ namespace TextReplace.MVVM.ViewModel
         }
     }
 
-    class SourceFileWrapper
+    public class SourceFileWrapper
     {
         public string FileName { get; set; }
         public string ShortFileName { get; set; }

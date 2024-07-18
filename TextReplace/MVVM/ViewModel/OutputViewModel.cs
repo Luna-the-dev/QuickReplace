@@ -65,15 +65,14 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
         public RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
 
-        public static bool isRegistered = false;
-
         public OutputViewModel()
         {
             SetIsReplacifyEnabled();
-            if (isRegistered == false)
-            {
-                WeakReferenceMessenger.Default.RegisterAll(this);
-            }
+        }
+
+        protected override void OnActivated()
+        {
+            WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
         public static async Task ReplaceAll(bool openFileLocation)

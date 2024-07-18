@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
 {
@@ -10,6 +11,10 @@ namespace TextReplace.MVVM.View
         public MainWindow()
         {
             InitializeComponent();
+
+            var viewModel = (MainViewModel)DataContext;
+            Loaded += (s, e) => viewModel.IsActive = true;
+            Unloaded += (s, e) => viewModel.IsActive = false;
         }
     }
 }

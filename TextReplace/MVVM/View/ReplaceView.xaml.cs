@@ -16,6 +16,10 @@ namespace TextReplace.MVVM.View
         public ReplaceView()
         {
             InitializeComponent();
+
+            var viewModel = (ReplaceViewModel)DataContext;
+            Loaded += (s, e) => viewModel.IsActive = true;
+            Unloaded += (s, e) => viewModel.IsActive = false;
         }
 
         private void OpenUploadWindow_OnClick(object sender, RoutedEventArgs e)

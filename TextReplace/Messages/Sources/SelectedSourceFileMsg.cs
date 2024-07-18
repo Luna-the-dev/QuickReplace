@@ -3,7 +3,7 @@ using TextReplace.MVVM.Model;
 
 namespace TextReplace.Messages.Replace
 {
-    class SelectedSourceFileMsg(SourceFile value) : ValueChangedMessage<SourceFile>(value)
+    public class SelectedSourceFileMsg(SourceFile value) : ValueChangedMessage<SourceFile>(value)
     {
     }
 }

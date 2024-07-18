@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using DocumentFormat.OpenXml.EMMA;
 using GongSolutions.Wpf.DragDrop;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -46,7 +45,7 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         [ObservableProperty]
-        private bool _doesReplacePhraseExist = (ReplaceData.ReplacePhrasesList.Count > 0);
+        private bool _doesReplacePhraseExist = ReplaceData.ReplacePhrasesList.Count > 0;
 
         [ObservableProperty]
         private bool _sortReplacePhrases = ReplaceData.IsSorted;
@@ -71,14 +70,9 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
         public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
 
-        public static bool isRegistered = false;
-        
-        public ReplaceViewModel()
+        protected override void OnActivated()
         {
-            if (isRegistered == false)
-            {
-                WeakReferenceMessenger.Default.RegisterAll(this);
-            }
+            WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
         /// <summary>
@@ -340,8 +334,6 @@ namespace TextReplace.MVVM.ViewModel
             {
                 ReplaceData.SelectedPhrase = new ReplacePhrase();
             }
-
-            DoesReplacePhraseExist = ReplacePhrases.Count > 0;
         }
 
         /// <summary>
@@ -388,7 +380,6 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         // Message receivers
-
         public void Receive(ReplaceFileNameMsg message)
         {
             FullFileName = message.Value;
@@ -401,7 +392,6 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(ReplacePhrasesMsg message)
         {
-            ReplacePhrases = new ObservableCollection<ReplacePhraseWrapper>(message.Value.Select(ReplacePhraseWrapper.WrapReplacePhrase));
             UpdateReplacePhrasesView(ReplaceData.SelectedPhrase.Item1);
         }
 

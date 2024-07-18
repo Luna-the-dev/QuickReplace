@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using TextReplace.MVVM.ViewModel;
@@ -14,6 +13,10 @@ namespace TextReplace.MVVM.View
         public TopBarView()
         {
             InitializeComponent();
+
+            var viewModel = (TopBarViewModel)DataContext;
+            Loaded += (s, e) => viewModel.IsActive = true;
+            Unloaded += (s, e) => viewModel.IsActive = false;
         }
 
         private void UploadReplaceFile_OnClick(object sender, RoutedEventArgs e)

@@ -4,7 +4,8 @@ using TextReplace.Messages;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class MainViewModel : ObservableRecipient, IRecipient<ActiveContentViewMsg>
+    partial class MainViewModel : ObservableRecipient,
+        IRecipient<ActiveContentViewMsg>
     {
         [ObservableProperty]
         private object _currentView;
@@ -20,8 +21,6 @@ namespace TextReplace.MVVM.ViewModel
         public TopBarViewModel TopBarVm = new TopBarViewModel();
         public SideBarViewModel SideBarVm = new SideBarViewModel();
 
-        public static bool isRegistered = false;
-
         public MainViewModel()
         {
             // set the home view as default
@@ -29,11 +28,11 @@ namespace TextReplace.MVVM.ViewModel
 
             _topBarView = TopBarVm;
             _sideBarView = SideBarVm;
+        }
 
-            if (isRegistered == false)
-            {
-                WeakReferenceMessenger.Default.Register(this);
-            }
+        protected override void OnActivated()
+        {
+            WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
         public void Receive(ActiveContentViewMsg message)

@@ -1,7 +1,6 @@
 ﻿using TextReplace.MVVM.ViewModel;
 using TextReplace.MVVM.Model;
 using TextReplace.Tests.Common;
-using System.Diagnostics;
 
 namespace TextReplace.Tests.ViewModels
 {

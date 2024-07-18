@@ -12,7 +12,7 @@ using TextReplace.Messages;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class TopBarViewModel : ObservableObject,
+    partial class TopBarViewModel : ObservableRecipient,
         IRecipient<WholeWordMsg>,
         IRecipient<CaseSensitiveMsg>,
         IRecipient<PreserveCaseMsg>,
@@ -54,14 +54,9 @@ namespace TextReplace.MVVM.ViewModel
         public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
         public RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
 
-        public static bool isRegistered = false;
-
-        public TopBarViewModel()
+        protected override void OnActivated()
         {
-            if (isRegistered == false)
-            {
-                WeakReferenceMessenger.Default.RegisterAll(this);
-            }
+            WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
         private void ToggleWholeWord()
