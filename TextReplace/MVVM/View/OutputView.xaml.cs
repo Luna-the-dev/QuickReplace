@@ -18,8 +18,17 @@ namespace TextReplace.MVVM.View
             InitializeComponent();
 
             var viewModel = (OutputViewModel)DataContext;
-            Loaded += (s, e) => viewModel.IsActive = true;
-            Unloaded += (s, e) => viewModel.IsActive = false;
+            Loaded += (s, e) =>
+            {
+                viewModel.IsActive = true;
+                WeakReferenceMessenger.Default.RegisterAll(this);
+            };
+
+            Unloaded += (s, e) =>
+            {
+                viewModel.IsActive = false;
+                WeakReferenceMessenger.Default.UnregisterAll(this);
+            };
         }
 
         private async void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
