@@ -84,26 +84,9 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns>False if new replace file was not set.</returns>
-        public bool SetNewReplaceFile(string fileName)
+        public static void SetNewReplacePhrasesFromFile(string fileName)
         {
-            // open a file dialogue for the user and update the replace file
-            bool result = ReplaceData.SetNewReplaceFile(fileName);
-
-            if (result)
-            {
-                ReplaceFileReadSuccess = true;
-                ReplaceFileReadFail = false;
-            }
-            else
-            {
-                Debug.WriteLine("ReplaceFile either could not be read or parsed.");
-                ReplaceFileReadSuccess = false;
-                ReplaceFileReadFail = true;
-            }
-
-            SetReplaceButtonClickability();
-
-            return result;
+            ReplaceData.SetNewReplacePhrasesFromFile(fileName);
         }
 
         public void SourceFiles(List<string> fileNames)

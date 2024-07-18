@@ -28,7 +28,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                ((TopBarViewModel)DataContext).SetNewReplaceFile(dialog.FullFileName);
+                TopBarViewModel.SetNewReplacePhrasesFromFile(dialog.FullFileName);
                 TopBarViewModel.SetActiveContentView("replace");
             }
         }

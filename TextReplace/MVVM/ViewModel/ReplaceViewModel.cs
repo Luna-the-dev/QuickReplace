@@ -116,32 +116,32 @@ namespace TextReplace.MVVM.ViewModel
         /// <returns></returns>
         public bool SavePhrasesToFile(string? newFileName = null, string newDelimiter = "")
         {
-            string fileName = newFileName ?? FullFileName;
-
-            string delimiter = Path.GetExtension(fileName).ToLower() switch
-            {
-                ".csv" => ",",
-                ".tsv" => "\t",
-                ".txt" => newDelimiter,
-                ".xlsx" => string.Empty,
-                _ => throw new NotSupportedException($"SavePhrasesToFile(): The file type is not supported.")
-            };
-
-            // check if the file type is suppoerted
-            if (FileValidation.IsReplaceFileTypeValid(fileName) == false)
-            {
-                Debug.WriteLine("File type is not supported, file not saved.");
-                return false;
-            }
-            // if a new file is *not* being created, check if the user has write perms
-            if (newFileName == null && FileValidation.IsInputFileReadWriteable(fileName) == false)
-            {
-                Debug.WriteLine("Cannot write to directory, file not saved.");
-                return false;
-            }
-
             try
             {
+                string fileName = newFileName ?? FullFileName;
+
+                string delimiter = Path.GetExtension(fileName).ToLower() switch
+                {
+                    ".csv" => ",",
+                    ".tsv" => "\t",
+                    ".txt" => newDelimiter,
+                    ".xlsx" => string.Empty,
+                    _ => throw new NotSupportedException($"SavePhrasesToFile(): The file type is not supported.")
+                };
+
+                // check if the file type is suppoerted
+                if (FileValidation.IsReplaceFileTypeValid(fileName) == false)
+                {
+                    Debug.WriteLine("File type is not supported, file not saved.");
+                    return false;
+                }
+                // if a new file is *not* being created, check if the user has write perms
+                if (newFileName == null && FileValidation.IsInputFileReadWriteable(fileName) == false)
+                {
+                    Debug.WriteLine("Cannot write to directory, file not saved.");
+                    return false;
+                }
+
                 ReplaceData.SavePhrasesToFile(fileName, SortReplacePhrases, delimiter);
 
                 ReplaceData.IsUnsaved = false;
@@ -149,6 +149,18 @@ namespace TextReplace.MVVM.ViewModel
             }
             // exception thrown if the file type is invalid
             catch (NotSupportedException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
+            // if the directory of the filename is null
+            catch (DirectoryNotFoundException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
+            // if the delimiter is invalid
+            catch (InvalidOperationException e)
             {
                 Debug.WriteLine(e);
                 return false;
@@ -271,6 +283,25 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         /// <summary>
+        /// Wrapper for ReplaceData.SetNewReplaceFile.
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <returns>False if new replace file was not set.</returns>
+        public static bool SetNewReplacePhrasesFromFile(string fileName)
+        {
+            return ReplaceData.SetNewReplacePhrasesFromFile(fileName);
+        }
+
+        /// <summary>
+        /// Wrapper for ReplaceData.CreateNewReplaceFile.
+        /// </summary>
+        public static void CreateNewReplacePhrasesAndFile()
+        {
+            ReplaceData.IsUnsaved = false;
+            ReplaceData.CreateNewReplacePhrasesAndFile();
+        }
+
+        /// <summary>
         /// Updates the replace phrases view by whether or not it should be sorted or
         /// if the user is searching for a specific phrase. Pass an empty string to deselect the phrase
         /// </summary>
@@ -333,25 +364,6 @@ namespace TextReplace.MVVM.ViewModel
                     ReplaceData.ReplacePhrasesList.FindIndex(x => x.Item1 == SelectedPhrase.Item1) + 1,
                 _ => -1,
             };
-        }
-
-        /// <summary>
-        /// Wrapper for ReplaceData.SetNewReplaceFile.
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns>False if new replace file was not set.</returns>
-        public static bool SetNewReplaceFile(string fileName)
-        {
-            return ReplaceData.SetNewReplaceFile(fileName);
-        }
-
-        /// <summary>
-        /// Wrapper for ReplaceData.CreateNewReplaceFile.
-        /// </summary>
-        public void CreateNewReplaceFile()
-        {
-            ReplaceData.IsUnsaved = false;
-            ReplaceData.CreateNewReplaceFile();
         }
 
         public void DragOver(IDropInfo dropInfo)

@@ -31,7 +31,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true)
             {
-                ReplaceViewModel.SetNewReplaceFile(dialog.FullFileName);
+                ReplaceViewModel.SetNewReplacePhrasesFromFile(dialog.FullFileName);
             }
         }
 
@@ -110,7 +110,7 @@ namespace TextReplace.MVVM.View
                 // if no file is selected, create a new one
                 if (viewModel.IsFileSelected == false)
                 {
-                    viewModel.CreateNewReplaceFile();
+                    ReplaceViewModel.CreateNewReplacePhrasesAndFile();
                 }
                 viewModel.AddNewPhrase(dialog.TopInputText, dialog.BottomInputText, dialog.InsertReplacePhraseAt);
             }

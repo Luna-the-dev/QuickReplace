@@ -100,6 +100,7 @@ namespace TextReplace.Tests.Common
                 // compare the files in the ./xl/ directory
                 if (CompareXlFiles(firstUnzippedPath, secondUnzippedPath) == false)
                 {
+                    Debug.WriteLine("poo1");
                     return false;
                 }
 
@@ -108,6 +109,7 @@ namespace TextReplace.Tests.Common
                 var secondThemePath = secondUnzippedPath + @"\xl\theme";
                 if (CompareFilesInDirectory(firstThemePath, secondThemePath) == false)
                 {
+                    Debug.WriteLine("poo2");
                     return false;
                 }
 
@@ -116,6 +118,7 @@ namespace TextReplace.Tests.Common
                 var secondWorksheetsPath = secondUnzippedPath + @"\xl\worksheets";
                 if (CompareFilesInDirectory(firstWorksheetsPath, secondWorksheetsPath) == false)
                 {
+                    Debug.WriteLine("poo3");
                     return false;
                 }
 
@@ -127,6 +130,7 @@ namespace TextReplace.Tests.Common
             }
             catch (Exception e)
             {
+                Debug.WriteLine("peepee");
                 Debug.WriteLine(e);
                 return false;
             }

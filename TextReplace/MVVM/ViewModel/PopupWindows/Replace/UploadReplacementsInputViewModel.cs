@@ -30,7 +30,7 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
 
         public void ValidateFile(string fileName)
         {
-            bool result = ReplaceData.SetNewReplaceFile(fileName, dryRun: true);
+            bool result = ReplaceData.SetNewReplacePhrasesFromFile(fileName, dryRun: true);
             FullFileName = fileName;
             if (result)
             {

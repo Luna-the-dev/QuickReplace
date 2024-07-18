@@ -91,17 +91,13 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
-        /// Opens a file dialogue and replaces the ReplaceFile with whatever the user selects (if valid).
-        /// Note: the newDelimiter parameter must be supplied if the fileName is a .txt or .text file.
+        /// Parses through a file for replace phrases and sets the ReplacePhrases List/Dict.
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="dryRun"></param>
-        /// <returns>
-        /// False if one of the files was invalid, null user closed the window without selecting a file.
-        /// </returns>
-        public static bool SetNewReplaceFile(string fileName, bool dryRun = false)
+        /// <returns>True if new replace phrases were successfully set from the file.</returns>
+        public static bool SetNewReplacePhrasesFromFile(string fileName, bool dryRun = false)
         {
-            // set the ReplaceFile name
             try
             {
                 // check to see if file name is valid so that the phrases can be parsed
@@ -206,7 +202,12 @@ namespace TextReplace.MVVM.Model
             var directory = Path.GetDirectoryName(fileName);
             if (directory == null)
             {
-                return;
+                throw new DirectoryNotFoundException($"Directory was not found: {fileName}");
+            }
+
+            if (Path.GetExtension(fileName) == ".txt" && DataValidation.IsDelimiterValid(delimiter) == false)
+            {
+                throw new InvalidOperationException($"Invalid delimiter: {delimiter}");
             }
 
             // prevents exception if directory doesnt exist
@@ -272,7 +273,7 @@ namespace TextReplace.MVVM.Model
             }
         }
 
-        public static void CreateNewReplaceFile()
+        public static void CreateNewReplacePhrasesAndFile()
         {
             IsNewFile = true;
             ReplacePhrasesDict = [];

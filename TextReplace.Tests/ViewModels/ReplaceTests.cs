@@ -3,6 +3,7 @@ using TextReplace.MVVM.Model;
 using TextReplace.Tests.Common;
 using System.IO;
 using System.Diagnostics;
+using DocumentFormat.OpenXml.Math;
 
 namespace TextReplace.Tests.ViewModels
 {
@@ -386,11 +387,11 @@ namespace TextReplace.Tests.ViewModels
         }
 
         [Theory]
-        [InlineData("replacements-for-testing.csv")]
-        [InlineData("replacements-for-testing.tsv")]
-        [InlineData("replacements-for-testing.xlsx")]
-        [InlineData("replacements-for-testing-pound-delimiter.txt", "#")]
-        [InlineData("replacements-for-testing-semicolon-delimiter.txt", ";")]
+        [InlineData("replacements.csv")]
+        [InlineData("replacements.tsv")]
+        [InlineData("replacements.xlsx")]
+        [InlineData("replacements-pound-delimiter.txt", "#")]
+        [InlineData("replacements-semicolon-delimiter.txt", ";")]
         public void SavePhrasesToFile_ValidPhrases_PhrasesSavedToFile(string filename, string delimiter = "")
         {
             // Arrange
@@ -403,7 +404,7 @@ namespace TextReplace.Tests.ViewModels
                 ("text;with;semicolons", "text;with;semicolons1")
             };
 
-            // relative file path to the Mockfiles folder
+            // relative file path to the TextReplace.Tests folder
             var relativeFilepath = "../../../MockFiles/MockReplacements/"; // TextReplace.Tests/
             var tempFilePath = "../../GeneratedTestFiles/"; // TextReplace.Tests/bin/
 
@@ -436,6 +437,158 @@ namespace TextReplace.Tests.ViewModels
 
             // Cleanup
             // Directory.Delete(tempFilePath, true);
+        }
+
+        [Fact]
+        public void SavePhrasesToFile_InvalidFileType_ExceptionThrown()
+        {
+            // Arrange
+            var filename = Path.GetTempFileName();
+            var delimiter = "";
+
+            var validReplacePhrases = new List<(string, string)>
+            {
+                ("basic-text", "basic-text1"),
+                ("text with whitespace", "text with whitespace 1"),
+                ("text,with,commas", "text,with,commas,1"),
+                ("text,with\",commas\"and\"quotes,\"", "text,with\",commas\"and\"quotes,\"1"),
+                ("text;with;semicolons", "text;with;semicolons1")
+            };
+
+            var vm = new ReplaceViewModel();
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            foreach (var phrase in validReplacePhrases)
+            {
+                vm.AddNewPhrase(phrase.Item1, phrase.Item2, Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            }
+
+            // Act
+            var actual = vm.SavePhrasesToFile(filename, delimiter);
+
+            // Assert
+            Assert.False(actual);
+
+            // Cleanup
+            File.Delete(filename);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("\n")]
+        public void SavePhrasesToFile_InvalidDelimiterForTextFile_ExceptionThrown(string delimiter)
+        {
+            // Arrange
+            var filename = @"./filename.txt";
+
+            var validReplacePhrases = new List<(string, string)>
+            {
+                ("basic-text", "basic-text1"),
+                ("text with whitespace", "text with whitespace 1"),
+                ("text,with,commas", "text,with,commas,1"),
+                ("text,with\",commas\"and\"quotes,\"", "text,with\",commas\"and\"quotes,\"1"),
+                ("text;with;semicolons", "text;with;semicolons1")
+            };
+
+            var vm = new ReplaceViewModel();
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            foreach (var phrase in validReplacePhrases)
+            {
+                vm.AddNewPhrase(phrase.Item1, phrase.Item2, Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            }
+
+            // Act
+            var actual = vm.SavePhrasesToFile(filename, delimiter);
+
+            // Assert
+            Assert.False(actual);
+        }
+
+        [Theory]
+        [InlineData("replacements.csv")]
+        [InlineData("replacements.tsv")]
+        [InlineData("replacements.xlsx")]
+        [InlineData("replacements-pound-delimiter.txt")]
+        [InlineData("replacements-semicolon-delimiter.txt")]
+        public void SetNewReplacePhrasesFromFile_ValidPhrasesValidFile_ReplacePhrasesAreParsed(string filename)
+        {
+            // Arrange
+            var replacePhrases = new List<(string, string)>
+            {
+                ("basic-text", "basic-text1"),
+                ("text with whitespace", "text with whitespace 1"),
+                ("text,with,commas", "text,with,commas,1"),
+                ("text,with\",commas\"and\"quotes,\"", "text,with\",commas\"and\"quotes,\"1"),
+                ("text;with;semicolons", "text;with;semicolons1")
+            };
+
+            // relative file path to the TextReplace.Tests folder
+            var mockFilePath = "../../../MockFiles/MockReplacements/";
+            var mockFileName = mockFilePath + filename;
+
+            var vm = new ReplaceViewModel();
+
+            // Act
+            ReplaceData.SetNewReplacePhrasesFromFile(mockFileName);
+
+            // convert the vm's ReplacePhrases into a List<(string, string)>
+            var actualReplacePhrases = new List<(string, string)>(vm.ReplacePhrases.Select(x => (x.Item1, x.Item2)));
+            var actual = ReplaceData.SetNewReplacePhrasesFromFile(mockFileName, dryRun: true);
+
+            // Assert
+            Assert.Equal(replacePhrases, actualReplacePhrases);
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void SetNewReplacePhrasesFromFile_InvalidFileType_ReturnFalse()
+        {
+            // Arrange
+            var filename = Path.GetTempFileName();
+
+            // Act
+            var actual = ReplaceData.SetNewReplacePhrasesFromFile(filename);
+            var actualDryRun = ReplaceData.SetNewReplacePhrasesFromFile(filename, dryRun: true);
+
+            // Assert
+            Assert.False(actual);
+            Assert.False(actualDryRun);
+        }
+
+        [Theory]
+        [InlineData("invalid-replacements-empty-item1.csv")]
+        [InlineData("invalid-replacements-duplicate-item1.tsv")]
+        public void SetNewReplacePhrasesFromFile_InvalidPhrases_ReturnFalse(string filename)
+        {
+            // Arrange
+            // relative file path to the TextReplace.Tests folder
+            var mockFilePath = "../../../MockFiles/MockReplacements/";
+            var mockFileName = mockFilePath + filename;
+
+            // Act
+            var actual = ReplaceData.SetNewReplacePhrasesFromFile(mockFileName);
+            var actualDryRun = ReplaceData.SetNewReplacePhrasesFromFile(mockFileName, dryRun: true);
+
+            // Assert
+            Assert.False(actual);
+            Assert.False(actualDryRun);
+        }
+
+        [Fact]
+        public void CreateNewReplacePhrasesAndFile_IsCalled_ReplacePhrasesAreEmpty()
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+
+            // Act
+            ReplaceData.CreateNewReplacePhrasesAndFile();
+
+            // Assert
+            Assert.Empty(vm.ReplacePhrases);
+            Assert.Equal("Untitled", vm.FileName);
         }
     }
 }
