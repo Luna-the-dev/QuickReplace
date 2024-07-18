@@ -6,7 +6,7 @@ using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class AddPhraseDoubleInputViewModel : ObservableRecipient,
+    public partial class AddPhraseDoubleInputViewModel : ObservableRecipient,
         IRecipient<SelectedReplacePhraseMsg>
     {
         [ObservableProperty]

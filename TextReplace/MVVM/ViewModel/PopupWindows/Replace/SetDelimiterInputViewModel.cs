@@ -3,7 +3,7 @@ using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class SetDelimiterInputViewModel : ObservableRecipient
+    public partial class SetDelimiterInputViewModel : ObservableRecipient
     {
         [ObservableProperty]
         private string _inputText = string.Empty;

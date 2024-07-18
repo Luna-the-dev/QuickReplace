@@ -1,9 +1,7 @@
 ﻿using TextReplace.MVVM.ViewModel;
 using TextReplace.MVVM.Model;
 using TextReplace.Tests.Common;
-using System.IO;
 using System.Diagnostics;
-using DocumentFormat.OpenXml.Math;
 
 namespace TextReplace.Tests.ViewModels
 {

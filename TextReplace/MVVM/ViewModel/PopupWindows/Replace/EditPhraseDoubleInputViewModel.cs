@@ -1,12 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using System.Diagnostics;
 using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class EditPhraseDoubleInputViewModel : ObservableRecipient,
+    public partial class EditPhraseDoubleInputViewModel : ObservableRecipient,
         IRecipient<SelectedReplacePhraseMsg>
     {
         [ObservableProperty]

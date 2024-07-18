@@ -1,12 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class UploadReplacementsInputViewModel : ObservableRecipient
+    public partial class UploadReplacementsInputViewModel : ObservableRecipient
     {
         [ObservableProperty]
         private string _fullFileName = string.Empty;
@@ -19,11 +17,11 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
         private string _fileName = string.Empty;
 
         [ObservableProperty]
-        private Visibility _showFileName = Visibility.Collapsed;
+        private bool _showFileName = false;
         [ObservableProperty]
-        private Visibility _fileIsValid = Visibility.Collapsed;
+        private bool _fileIsValid = false;
         [ObservableProperty]
-        private Visibility _fileIsInvalid = Visibility.Collapsed;
+        private bool _fileIsInvalid = false;
 
         [ObservableProperty]
         private bool _confirmIsClickable = false;
@@ -34,16 +32,16 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             FullFileName = fileName;
             if (result)
             {
-                ShowFileName = Visibility.Visible;
-                FileIsValid = Visibility.Visible;
-                FileIsInvalid = Visibility.Collapsed;
+                ShowFileName = true;
+                FileIsValid = true;
+                FileIsInvalid = false;
                 ConfirmIsClickable = true;
             }
             else
             {
-                ShowFileName = Visibility.Visible;
-                FileIsValid = Visibility.Collapsed;
-                FileIsInvalid = Visibility.Visible;
+                ShowFileName = true;
+                FileIsValid = false;
+                FileIsInvalid = true;
                 ConfirmIsClickable = false;
             }
         }
