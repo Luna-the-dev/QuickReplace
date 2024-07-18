@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TextReplace", "TextReplace\TextReplace.csproj", "{6CAC15A4-E87C-49B6-A005-8020EE9D8027}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextReplace.Tests", "TextReplace.Test\TextReplace.Tests.csproj", "{8C4BF8E1-B0CE-4B91-B5F2-4CCEC20C0994}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextReplace.Tests", "TextReplace.Tests\TextReplace.Tests.csproj", "{8C4BF8E1-B0CE-4B91-B5F2-4CCEC20C0994}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

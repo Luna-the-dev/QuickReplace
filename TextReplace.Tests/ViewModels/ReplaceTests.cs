@@ -1,5 +1,8 @@
 ﻿using TextReplace.MVVM.ViewModel;
 using TextReplace.MVVM.Model;
+using TextReplace.Tests.Common;
+using System.IO;
+using System.Diagnostics;
 
 namespace TextReplace.Tests.ViewModels
 {
@@ -380,6 +383,59 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Equal(expected, vm.SelectedPhrase.Item1);
+        }
+
+        [Theory]
+        [InlineData("replacements-for-testing.csv")]
+        [InlineData("replacements-for-testing.tsv")]
+        [InlineData("replacements-for-testing.xlsx")]
+        [InlineData("replacements-for-testing-pound-delimiter.txt", "#")]
+        [InlineData("replacements-for-testing-semicolon-delimiter.txt", ";")]
+        public void SavePhrasesToFile_ValidPhrases_PhrasesSavedToFile(string filename, string delimiter = "")
+        {
+            // Arrange
+            var validReplacePhrases = new List<(string, string)>
+            {
+                ("basic-text", "basic-text1"),
+                ("text with whitespace", "text with whitespace 1"),
+                ("text,with,commas", "text,with,commas,1"),
+                ("text,with\",commas\"and\"quotes,\"", "text,with\",commas\"and\"quotes,\"1"),
+                ("text;with;semicolons", "text;with;semicolons1")
+            };
+
+            // relative file path to the Mockfiles folder
+            var relativeFilepath = "../../../MockFiles/MockReplacements/"; // TextReplace.Tests/
+            var tempFilePath = "../../GeneratedTestFiles/"; // TextReplace.Tests/bin/
+
+            var verificationFilename = relativeFilepath + filename;
+            var tempFilename = tempFilePath + filename;
+
+            var vm = new ReplaceViewModel();
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            foreach (var phrase in validReplacePhrases)
+            {
+                vm.AddNewPhrase(phrase.Item1, phrase.Item2, Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            }
+
+            // Act
+            vm.SavePhrasesToFile(tempFilename, delimiter);
+
+            // Assert
+            if (Path.GetExtension(filename) == ".xlsx")
+            {
+                // Custom method for comparing excel files due to
+                // unique ids being generated for each file by OpenXML
+                Assert.True(FileComparer.FilesAreEqual_Excel(verificationFilename, tempFilename));
+            }
+            else
+            {
+                Assert.True(FileComparer.FilesAreEqual(verificationFilename, tempFilename));
+            }
+
+            // Cleanup
+            // Directory.Delete(tempFilePath, true);
         }
     }
 }

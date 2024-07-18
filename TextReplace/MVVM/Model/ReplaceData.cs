@@ -203,6 +203,18 @@ namespace TextReplace.MVVM.Model
         /// <param name="delimiter"></param>
         public static void SavePhrasesToFile(string fileName, bool shouldSort, string delimiter)
         {
+            var directory = Path.GetDirectoryName(fileName);
+            if (directory == null)
+            {
+                return;
+            }
+
+            // prevents exception if directory doesnt exist
+            if (Directory.Exists(directory) == false)
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             if (FileValidation.IsExcelFile(fileName))
             {
                 SavePhrasesToExcel(fileName, shouldSort);
