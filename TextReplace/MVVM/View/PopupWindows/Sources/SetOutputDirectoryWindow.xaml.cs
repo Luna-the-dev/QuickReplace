@@ -81,7 +81,7 @@ namespace TextReplace.MVVM.View.PopupWindows
                 return;
             }
 
-            ((SetOutputDirectoryViewModel)DataContext).ValidateOutputDirectory(dialog.FileName);
+            ((SetOutputDirectoryViewModel)DataContext).DirectoryName = dialog.FileName;
         }
 
         private void BtnOk_OnClick(object sender, RoutedEventArgs e)

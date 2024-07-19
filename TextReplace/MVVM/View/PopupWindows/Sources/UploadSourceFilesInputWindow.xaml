@@ -58,7 +58,7 @@
                 <Grid Grid.Column="1" Grid.Row="2">
                     <TextBlock Name="FileNameTextBox"
                                Text="{Binding FileNameOrCount}"
-                               Visibility="{Binding ShowFileNameOrCount}"
+                               Visibility="{Binding ShowFileNameOrCount, Converter={StaticResource BooleanToVisibilityConverter}}"
                                HorizontalAlignment="Stretch"
                                TextTrimming="CharacterEllipsis"
                                Foreground="{StaticResource TextLight}"
@@ -68,7 +68,7 @@
 
                     <Border Width="19" Height="19"
                             Margin="0 0 5 18"
-                            Visibility="{Binding FileIsValid}"
+                            Visibility="{Binding FileIsValid, Converter={StaticResource BooleanToVisibilityConverter}}"
                             HorizontalAlignment="Right">
                         <Path Stretch="Uniform"
                               Fill="{StaticResource TextLight}"
@@ -77,7 +77,7 @@
 
                     <Border Width="14" Height="14"
                             Margin="0 0 5 18"
-                            Visibility="{Binding FileIsInvalid}"
+                            Visibility="{Binding FileIsInvalid, Converter={StaticResource BooleanToVisibilityConverter}}"
                             HorizontalAlignment="Right">
                         <Path Stretch="Uniform"
                               Fill="{StaticResource TextLight}"

@@ -1,13 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Windows;
 using TextReplace.Core.Validation;
-using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class UploadSourceFilesInputViewModel : ObservableRecipient
+    public partial class UploadSourceFilesInputViewModel : ObservableRecipient
     {
         [ObservableProperty]
         private List<string> _fullFileNames = new List<string>();
@@ -20,11 +18,11 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
         private string _fileNameOrCount = string.Empty;
 
         [ObservableProperty]
-        private Visibility _showFileNameOrCount = Visibility.Collapsed;
+        private bool _showFileNameOrCount = false;
         [ObservableProperty]
-        private Visibility _fileIsValid = Visibility.Collapsed;
+        private bool _fileIsValid = false;
         [ObservableProperty]
-        private Visibility _fileIsInvalid = Visibility.Collapsed;
+        private bool _fileIsInvalid = false;
 
         [ObservableProperty]
         private bool _confirmIsClickable = false;
@@ -46,29 +44,18 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             if (invalidFileName != string.Empty)
             {
                 FullFileNames = new List<string>(){ invalidFileName };
-                ShowFileNameOrCount = Visibility.Visible;
-                FileIsValid = Visibility.Collapsed;
-                FileIsInvalid = Visibility.Visible;
+                ShowFileNameOrCount = true;
+                FileIsValid = false;
+                FileIsInvalid = true;
                 ConfirmIsClickable = false;
                 return false;
             }
 
-            // if only one file was selected
-            if (fileNames.Count <= 1)
-            {
-                FullFileNames = fileNames;
-                ShowFileNameOrCount = Visibility.Visible;
-                FileIsValid = Visibility.Visible;
-                FileIsInvalid = Visibility.Collapsed;
-                ConfirmIsClickable = true;
-                return true;
-            }
-
             // if multiple files were selected
             FullFileNames = fileNames;
-            ShowFileNameOrCount = Visibility.Visible;
-            FileIsValid = Visibility.Visible;
-            FileIsInvalid = Visibility.Collapsed;
+            ShowFileNameOrCount = true;
+            FileIsValid = true;
+            FileIsInvalid = false;
             ConfirmIsClickable = true;
             return true;
         }

@@ -59,7 +59,7 @@
 
                 <userControl:RollingText Grid.Column="1" Grid.Row="2"
                                          x:Name="DirectoryNameTextBox"
-                                         Visibility="{Binding ShowDirectoryName}"
+                                         Visibility="{Binding ShowDirectoryName, Converter={StaticResource BooleanToVisibilityConverter}}"
                                          Text="{Binding DirectoryName}"
                                          Foreground="{StaticResource TextLight}"
                                          FontSize="13"

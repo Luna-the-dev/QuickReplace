@@ -15,11 +15,14 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.RemoveAllSourceFiles();
             vm.IsSourceFileUploaded = false;
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
 
             // Act
@@ -71,11 +74,15 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
+
             var sourceFiles = new List<string>()
             {
-                "hello",
-                "filenameB",
-                "xxHello!xx"
+                relativeFilepath + "hello.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "xxHello!xx.txt"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -84,8 +91,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Equal(2, vm.SourceFiles.Count);
-            Assert.Equal("hello", vm.SourceFiles[0].FileName);
-            Assert.Equal("xxHello!xx", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "hello.txt", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "xxHello!xx.txt", vm.SourceFiles[1].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -98,11 +105,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -110,7 +120,7 @@ namespace TextReplace.Tests.ViewModels
             vm.SetSelectedFileCommand.Execute(vm.SourceFiles[1]);
 
             // Assert
-            Assert.Equal("filenameB", vm.SelectedFile.FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SelectedFile.FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -123,9 +133,12 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFile = new List<string>()
             {
-                "filenameA"
+                relativeFilepath + "source.txt"
             };
 
             // Act
@@ -133,7 +146,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Single(vm.SourceFiles);
-            Assert.Equal("filenameA", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[0].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -146,11 +159,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
 
             // Act
@@ -158,9 +174,9 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Equal(3, vm.SourceFiles.Count);
-            Assert.Equal("filenameA", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameB", vm.SourceFiles[1].FileName);
-            Assert.Equal("filenameC", vm.SourceFiles[2].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[2].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -173,11 +189,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
 
             SourcesViewModel.UpdateAllSourceFileOutputDirectories("directory-name/");
@@ -202,11 +221,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
 
             SourcesViewModel.UpdateAllSourceFileSuffixes("-replacify");
@@ -231,11 +253,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -244,8 +269,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Equal(2, vm.SourceFiles.Count);
-            Assert.Equal("filenameB", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameC", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[1].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -260,11 +285,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -284,11 +312,14 @@ namespace TextReplace.Tests.ViewModels
             var vm = new SourcesViewModel();
             VMHelper.RegisterMessenger(vm);
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -309,11 +340,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -321,9 +355,9 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.MoveSourceFile(oldIndex: 2, newIndex: 0);
 
             // Assert
-            Assert.Equal("filenameC", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameA", vm.SourceFiles[1].FileName);
-            Assert.Equal("filenameB", vm.SourceFiles[2].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[2].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -336,11 +370,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -348,9 +385,9 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.MoveSourceFile(oldIndex: 0, newIndex: 2);
 
             // Assert
-            Assert.Equal("filenameB", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameA", vm.SourceFiles[1].FileName);
-            Assert.Equal("filenameC", vm.SourceFiles[2].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[2].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -363,11 +400,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -375,9 +415,9 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.MoveSourceFile(oldIndex: 0, newIndex: 0);
 
             // Assert
-            Assert.Equal("filenameA", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameB", vm.SourceFiles[1].FileName);
-            Assert.Equal("filenameC", vm.SourceFiles[2].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[2].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -390,11 +430,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -402,9 +445,9 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.MoveSourceFile(oldIndex: 2, newIndex: 2);
 
             // Assert
-            Assert.Equal("filenameA", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameB", vm.SourceFiles[1].FileName);
-            Assert.Equal("filenameC", vm.SourceFiles[2].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[2].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -419,11 +462,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -432,9 +478,9 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.False(actual);
-            Assert.Equal("filenameA", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameB", vm.SourceFiles[1].FileName);
-            Assert.Equal("filenameC", vm.SourceFiles[2].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[2].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -449,11 +495,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -462,9 +511,9 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.False(actual);
-            Assert.Equal("filenameA", vm.SourceFiles[0].FileName);
-            Assert.Equal("filenameB", vm.SourceFiles[1].FileName);
-            Assert.Equal("filenameC", vm.SourceFiles[2].FileName);
+            Assert.Equal(relativeFilepath + "source.txt", vm.SourceFiles[0].FileName);
+            Assert.Equal(relativeFilepath + "source.docx", vm.SourceFiles[1].FileName);
+            Assert.Equal(relativeFilepath + "source.xlsx", vm.SourceFiles[2].FileName);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -477,11 +526,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
             vm.SetSelectedFileCommand.Execute(vm.SourceFiles[1]);
@@ -504,11 +556,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
@@ -532,11 +587,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
             vm.SetSelectedFileCommand.Execute(vm.SourceFiles[1]);
@@ -559,11 +617,14 @@ namespace TextReplace.Tests.ViewModels
             VMHelper.RegisterMessenger(vm);
             SourcesViewModel.RemoveAllSourceFiles();
 
+            // relative file path to the TextReplace.Tests folder
+            var relativeFilepath = "../../../MockFiles/MockSources/";
+
             var sourceFiles = new List<string>()
             {
-                "filenameA",
-                "filenameB",
-                "filenameC"
+                relativeFilepath + "source.txt",
+                relativeFilepath + "source.docx",
+                relativeFilepath + "source.xlsx"
             };
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 

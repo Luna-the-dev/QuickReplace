@@ -1,9 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System.Diagnostics;
 using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class SetSuffixInputResetViewModel : ObservableRecipient
+    public partial class SetSuffixInputResetViewModel : ObservableRecipient
     {
         [ObservableProperty]
         private string _inputText = string.Empty;

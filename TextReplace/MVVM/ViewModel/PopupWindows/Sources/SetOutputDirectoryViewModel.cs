@@ -1,37 +1,23 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using TextReplace.Core.Validation;
 using TextReplace.MVVM.Model;
-using System.Windows;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class SetOutputDirectoryViewModel : ObservableRecipient
+    public partial class SetOutputDirectoryViewModel : ObservableRecipient
     {
         [ObservableProperty]
-        private string _directoryName;
+        private string _directoryName = SourceFilesData.DefaultSourceFileOptions.OutputDirectory;
         partial void OnDirectoryNameChanged(string value)
         {
-            ShowDirectoryName = (value == string.Empty) ?
-                Visibility.Collapsed :
-                Visibility.Visible;
+            ShowDirectoryName = (value != string.Empty);
+            ConfirmIsClickable = (value != string.Empty);
         }
 
         [ObservableProperty]
-        private Visibility _showDirectoryName = Visibility.Collapsed;
+        private bool _showDirectoryName = false;
 
         [ObservableProperty]
         private bool _confirmIsClickable = false;
-
-        public SetOutputDirectoryViewModel()
-        {
-            DirectoryName = SourceFilesData.DefaultSourceFileOptions.OutputDirectory;
-        }
-
-        public void ValidateOutputDirectory(string directory)
-        {
-            DirectoryName = directory;
-            ConfirmIsClickable = true;
-        }
     }
 }
