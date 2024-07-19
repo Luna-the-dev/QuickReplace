@@ -48,24 +48,27 @@ namespace TextReplace.MVVM.Model
         /// <param name="newIndex"></param>
         public static void MoveSourceFile(int oldIndex, int newIndex)
         {
-            try
+            if (oldIndex < 0 || oldIndex >= SourceFiles.Count)
             {
-                var sourceFile = SourceFiles[oldIndex];
-
-                SourceFiles.RemoveAt(oldIndex);
-
-                // shift the new index due to the removal if needed
-                if (newIndex > oldIndex)
-                {
-                    newIndex--;
-                }
-
-                SourceFiles.Insert(newIndex, sourceFile);
+                throw new ArgumentOutOfRangeException($"oldIndex is out of range: {oldIndex}");
             }
-            catch (IndexOutOfRangeException e)
+
+            if (newIndex < 0 || newIndex > SourceFiles.Count)
             {
-                Debug.WriteLine(e.Message);
+                throw new ArgumentOutOfRangeException($"newIndex is out of range: {newIndex}");
             }
+
+            var sourceFile = SourceFiles[oldIndex];
+
+            SourceFiles.RemoveAt(oldIndex);
+
+            // shift the new index due to the removal if needed
+            if (newIndex > oldIndex)
+            {
+                newIndex--;
+            }
+
+            SourceFiles.Insert(newIndex, sourceFile);
 
             WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
             OutputData.UpdateOutputFiles(SourceFiles);
@@ -139,24 +142,37 @@ namespace TextReplace.MVVM.Model
         public static void UpdateSourceFileOptions(string fileName, string? outputDirectory = null, string? suffix = null)
         {
             int index = SourceFiles.FindIndex(x => x.FileName == fileName);
-
             if (index < 0)
             {
                 Debug.WriteLine("Filename could not be found, source file option not updated.");
                 return;
             }
 
+            var isFileSelected = SelectedFile.FileName != string.Empty;
+
             if (outputDirectory != null)
             {
                 SourceFiles[index].OutputDirectory = outputDirectory;
+                if (isFileSelected)
+                {
+                    SelectedFile.OutputDirectory = outputDirectory;
+                }
             }
 
             if (suffix != null)
             {
                 SourceFiles[index].Suffix = suffix;
+                if (isFileSelected)
+                {
+                    SelectedFile.Suffix = suffix;
+                }
             }
 
             WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
+            if (isFileSelected)
+            {
+                WeakReferenceMessenger.Default.Send(new SelectedSourceFileMsg(SelectedFile));
+            }
             OutputData.UpdateOutputFiles(SourceFiles);
         }
 
@@ -177,6 +193,7 @@ namespace TextReplace.MVVM.Model
                     file.OutputDirectory = outputDirectory;
                 }
 
+                SelectedFile.OutputDirectory = outputDirectory;
                 newDefaultSfo.OutputDirectory = outputDirectory;
             }
 
@@ -187,10 +204,12 @@ namespace TextReplace.MVVM.Model
                     file.Suffix = suffix;
                 }
 
+                SelectedFile.Suffix = suffix;
                 newDefaultSfo.Suffix = suffix;
             }
 
             SourceFiles = newSourceFiles;
+            WeakReferenceMessenger.Default.Send(new SelectedSourceFileMsg(SelectedFile));
             OutputData.UpdateOutputFiles(newSourceFiles);
             DefaultSourceFileOptions = newDefaultSfo;
         }
@@ -213,6 +232,11 @@ namespace TextReplace.MVVM.Model
             WeakReferenceMessenger.Default.Send(new SourceFilesMsg(SourceFiles));
             OutputData.UpdateOutputFiles(SourceFiles);
             return true;
+        }
+
+        public static void RemoveAllSourceFiles()
+        {
+            SourceFiles = [];
         }
     }
 

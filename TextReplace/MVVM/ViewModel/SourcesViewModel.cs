@@ -69,24 +69,36 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         /// <summary>
+        /// Wrapper for SourceFilesData.AddNewSourceFiles
+        /// </summary>
+        /// <param name="fileNames"></param>
+        /// <returns></returns>
+        public static bool AddNewSourceFiles(List<string> fileNames)
+        {
+            return SourceFilesData.AddNewSourceFiles(fileNames);
+        }
+
+        /// <summary>
         /// Removes a source file based on the index of the file.
         /// </summary>
         /// <param name="index"></param>
-        public void RemoveSourceFile(int index)
+        public bool RemoveSourceFile(int index)
         {
-            if (index > SourceFiles.Count - 1)
+            if (index < 0 || index > SourceFiles.Count - 1)
             {
                 Debug.WriteLine("Source file index is invalid");
-                return;
+                return false;
             }
 
             bool res = SourceFilesData.RemoveSourceFile(SourceFiles[index].FileName);
             if (res == false)
             {
                 Debug.WriteLine("Source file could not be removed.");
-                return;
+                return false;
             }
+
             UpdateSourceFilesView(SelectedFile.FileName);
+            return true;
         }
 
         /// <summary>
@@ -94,7 +106,34 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         public static void RemoveAllSourceFiles()
         {
-            SourceFilesData.SourceFiles = [];
+            SourceFilesData.RemoveAllSourceFiles();
+        }
+
+        /// <summary>
+        /// Moves a source file in the SourceFilesList from its current position to a new index
+        /// </summary>
+        /// <param name="oldIndex"></param>
+        /// <param name="newIndex"></param>
+        /// <returns>True if successful, false if an exception was thrown</returns>
+        public static bool MoveSourceFile(int oldIndex, int newIndex)
+        {
+            try
+            {
+                // the item was dropped into the same position was it was in before. do nothing
+                if (newIndex == oldIndex || newIndex == oldIndex + 1)
+                {
+                    return true;
+                }
+            
+                SourceFilesData.MoveSourceFile(oldIndex, newIndex);
+
+                return true;
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
         }
 
         /// <summary>
@@ -119,7 +158,7 @@ namespace TextReplace.MVVM.ViewModel
         /// Updates the suffix for the selected source file
         /// </summary>
         /// <param name="suffix"></param>
-        public void UpdateSourceFileSuffixes(string suffix)
+        public void UpdateSourceFileSuffix(string suffix)
         {
             SourceFilesData.UpdateSourceFileOptions(SelectedFile.FileName, suffix: suffix);
         }
@@ -158,16 +197,6 @@ namespace TextReplace.MVVM.ViewModel
             }
         }
 
-        /// <summary>
-        /// Wrapper for SourceFilesData.SetNewSourceFiles
-        /// </summary>
-        /// <param name="fileNames"></param>
-        /// <returns></returns>
-        public static bool AddNewSourceFiles(List<string> fileNames)
-        {
-            return SourceFilesData.AddNewSourceFiles(fileNames);
-        }
-
         public void DragOver(IDropInfo dropInfo)
         {
             dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
@@ -180,19 +209,8 @@ namespace TextReplace.MVVM.ViewModel
 
             // grab the old index of the replace phrase
             int oldIndex = SourceFiles.IndexOf(droppedItem);
-            if (oldIndex < 0)
-            {
-                Debug.WriteLine("Dropped item does not exist.");
-                return;
-            }
 
-            // the item was dropped into the same position was it was in before. do nothing
-            if (dropInfo.InsertIndex == oldIndex || dropInfo.InsertIndex == oldIndex + 1)
-            {
-                return;
-            }
-
-            SourceFilesData.MoveSourceFile(oldIndex, dropInfo.InsertIndex);
+            MoveSourceFile(oldIndex, dropInfo.InsertIndex);
         }
 
         public void Receive(SourceFilesMsg message)
@@ -234,6 +252,23 @@ namespace TextReplace.MVVM.ViewModel
 
         public SourceFileWrapper(SourceFile file, bool isSelected = false)
         {
+            FileName = file.FileName;
+            ShortFileName = Path.GetFileName(file.FileName);
+            OutputDirectory = file.OutputDirectory;
+            OutputDirectoryText = (OutputDirectory == string.Empty) ? "Default" : OutputDirectory;
+            Suffix = file.Suffix;
+            SuffixText = (Suffix == string.Empty) ? "Default" : Suffix;
+            IsSelected = isSelected;
+        }
+
+        public SourceFileWrapper(
+            string fileName,
+            string outputDirectory,
+            string suffix,
+            bool isSelected = false)
+        {
+            var file = new SourceFile(fileName, outputDirectory, suffix);
+
             FileName = file.FileName;
             ShortFileName = Path.GetFileName(file.FileName);
             OutputDirectory = file.OutputDirectory;

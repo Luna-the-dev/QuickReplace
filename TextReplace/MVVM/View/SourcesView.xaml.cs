@@ -128,7 +128,7 @@ namespace TextReplace.MVVM.View
 
             if (dialog.BtnOk.IsChecked == true || dialog.BtnReset.IsChecked == true)
             {
-                viewModel.UpdateSourceFileSuffixes(dialog.InputText);
+                viewModel.UpdateSourceFileSuffix(dialog.InputText);
             }
         }
 

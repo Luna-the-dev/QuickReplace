@@ -264,16 +264,25 @@ namespace TextReplace.MVVM.ViewModel
         /// </summary>
         /// <param name="oldIndex"></param>
         /// <param name="newIndex"></param>
-        public void MoveReplacePhrase(int oldIndex, int newIndex)
+        public static bool MoveReplacePhrase(int oldIndex, int newIndex)
         {
-            // the item was dropped into the same position was it was in before. do nothing
-            if (newIndex == oldIndex || newIndex == oldIndex + 1)
+            try
             {
-                return;
-            }
+                // the item was dropped into the same position was it was in before. do nothing
+                if (newIndex == oldIndex || newIndex == oldIndex + 1)
+                {
+                    return true;
+                }
 
-            ReplaceData.MoveReplacePhrase(oldIndex, newIndex);
-            UpdateReplacePhrasesView(SelectedPhrase.Item1);
+                ReplaceData.MoveReplacePhrase(oldIndex, newIndex);
+
+                return true;
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Debug.WriteLine(e);
+                return false;
+            }
         }
 
         /// <summary>

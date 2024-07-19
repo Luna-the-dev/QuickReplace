@@ -288,25 +288,28 @@ namespace TextReplace.MVVM.Model
         /// <param name="newIndex"></param>
         public static void MoveReplacePhrase(int oldIndex, int newIndex)
         {
-            try
+            if (oldIndex < 0 || oldIndex >= ReplacePhrasesList.Count)
             {
-                var replacePhrase = ReplacePhrasesList[oldIndex];
-
-                ReplacePhrasesList.RemoveAt(oldIndex);
-
-                // shift the new index due to the removal if needed
-                if (newIndex > oldIndex)
-                {
-                    newIndex--;
-                }
-
-                ReplacePhrasesList.Insert(newIndex, replacePhrase);
-                WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
+                throw new ArgumentOutOfRangeException($"oldIndex is out of range: {oldIndex}");
             }
-            catch (IndexOutOfRangeException e)
+
+            if (newIndex < 0 || newIndex > ReplacePhrasesList.Count)
             {
-                Debug.WriteLine(e.Message);
+                throw new ArgumentOutOfRangeException($"newIndex is out of range: {newIndex}");
             }
+
+            var replacePhrase = ReplacePhrasesList[oldIndex];
+
+            ReplacePhrasesList.RemoveAt(oldIndex);
+
+            // shift the new index due to the removal if needed
+            if (newIndex > oldIndex)
+            {
+                newIndex--;
+            }
+
+            ReplacePhrasesList.Insert(newIndex, replacePhrase);
+            WeakReferenceMessenger.Default.Send(new ReplacePhrasesMsg(ReplacePhrasesList));
         }
 
         /// <summary>

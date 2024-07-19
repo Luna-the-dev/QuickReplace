@@ -381,7 +381,6 @@ namespace TextReplace.Tests.ViewModels
             // Arrange
             var vm = new ReplaceViewModel();
             VMHelper.RegisterMessenger(vm);
-            ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
 
@@ -424,7 +423,7 @@ namespace TextReplace.Tests.ViewModels
             vm.AddNewPhrase("c", "this should be first", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
 
             // Act
-            vm.MoveReplacePhrase(oldIndex: 2, newIndex: 0);
+            ReplaceViewModel.MoveReplacePhrase(oldIndex: 2, newIndex: 0);
 
             // Assert
             Assert.Equal("c", vm.ReplacePhrases[0].Item1);
@@ -448,7 +447,7 @@ namespace TextReplace.Tests.ViewModels
             vm.AddNewPhrase("c", "this should be third", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
 
             // Act
-            vm.MoveReplacePhrase(oldIndex: 0, newIndex: 2);
+            ReplaceViewModel.MoveReplacePhrase(oldIndex: 0, newIndex: 2);
 
             // Assert
             Assert.Equal("b", vm.ReplacePhrases[0].Item1);
@@ -472,9 +471,87 @@ namespace TextReplace.Tests.ViewModels
             vm.AddNewPhrase("c", "this should be third", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
 
             // Act
-            vm.MoveReplacePhrase(oldIndex: 0, newIndex: 0);
+            ReplaceViewModel.MoveReplacePhrase(oldIndex: 0, newIndex: 0);
 
             // Assert
+            Assert.Equal("a", vm.ReplacePhrases[0].Item1);
+            Assert.Equal("b", vm.ReplacePhrases[1].Item1);
+            Assert.Equal("c", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Fact]
+        public void MoveReplacePhrase_LastToLast_PhrasesInCorrectOrder()
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            vm.AddNewPhrase("a", "this should be first", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("b", "this should be second", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("c", "this should be third", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+
+            // Act
+            ReplaceViewModel.MoveReplacePhrase(oldIndex: 2, newIndex: 2);
+
+            // Assert
+            Assert.Equal("a", vm.ReplacePhrases[0].Item1);
+            Assert.Equal("b", vm.ReplacePhrases[1].Item1);
+            Assert.Equal("c", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(5)]
+        public void MoveReplacePhrase_InvalidOldIndex_ReturnsFalse(int oldIndex)
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            vm.AddNewPhrase("a", "this should be first", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("b", "this should be second", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("c", "this should be third", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+
+            // Act
+            var actual = ReplaceViewModel.MoveReplacePhrase(oldIndex: oldIndex, newIndex: 2);
+
+            // Assert
+            Assert.False(actual);
+            Assert.Equal("a", vm.ReplacePhrases[0].Item1);
+            Assert.Equal("b", vm.ReplacePhrases[1].Item1);
+            Assert.Equal("c", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(5)]
+        public void MoveReplacePhrase_InvalidNewIndex_ReturnsFalse(int newIndex)
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            vm.AddNewPhrase("a", "this should be first", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("b", "this should be second", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("c", "this should be third", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+
+            // Act
+            var actual = ReplaceViewModel.MoveReplacePhrase(oldIndex: 0, newIndex: newIndex);
+
+            // Assert
+            Assert.False(actual);
             Assert.Equal("a", vm.ReplacePhrases[0].Item1);
             Assert.Equal("b", vm.ReplacePhrases[1].Item1);
             Assert.Equal("c", vm.ReplacePhrases[2].Item1);
