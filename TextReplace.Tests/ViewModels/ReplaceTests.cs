@@ -1,16 +1,147 @@
 ﻿using TextReplace.MVVM.ViewModel;
 using TextReplace.MVVM.Model;
 using TextReplace.Tests.Common;
+using System.Diagnostics;
+using System.Text;
 
 namespace TextReplace.Tests.ViewModels
 {
     public class ReplaceTests
     {
         [Fact]
+        public void OnFullFileNameChanged_ValidFileName_FileNameIsParsed()
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            vm.FileName = "";
+            vm.IsFileSelected = false;
+
+            var tempFileName = Path.GetTempFileName();
+            var expected = Path.GetFileName(tempFileName);
+
+            // Act
+            vm.FullFileName = tempFileName;
+
+            // Assert
+            Assert.Equal(expected, vm.FileName);
+            Assert.True(vm.IsFileSelected);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Fact]
+        public void OnReplacePhrasesChanged_ChangingReplacePhrases_UpdatesDoesReplacePhraseExist()
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            ReplaceViewModel.RemoveAllPhrases();
+
+            // Act
+            var firstActual = vm.DoesReplacePhraseExist;
+
+            vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            var secondActual = vm.DoesReplacePhraseExist;
+
+            vm.RemoveSelectedPhrase();
+            var thirdActual = vm.DoesReplacePhraseExist;
+
+            vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            var fourthActual = vm.DoesReplacePhraseExist;
+
+            ReplaceViewModel.RemoveAllPhrases();
+            var fifthActual = vm.DoesReplacePhraseExist;
+
+            // Assert
+            Assert.False(firstActual);
+            Assert.True(secondActual);
+            Assert.False(thirdActual);
+            Assert.True(fourthActual);
+            Assert.False(fifthActual);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Fact]
+        public void OnSelectedPhraseChanged_ChangingSelectedPhrase_UpdatesIsPhraseSelected()
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            ReplaceViewModel.RemoveAllPhrases();
+
+            // Act
+            var actual = vm.IsPhraseSelected;
+
+            vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            var secondActual = vm.IsPhraseSelected;
+
+            // Assert
+            Assert.False(actual);
+            Assert.True(secondActual);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Theory]
+        [InlineData("Hello")]
+        [InlineData("hello")]
+        public void OnSearchTextChanged_SearchTextChanged_FiltersReplacePhrasesByItem1(string filter)
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            vm.AddNewPhrase("hello", "this should exist", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("Item1", "this should get filtered out", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("xxHello!xx", "this should also exist", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+
+            // Act
+            vm.SearchText = filter;
+
+            // Assert
+            Assert.Equal(2, vm.ReplacePhrases.Count);
+            Assert.Equal("hello", vm.ReplacePhrases[0].Item1);
+            Assert.Equal("xxHello!xx", vm.ReplacePhrases[1].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Theory]
+        [InlineData("Hello")]
+        [InlineData("hello")]
+        public void OnSearchTextChanged_SearchTextChanged_FiltersReplacePhrasesByItem2(string filter)
+        {
+            // Arrange
+            var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
+            ReplaceViewModel.RemoveAllPhrases();
+            ReplaceData.IsSorted = false;
+
+            vm.AddNewPhrase("this should exist", "hello", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("Item1", "this should get filtered out", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+            vm.AddNewPhrase("this should also exist", "xxHello!xx", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
+
+            // Act
+            vm.SearchText = filter;
+
+            // Assert
+            Assert.Equal(2, vm.ReplacePhrases.Count);
+            Assert.Equal("this should exist", vm.ReplacePhrases[0].Item1);
+            Assert.Equal("this should also exist", vm.ReplacePhrases[1].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Fact]
         public void AddNewPhrase_AddPhrasesAtTop_PhrasesInCorrectOrder()
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -23,6 +154,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("c", vm.ReplacePhrases[0].Item1);
             Assert.Equal("b", vm.ReplacePhrases[1].Item1);
             Assert.Equal("a", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -30,6 +163,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -42,6 +176,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("a", vm.ReplacePhrases[0].Item1);
             Assert.Equal("b", vm.ReplacePhrases[1].Item1);
             Assert.Equal("c", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -49,6 +185,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -61,6 +198,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("c", vm.ReplacePhrases[0].Item1);
             Assert.Equal("b", vm.ReplacePhrases[1].Item1);
             Assert.Equal("a", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -68,6 +207,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -80,6 +220,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("a", vm.ReplacePhrases[0].Item1);
             Assert.Equal("b", vm.ReplacePhrases[1].Item1);
             Assert.Equal("c", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -87,6 +229,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
             var duplicateItem1 = "Item1";
@@ -97,6 +240,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.False(actual);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -107,6 +252,7 @@ namespace TextReplace.Tests.ViewModels
             var expectedItem2 = "new Item2";
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase("original Item1", "original Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
@@ -119,6 +265,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal(expectedItem1, vm.SelectedPhrase.Item1);
             Assert.Equal(expectedItem2, vm.ReplacePhrases[0].Item2);
             Assert.Equal(expectedItem2, vm.SelectedPhrase.Item2);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -128,6 +276,7 @@ namespace TextReplace.Tests.ViewModels
             var expected = "new Item2";
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase("Item1", "original Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
@@ -138,6 +287,8 @@ namespace TextReplace.Tests.ViewModels
             // Assert
             Assert.Equal(expected, vm.ReplacePhrases[0].Item2);
             Assert.Equal(expected, vm.SelectedPhrase.Item2);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -145,6 +296,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
@@ -155,6 +307,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.False(actual);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -164,6 +318,7 @@ namespace TextReplace.Tests.ViewModels
             var expectedItem1 = "expected Item1";
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -176,6 +331,8 @@ namespace TextReplace.Tests.ViewModels
             // Assert
             Assert.Single(vm.ReplacePhrases);
             Assert.Equal(expectedItem1, vm.ReplacePhrases[0].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -183,6 +340,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
@@ -193,6 +351,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.False(actual);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -200,6 +360,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
@@ -210,6 +371,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.False(actual);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -217,6 +380,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
@@ -226,6 +390,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Empty(vm.ReplacePhrases);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -233,13 +399,15 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
-            ReplaceViewModel.RemoveAllPhrases();
+            VMHelper.RegisterMessenger(vm);
 
             // Act
             ReplaceViewModel.RemoveAllPhrases();
 
             // Assert
             Assert.Empty(vm.ReplacePhrases);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -247,6 +415,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -261,6 +430,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("c", vm.ReplacePhrases[0].Item1);
             Assert.Equal("a", vm.ReplacePhrases[1].Item1);
             Assert.Equal("b", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -268,6 +439,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -282,6 +454,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("b", vm.ReplacePhrases[0].Item1);
             Assert.Equal("a", vm.ReplacePhrases[1].Item1);
             Assert.Equal("c", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -289,6 +463,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -303,6 +478,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("a", vm.ReplacePhrases[0].Item1);
             Assert.Equal("b", vm.ReplacePhrases[1].Item1);
             Assert.Equal("c", vm.ReplacePhrases[2].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -310,6 +487,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -326,6 +504,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("b", vm.ReplacePhrases[1].Item1);
             Assert.Equal("c", vm.ReplacePhrases[2].Item1);
             Assert.Equal("d", vm.ReplacePhrases[3].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -333,6 +513,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = true;
 
@@ -349,6 +530,8 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("a", vm.ReplacePhrases[1].Item1);
             Assert.Equal("d", vm.ReplacePhrases[2].Item1);
             Assert.Equal("c", vm.ReplacePhrases[3].Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -356,6 +539,7 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             // Act
@@ -363,6 +547,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Equal("Item1", vm.SelectedPhrase.Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -372,6 +558,7 @@ namespace TextReplace.Tests.ViewModels
             var expected = "original selected phrase Item1";
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
 
             vm.AddNewPhrase(expected, "", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
@@ -381,6 +568,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.Equal(expected, vm.SelectedPhrase.Item1);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Theory]
@@ -409,6 +598,7 @@ namespace TextReplace.Tests.ViewModels
             var tempFilename = tempFilePath + filename;
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -434,6 +624,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Cleanup
             // Directory.Delete(tempFilePath, true);
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -453,6 +644,7 @@ namespace TextReplace.Tests.ViewModels
             };
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -469,6 +661,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Cleanup
             File.Delete(filename);
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Theory]
@@ -489,6 +682,7 @@ namespace TextReplace.Tests.ViewModels
             };
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
 
@@ -502,6 +696,8 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.False(actual);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Theory]
@@ -527,17 +723,20 @@ namespace TextReplace.Tests.ViewModels
             var mockFileName = mockFilePath + filename;
 
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
 
             // Act
-            ReplaceData.SetNewReplacePhrasesFromFile(mockFileName);
+            ReplaceViewModel.SetNewReplacePhrasesFromFile(mockFileName);
 
             // convert the vm's ReplacePhrases into a List<(string, string)>
             var actualReplacePhrases = new List<(string, string)>(vm.ReplacePhrases.Select(x => (x.Item1, x.Item2)));
-            var actual = ReplaceData.SetNewReplacePhrasesFromFile(mockFileName, dryRun: true);
+            var actualDryRun = ReplaceData.SetNewReplacePhrasesFromFile(mockFileName, dryRun: true);
 
             // Assert
             Assert.Equal(replacePhrases, actualReplacePhrases);
-            Assert.True(actual);
+            Assert.True(actualDryRun);
+
+            VMHelper.UnregisterMessenger(vm);
         }
 
         [Fact]
@@ -547,7 +746,7 @@ namespace TextReplace.Tests.ViewModels
             var filename = Path.GetTempFileName();
 
             // Act
-            var actual = ReplaceData.SetNewReplacePhrasesFromFile(filename);
+            var actual = ReplaceViewModel.SetNewReplacePhrasesFromFile(filename);
             var actualDryRun = ReplaceData.SetNewReplacePhrasesFromFile(filename, dryRun: true);
 
             // Assert
@@ -566,7 +765,7 @@ namespace TextReplace.Tests.ViewModels
             var mockFileName = mockFilePath + filename;
 
             // Act
-            var actual = ReplaceData.SetNewReplacePhrasesFromFile(mockFileName);
+            var actual = ReplaceViewModel.SetNewReplacePhrasesFromFile(mockFileName);
             var actualDryRun = ReplaceData.SetNewReplacePhrasesFromFile(mockFileName, dryRun: true);
 
             // Assert
@@ -579,13 +778,16 @@ namespace TextReplace.Tests.ViewModels
         {
             // Arrange
             var vm = new ReplaceViewModel();
+            VMHelper.RegisterMessenger(vm);
 
             // Act
-            ReplaceData.CreateNewReplacePhrasesAndFile();
+            ReplaceViewModel.CreateNewReplacePhrasesAndFile();
 
             // Assert
             Assert.Empty(vm.ReplacePhrases);
             Assert.Equal("Untitled", vm.FileName);
+
+            VMHelper.UnregisterMessenger(vm);
         }
     }
 }
