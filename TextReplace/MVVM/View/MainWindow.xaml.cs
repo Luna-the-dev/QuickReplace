@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using System.ComponentModel;
 using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
@@ -15,6 +16,16 @@ namespace TextReplace.MVVM.View
             var viewModel = (MainViewModel)DataContext;
             Loaded += (s, e) => viewModel.IsActive = true;
             Unloaded += (s, e) => viewModel.IsActive = false;
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            MainViewModel.SaveUserSettings();
         }
     }
 }

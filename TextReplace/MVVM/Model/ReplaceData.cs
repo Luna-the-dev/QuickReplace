@@ -14,7 +14,7 @@ using ClosedXML.Excel;
 
 namespace TextReplace.MVVM.Model
 {
-    public class ReplaceData
+    public static class ReplaceData
     {
         private static string _fileName = string.Empty;
         public static string FileName
@@ -36,7 +36,6 @@ namespace TextReplace.MVVM.Model
                 WeakReferenceMessenger.Default.Send(new IsNewReplacementsFileMsg(value));
             }
         }
-
 
         // key is the phrase to replace, value is what it is being replaced with
         private static Dictionary<string, string> _replacePhrasesDict = [];

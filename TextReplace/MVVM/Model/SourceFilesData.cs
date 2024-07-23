@@ -7,7 +7,7 @@ using TextReplace.Messages.Sources;
 
 namespace TextReplace.MVVM.Model
 {
-    class SourceFilesData
+    static class SourceFilesData
     {
         private static List<SourceFile> _sourceFiles = [];
         public static List<SourceFile> SourceFiles

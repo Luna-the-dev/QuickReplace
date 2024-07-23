@@ -7,6 +7,8 @@
                  xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
                  xmlns:view="clr-namespace:TextReplace.MVVM.View"
                  xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                 Closing="Window_Closing"
+                 Closed="Window_Closed"
                  mc:Ignorable="d"
                  d:Width="1920" d:Height="1032"
                  MinWidth="920" MinHeight="600"

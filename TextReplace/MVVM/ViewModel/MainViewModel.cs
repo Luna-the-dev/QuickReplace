@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using System.Diagnostics;
 using TextReplace.Messages;
+using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -15,7 +17,6 @@ namespace TextReplace.MVVM.ViewModel
 
         [ObservableProperty]
         private object _sideBarView;
-
 
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
         public TopBarViewModel TopBarVm = new TopBarViewModel();
@@ -33,6 +34,24 @@ namespace TextReplace.MVVM.ViewModel
         protected override void OnActivated()
         {
             WeakReferenceMessenger.Default.RegisterAll(this);
+        }
+
+        public static void SaveUserSettings()
+        {
+            Debug.WriteLine("hey!");
+            OutputData.UserSettings.WholeWord = OutputData.WholeWord;
+            OutputData.UserSettings.CaseSensitive = OutputData.CaseSensitive;
+            OutputData.UserSettings.PreserveCase = OutputData.PreserveCase;
+            OutputData.UserSettings.OpenFileLocation = OutputData.OpenFileLocation;
+
+            OutputData.UserSettings.Styling.Bold = OutputData.OutputFilesStyling.Bold;
+            OutputData.UserSettings.Styling.Italics = OutputData.OutputFilesStyling.Italics;
+            OutputData.UserSettings.Styling.Underline = OutputData.OutputFilesStyling.Underline;
+            OutputData.UserSettings.Styling.Strikethrough = OutputData.OutputFilesStyling.Strikethrough;
+            OutputData.UserSettings.Styling.IsHighlighted = OutputData.OutputFilesStyling.IsHighlighted;
+            OutputData.UserSettings.Styling.IsTextColored = OutputData.OutputFilesStyling.IsTextColored;
+            OutputData.UserSettings.Styling.HighlightColor = OutputData.OutputFilesStyling.HighlightColor.ToString();
+            OutputData.UserSettings.Styling.TextColor = OutputData.OutputFilesStyling.TextColor.ToString();
         }
 
         public void Receive(ActiveContentViewMsg message)

@@ -10,11 +10,20 @@ using TextReplace.Messages.Replace;
 using DocumentFormat.OpenXml;
 using TextReplace.Core.Enums;
 using TextReplace.Messages.Output;
+using TextReplace.Core.Config;
+using Config.Net;
 
 namespace TextReplace.MVVM.Model
 {
-    class OutputData
+    static class OutputData
     {
+        private static IUserSettings _userSettings;
+        public static IUserSettings UserSettings
+        {
+            get { return _userSettings; }
+            set { _userSettings = value; }
+        }
+
         private static List<OutputFile> _outputFiles = [];
         public static List<OutputFile> OutputFiles
         {
@@ -37,7 +46,7 @@ namespace TextReplace.MVVM.Model
             }
         }
 
-        private static OutputFileStyling _outputFilesStyling = new OutputFileStyling();
+        private static OutputFileStyling _outputFilesStyling;
         public static OutputFileStyling OutputFilesStyling
         {
             get { return _outputFilesStyling; }
@@ -47,8 +56,7 @@ namespace TextReplace.MVVM.Model
             }
         }
 
-
-        private static bool _wholeWord = false;
+        private static bool _wholeWord;
         public static bool WholeWord
         {
             get { return _wholeWord; }
@@ -59,7 +67,7 @@ namespace TextReplace.MVVM.Model
             }
         }
 
-        private static bool _caseSensitive = false;
+        private static bool _caseSensitive;
         public static bool CaseSensitive
         {
             get { return _caseSensitive; }
@@ -97,6 +105,26 @@ namespace TextReplace.MVVM.Model
             set { _retryReplacementsOnFile = value; }
         }
 
+        static OutputData()
+        {
+            _userSettings = new ConfigurationBuilder<IUserSettings>()
+                .UseIniFile(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/Replacify/UserSettings.ini")
+                .Build();
+
+            _wholeWord = UserSettings.WholeWord;
+            _caseSensitive = UserSettings.CaseSensitive;
+            _preserveCase = UserSettings.PreserveCase;
+            _openFileLocation = UserSettings.OpenFileLocation;
+            _outputFilesStyling = new OutputFileStyling(
+                UserSettings.Styling.Bold,
+                UserSettings.Styling.Italics,
+                UserSettings.Styling.Underline,
+                UserSettings.Styling.Strikethrough,
+                UserSettings.Styling.IsHighlighted,
+                UserSettings.Styling.IsTextColored,
+                UserSettings.Styling.HighlightColor,
+                UserSettings.Styling.TextColor);
+        }
 
         /// <summary>
         /// Searches through a list of source files, looking for instances of keys from 
@@ -997,6 +1025,34 @@ namespace TextReplace.MVVM.Model
             IsTextColored = isTextColored;
             HighlightColor = highlightColor;
             TextColor = textColor;
+            HighlightColorString = (highlightColor.ToString()[0] == '#') ?
+                    highlightColor.ToString().Substring(3) :
+                    highlightColor.ToString().Substring(1);
+            TextColorString = (textColor.ToString()[0] == '#') ?
+                    textColor.ToString().Substring(3) :
+                    textColor.ToString().Substring(1);
+        }
+
+        public OutputFileStyling(
+            bool bold,
+            bool italics,
+            bool underline,
+            bool strikethrough,
+            bool isHighlighted,
+            bool isTextColored,
+            string highlightColor,
+            string textColor)
+        {
+            Bold = bold;
+            Italics = italics;
+            Underline = underline;
+            Strikethrough = strikethrough;
+            IsHighlighted = isHighlighted;
+            IsTextColored = isTextColored;
+
+            HighlightColor = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(highlightColor);
+            TextColor = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(textColor);
+
             HighlightColorString = (highlightColor.ToString()[0] == '#') ?
                     highlightColor.ToString().Substring(3) :
                     highlightColor.ToString().Substring(1);
