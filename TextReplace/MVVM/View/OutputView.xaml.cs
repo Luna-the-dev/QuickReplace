@@ -69,6 +69,7 @@ namespace TextReplace.MVVM.View
 
             if (filePath != string.Empty)
             {
+                filePath = filePath.Replace("/", "\\");
                 Process.Start("explorer.exe", "/select, " + filePath);
             }
         }
@@ -105,6 +106,7 @@ namespace TextReplace.MVVM.View
             }
 
             string? filePath = viewModel.SelectedFile.FileName;
+            filePath = filePath.Replace("/", "\\");
             Process.Start("explorer.exe", "/select, " + filePath);
         }
 
