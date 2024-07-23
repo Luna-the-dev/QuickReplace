@@ -13,7 +13,7 @@ using TextReplace.Messages.Output;
 
 namespace TextReplace.MVVM.Model
 {
-    public class OutputData
+    class OutputData
     {
         private static List<OutputFile> _outputFiles = [];
         public static List<OutputFile> OutputFiles
@@ -851,6 +851,7 @@ namespace TextReplace.MVVM.Model
                 {
                     continue;
                 }
+
                 outputFile.FileName = Path.ChangeExtension(
                     outputFile.FileName,
                     OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.SourceFileName));
@@ -863,6 +864,9 @@ namespace TextReplace.MVVM.Model
                 }
             }
 
+            // update the selected file first to prevent issue with viewmodel
+            // updating its data with an outdated selected file
+            WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
             WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
     }

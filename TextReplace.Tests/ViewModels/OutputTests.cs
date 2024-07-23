@@ -327,15 +327,15 @@ namespace TextReplace.Tests.ViewModels
             // Act
             OutputViewModel.SetAllOutputFileTypes(OutputFileTypeEnum.KeepFileType);
             var expected1 = Path.GetExtension(sourceFileName);
-            var actual1 = Path.GetExtension(vm.SelectedFile.FileName);
+            var actual1 = Path.GetExtension(vm.OutputFiles[0].FileName);
 
             OutputViewModel.SetAllOutputFileTypes(OutputFileTypeEnum.Text);
             var expected2 = Path.GetExtension(".txt");
-            var actual2 = Path.GetExtension(vm.SelectedFile.FileName);
+            var actual2 = Path.GetExtension(vm.OutputFiles[0].FileName);
 
             OutputViewModel.SetAllOutputFileTypes(OutputFileTypeEnum.Document);
             var expected3 = Path.GetExtension(".docx");
-            var actual3 = Path.GetExtension(vm.SelectedFile.FileName);
+            var actual3 = Path.GetExtension(vm.OutputFiles[0].FileName);
 
             // Assert
             Assert.Equal(expected1, actual1);

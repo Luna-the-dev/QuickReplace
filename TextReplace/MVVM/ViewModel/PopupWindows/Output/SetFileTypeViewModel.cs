@@ -3,7 +3,7 @@ using TextReplace.Core.Enums;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows
 {
-    partial class SetOutputFileTypeViewModel : ObservableRecipient
+    public partial class SetOutputFileTypeViewModel : ObservableRecipient
     {
 
         [ObservableProperty]
