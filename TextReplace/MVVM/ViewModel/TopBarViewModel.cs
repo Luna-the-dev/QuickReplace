@@ -8,6 +8,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using TextReplace.Messages.Sources;
 using TextReplace.Core.Validation;
 using TextReplace.Messages.Replace;
+using TextReplace.Messages.Output;
 using TextReplace.Messages;
 
 namespace TextReplace.MVVM.ViewModel

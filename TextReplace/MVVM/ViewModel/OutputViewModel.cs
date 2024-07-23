@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.Windows.Media;
 using TextReplace.Core.Enums;
 using TextReplace.Messages.Replace;
+using TextReplace.Messages.Sources;
+using TextReplace.Messages.Output;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel

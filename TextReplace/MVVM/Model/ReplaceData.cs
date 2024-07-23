@@ -89,6 +89,17 @@ namespace TextReplace.MVVM.Model
             }
         }
 
+        private static bool _isSavingReplacementsInProgress;
+        public static bool IsSavingReplacementsInProgress
+        {
+            get { return _isSavingReplacementsInProgress; }
+            set
+            {
+                _isSavingReplacementsInProgress = value;
+                WeakReferenceMessenger.Default.Send(new SavingReplacementsInProgressMsg(value));
+            }
+        }
+
         /// <summary>
         /// Parses through a file for replace phrases and sets the ReplacePhrases List/Dict.
         /// </summary>
@@ -198,33 +209,46 @@ namespace TextReplace.MVVM.Model
         /// <param name="delimiter"></param>
         public static void SavePhrasesToFile(string fileName, bool shouldSort, string delimiter)
         {
+            IsSavingReplacementsInProgress = true;
+
             var directory = Path.GetDirectoryName(fileName)?.Replace("\\", "/");
             if (directory == null)
             {
+                IsSavingReplacementsInProgress = false;
                 throw new DirectoryNotFoundException($"Directory was not found: {fileName}");
             }
 
             if (Path.GetExtension(fileName) == ".txt" && DataValidation.IsDelimiterValid(delimiter) == false)
             {
+                IsSavingReplacementsInProgress = false;
                 throw new InvalidOperationException($"Invalid delimiter: {delimiter}");
             }
 
-            // prevents exception if directory doesnt exist
-            if (Directory.Exists(directory) == false)
+            try
             {
-                Directory.CreateDirectory(directory);
-            }
+                // prevents exception if directory doesnt exist
+                if (Directory.Exists(directory) == false)
+                {
+                    Directory.CreateDirectory(directory);
+                }
 
-            if (FileValidation.IsExcelFile(fileName))
-            {
-                SavePhrasesToExcel(fileName, shouldSort);
+                if (FileValidation.IsExcelFile(fileName))
+                {
+                    SavePhrasesToExcel(fileName, shouldSort);
+                }
+                else
+                {
+                    SavePhrasesToCsv(fileName, shouldSort, delimiter);
+                }
             }
-            else
+            catch
             {
-                SavePhrasesToCsv(fileName, shouldSort, delimiter);
+                IsSavingReplacementsInProgress = false;
+                throw;
             }
 
             FileName = fileName;
+            IsSavingReplacementsInProgress = false;
         }
 
         private static void SavePhrasesToExcel(string fileName, bool shouldSort)

@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.AhoCorasick;
 using TextReplace.Core.Validation;
-using TextReplace.Messages.Replace;
 using DocumentFormat.OpenXml;
 using TextReplace.Core.Enums;
 using TextReplace.Messages.Output;
@@ -105,6 +104,18 @@ namespace TextReplace.MVVM.Model
             set { _retryReplacementsOnFile = value; }
         }
 
+        private static bool _isReplacementInProgress;
+        public static bool IsReplacementInProgress
+        {
+            get { return _isReplacementInProgress; }
+            set
+            {
+                _isReplacementInProgress = value;
+                WeakReferenceMessenger.Default.Send(new ReplacementInProgressMsg(value));
+            }
+        }
+
+
         static OutputData()
         {
             _userSettings = new ConfigurationBuilder<IUserSettings>()
@@ -147,9 +158,12 @@ namespace TextReplace.MVVM.Model
             bool caseSensitive,
             bool preserveCase)
         {
+            IsReplacementInProgress = true;
+
             if (srcFiles.Count == 0 || destFiles.Count == 0)
             {
                 Debug.WriteLine("srcFiles or destFiles is empty");
+                IsReplacementInProgress = false;
                 return false;
             }
 
@@ -178,6 +192,7 @@ namespace TextReplace.MVVM.Model
             }
 
             WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
+            IsReplacementInProgress = false;
             return didEverythingSucceed;
         }
 

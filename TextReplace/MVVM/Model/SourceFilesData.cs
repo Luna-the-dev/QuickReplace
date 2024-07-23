@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Validation;
-using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
 
 namespace TextReplace.MVVM.Model

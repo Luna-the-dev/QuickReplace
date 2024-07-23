@@ -1,13 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
-using System.Diagnostics;
 using TextReplace.Messages;
+using TextReplace.Messages.Output;
+using TextReplace.Messages.Replace;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
     partial class MainViewModel : ObservableRecipient,
-        IRecipient<ActiveContentViewMsg>
+        IRecipient<ActiveContentViewMsg>,
+        IRecipient<ReplacementInProgressMsg>,
+        IRecipient<SavingReplacementsInProgressMsg>
     {
         [ObservableProperty]
         private object _currentView;
@@ -21,6 +24,21 @@ namespace TextReplace.MVVM.ViewModel
         public ReplaceViewModel ReplaceVm = new ReplaceViewModel();
         public TopBarViewModel TopBarVm = new TopBarViewModel();
         public SideBarViewModel SideBarVm = new SideBarViewModel();
+
+        private bool _isReplacementInProgress = OutputData.IsReplacementInProgress;
+        public bool IsReplacementInProgress
+        {
+            get { return _isReplacementInProgress; }
+            set { _isReplacementInProgress = value; }
+        }
+
+        private bool _isSavingReplacementsInProgress = ReplaceData.IsSavingReplacementsInProgress;
+        public bool IsSavingReplacementsInProgress
+        {
+            get { return _isSavingReplacementsInProgress; }
+            set { _isSavingReplacementsInProgress = value; }
+        }
+
 
         public MainViewModel()
         {
@@ -38,7 +56,6 @@ namespace TextReplace.MVVM.ViewModel
 
         public static void SaveUserSettings()
         {
-            Debug.WriteLine("hey!");
             OutputData.UserSettings.WholeWord = OutputData.WholeWord;
             OutputData.UserSettings.CaseSensitive = OutputData.CaseSensitive;
             OutputData.UserSettings.PreserveCase = OutputData.PreserveCase;
@@ -57,6 +74,16 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(ActiveContentViewMsg message)
         {
             CurrentView = message.Value;
+        }
+
+        public void Receive(ReplacementInProgressMsg message)
+        {
+            IsReplacementInProgress = message.Value;
+        }
+
+        public void Receive(SavingReplacementsInProgressMsg message)
+        {
+            IsSavingReplacementsInProgress = message.Value;
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace TextReplace.Messages.Output
 {
-    public class CaseSensitiveMsg(bool value) : ValueChangedMessage<bool>(value)
+    public class ReplacementInProgressMsg(bool value) : ValueChangedMessage<bool>(value)
     {
     }
 }
