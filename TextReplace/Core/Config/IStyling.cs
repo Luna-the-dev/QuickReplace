@@ -16,10 +16,10 @@ namespace TextReplace.Core.Config
 
         bool IsTextColored { get; set; }
 
-        [Option(DefaultValue = "#FFFFFF")]
+        [Option(DefaultValue = "#000000")]
         string HighlightColor { get; set; }
 
-        [Option(DefaultValue = "#FFFFFF")]
+        [Option(DefaultValue = "#000000")]
         string TextColor { get; set; }
     }
 }
