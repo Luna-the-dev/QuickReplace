@@ -2,7 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class WholeWordMsg(bool value) : ValueChangedMessage<bool>(value)
+    public class WholeWordMsg(bool value) : ValueChangedMessage<bool>(value)
     {
     }
 }

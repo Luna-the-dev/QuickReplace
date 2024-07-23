@@ -11,7 +11,7 @@ using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
-    partial class OutputViewModel : ObservableRecipient,
+    public partial class OutputViewModel : ObservableRecipient,
         IRecipient<OutputFilesMsg>,
         IRecipient<SelectedOutputFileMsg>,
         IRecipient<ReplacePhrasesMsg>,
@@ -20,7 +20,7 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<CaseSensitiveMsg>,
         IRecipient<PreserveCaseMsg>,
         IDropTarget
-    {
+    {   
         [ObservableProperty]
         private ObservableCollection<OutputFileWrapper> _outputFiles =
             new(OutputData.OutputFiles.Select(OutputFileWrapper.WrapOutputFile));
@@ -60,10 +60,10 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private bool _isPreserveCase = OutputData.PreserveCase;
 
-        public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
-        public RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
-        public RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
-        public RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
+        public static RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
+        public static RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
+        public static RelayCommand ToggleCaseSensitiveCommand => new RelayCommand(ToggleCaseSensitive);
+        public static RelayCommand TogglePreserveCaseCommand => new RelayCommand(TogglePreserveCase);
 
         public OutputViewModel()
         {
@@ -75,27 +75,7 @@ namespace TextReplace.MVVM.ViewModel
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
-        public static async Task ReplaceAll(bool openFileLocation)
-        {
-            await Task.Run(() =>
-            {
-                OutputData.OpenFileLocation = openFileLocation;
-                PerformReplacements(
-                    OutputData.OutputFiles.Select(x => x.SourceFileName).ToList(),
-                    OutputData.OutputFiles.Select(x => x.FileName).ToList());
-            });
-        }
-
-        public static async Task ReplaceSelected(bool openFileLocation)
-        {
-            await Task.Run(() =>
-            {
-                OutputData.OpenFileLocation = openFileLocation;
-                PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
-            });
-        }
-
-        private void SetSelectedFile(object? file)
+        private static void SetSelectedFile(object? file)
         {
             // for some reason if i pass in the SourceFileWrapper, this doesn't fire
             // on the first click, however if i pass it as a generic obect and
@@ -108,27 +88,51 @@ namespace TextReplace.MVVM.ViewModel
             OutputData.SelectedFile = OutputFileWrapper.UnwrapOutputFile(f);
         }
 
-        private void ToggleWholeWord()
+        private static void ToggleWholeWord()
         {
             OutputData.WholeWord = !OutputData.WholeWord;
         }
 
-        private void ToggleCaseSensitive()
+        private static void ToggleCaseSensitive()
         {
             OutputData.CaseSensitive = !OutputData.CaseSensitive;
         }
 
-        private void TogglePreserveCase()
+        private static void TogglePreserveCase()
         {
             OutputData.PreserveCase = !OutputData.PreserveCase;
         }
 
-        private static void PerformReplacements(List<string> sourceFiles, List<string> destFiles)
+        public static async Task<bool> ReplaceSelected(bool openFileLocation)
+        {
+            var result = false;
+            await Task.Run(() =>
+            {
+                OutputData.OpenFileLocation = openFileLocation;
+                result = PerformReplacements([OutputData.SelectedFile.SourceFileName], [OutputData.SelectedFile.FileName]);
+            });
+            return result;
+        }
+
+        public static async Task<bool> ReplaceAll(bool openFileLocation)
+        {
+            var result = false;
+            await Task.Run(() =>
+            {
+                OutputData.OpenFileLocation = openFileLocation;
+                result = PerformReplacements(
+                    OutputData.OutputFiles.Select(x => x.SourceFileName).ToList(),
+                    OutputData.OutputFiles.Select(x => x.FileName).ToList());
+            });
+            return result;
+        }
+
+        private static bool PerformReplacements(List<string> sourceFiles, List<string> destFiles)
         {
             if (ReplaceData.FileName == string.Empty || SourceFilesData.SourceFiles.Count == 0)
             {
                 Debug.WriteLine("Replace file or source files were empty. This should never be reached...");
-                return;
+                return false;
             }
 
             // perform the text replacements
@@ -148,6 +152,7 @@ namespace TextReplace.MVVM.ViewModel
             {
                 Debug.WriteLine("Replacements successfully performed.");
             }
+            return result;
         }
 
         public void SetSelectedOutputFileType(OutputFileTypeEnum fileType)
@@ -167,6 +172,11 @@ namespace TextReplace.MVVM.ViewModel
             OutputData.OutputFilesStyling = new OutputFileStyling(
                 bold, italics, underline, strikethrough,
                 isHighlighted, isTextColored, highlightColor, textColor);
+        }
+
+        public static void SetOutputFilesStylingDefault()
+        {
+            OutputData.OutputFilesStyling = new OutputFileStyling();
         }
 
         private void SetIsReplacifyEnabled()
@@ -266,6 +276,7 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(SelectedOutputFileMsg message)
         {
             SelectedFile = OutputFileWrapper.WrapOutputFile(message.Value);
+            // UpdateOutputFilesView(SelectedFile.FileName);
         }
 
         public void Receive(ReplacePhrasesMsg message)
@@ -296,7 +307,7 @@ namespace TextReplace.MVVM.ViewModel
         }
     }
 
-    class OutputFileWrapper
+    public class OutputFileWrapper
     {
         public string FileName { get; set; }
         public string ShortFileName { get; set; }
@@ -318,6 +329,24 @@ namespace TextReplace.MVVM.ViewModel
 
         public OutputFileWrapper(OutputFile file, bool isSelected = false)
         {
+            FileName = file.FileName;
+            ShortFileName = file.ShortFileName;
+            SourceFileName = file.SourceFileName;
+            NumOfReplacements = file.NumOfReplacements;
+            NumOfReplacementsString = string.Empty;
+            SetNumOfReplacementsString();
+            IsSelected = isSelected;
+        }
+
+        public OutputFileWrapper(
+            string fileName,
+            string shortFileName,
+            string sourceFileName,
+            int numOfReplacements,
+            bool isSelected = false)
+        {
+            var file = new OutputFile(fileName, shortFileName, sourceFileName, numOfReplacements);
+
             FileName = file.FileName;
             ShortFileName = file.ShortFileName;
             SourceFileName = file.SourceFileName;

@@ -48,14 +48,14 @@ namespace TextReplace.MVVM.ViewModel
         [ObservableProperty]
         private SourceFile _defaultSourceFileOptions = SourceFilesData.DefaultSourceFileOptions;
 
-        public RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
+        public static RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
 
         protected override void OnActivated()
         {
             WeakReferenceMessenger.Default.RegisterAll(this);
         }
 
-        private void SetSelectedFile(object? file)
+        private static void SetSelectedFile(object? file)
         {
             // for some reason if i pass in the SourceFileWrapper, this doesn't fire
             // on the first click, however if i pass it as a generic obect and

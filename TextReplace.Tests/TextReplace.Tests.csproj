@@ -10,6 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MockFiles\MockOutputs\**" />
+    <Compile Remove="MockFiles\MockReplacements\**" />
+    <Compile Remove="MockFiles\MockSources\**" />
+    <EmbeddedResource Remove="MockFiles\MockOutputs\**" />
+    <EmbeddedResource Remove="MockFiles\MockReplacements\**" />
+    <EmbeddedResource Remove="MockFiles\MockSources\**" />
+    <None Remove="MockFiles\MockOutputs\**" />
+    <None Remove="MockFiles\MockReplacements\**" />
+    <None Remove="MockFiles\MockSources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -32,12 +44,6 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="MockFiles\MockOutputs\" />
-    <Folder Include="MockFiles\MockReplacements\" />
-    <Folder Include="MockFiles\MockSources\" />
   </ItemGroup>
 
   <ItemGroup>

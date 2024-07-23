@@ -13,7 +13,7 @@ using TextReplace.Messages.Output;
 
 namespace TextReplace.MVVM.Model
 {
-    class OutputData
+    public class OutputData
     {
         private static List<OutputFile> _outputFiles = [];
         public static List<OutputFile> OutputFiles
@@ -196,6 +196,14 @@ namespace TextReplace.MVVM.Model
 
             try
             {
+                // create a directory for the generated file if it doesnt exist
+                var destFile = new FileInfo(dest);
+                if (destFile.Directory == null)
+                {
+                    throw new DirectoryNotFoundException("TryWriteReplacementsToFile(): destination file directory could not be parsed.");
+                }
+                destFile.Directory.Create();
+
                 // source file is csv, tsv, or text
                 if (FileValidation.IsCsvTsvFile(src) || FileValidation.IsTextFile(src))
                 {
@@ -483,7 +491,13 @@ namespace TextReplace.MVVM.Model
 
             // this keeps track of the shared string item that have been visited
             // key is the sharedstringitem id, value is the number of replacements made in it
-            var visitedSharedStringItems = new Dictionary<int, int>();
+            var sharedStringItemToNumOfReplacementsMap = new Dictionary<int, int>();
+
+            // this maps the styleIndex of a cell's formatting to the index of a new cellFormat in the CellFormats tag,
+            // which is identical to the old format but with the new highlight color. This is used to not wipe a cell's
+            // formatting when applying a new highlight color, as well as to not needlessly add duplicate CellFormats
+            // to the excel spreadsheet.
+            var OldStyleIndexToReplacedStyleIndexMap = new Dictionary<UInt32Value, UInt32Value>();
 
             File.Copy(src, dest, true);
 
@@ -496,6 +510,10 @@ namespace TextReplace.MVVM.Model
 
             WorkbookPart wbPart = document.WorkbookPart;
             List<Spreadsheet.Sheet> sheets = wbPart.Workbook.Sheets.Elements<Spreadsheet.Sheet>().ToList();
+
+            // this is used to keep track of the id associated with the fill styling associated with the highlight color
+            // OpenXml requires this to know how to highlight the cell with the given color
+            UInt32Value highlightFIllId = 0;
 
             foreach (var sheet in sheets)
             {
@@ -511,6 +529,7 @@ namespace TextReplace.MVVM.Model
                 {
                     int currNumOfMatches = 0;
 
+                    // handle a cell of data type shared string
                     if (cell.DataType != null && cell.DataType == Spreadsheet.CellValues.SharedString)
                     {
                         if (Int32.TryParse(cell.InnerText, out int id))
@@ -522,15 +541,15 @@ namespace TextReplace.MVVM.Model
                             }
 
                             // if the shared string item id has already been visited, then replacements do not need to be made again
-                            if (visitedSharedStringItems.TryGetValue(id, out currNumOfMatches ))
+                            if (sharedStringItemToNumOfReplacementsMap.TryGetValue(id, out currNumOfMatches))
                             {
                                 numOfMatches += currNumOfMatches;
 
                                 // highlight the cell if highlighting is specified and a replacement was made
                                 if (styling.IsHighlighted && currNumOfMatches > 0)
                                 {
-                                    uint cellFormatId = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + styling.HighlightColorString);
-                                    cell.StyleIndex = cellFormatId;
+                                    // update the cell's formatting to point to the new formatting that includes the highlighted background
+                                    cell.StyleIndex = UpdateCellFormatting(cell, OldStyleIndexToReplacedStyleIndexMap, wbPart, styling.HighlightColorString, ref highlightFIllId);
                                 }
 
                                 continue;
@@ -560,11 +579,11 @@ namespace TextReplace.MVVM.Model
                             // highlight the cell if highlighting is specified and a replacement was made
                             if (styling.IsHighlighted && currNumOfMatches > 0)
                             {
-                                uint cellFormatId = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + styling.HighlightColorString);
-                                cell.StyleIndex = cellFormatId;
+                                // update the cell's formatting to point to the new formatting that includes the highlighted background
+                                cell.StyleIndex = UpdateCellFormatting(cell, OldStyleIndexToReplacedStyleIndexMap, wbPart, styling.HighlightColorString, ref highlightFIllId);
                             }
 
-                            visitedSharedStringItems[id] = currNumOfMatches;
+                            sharedStringItemToNumOfReplacementsMap[id] = currNumOfMatches;
                             numOfMatches += currNumOfMatches;
                         }
                     }
@@ -604,11 +623,11 @@ namespace TextReplace.MVVM.Model
                         // highlight the cell if highlighting is specified and a replacement was made
                         if (styling.IsHighlighted && currNumOfMatches > 0)
                         {
-                            uint cellFormatId = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + styling.HighlightColorString);
-                            cell.StyleIndex = cellFormatId;
+                            // update the cell's formatting to point to the new formatting that includes the highlighted background
+                            cell.StyleIndex = UpdateCellFormatting(cell, OldStyleIndexToReplacedStyleIndexMap, wbPart, styling.HighlightColorString, ref highlightFIllId);
                         }
-                        
-                        visitedSharedStringItems[id] = currNumOfMatches;
+
+                        sharedStringItemToNumOfReplacementsMap[id] = currNumOfMatches;
                         numOfMatches += currNumOfMatches;
                     }
                 }
@@ -618,7 +637,7 @@ namespace TextReplace.MVVM.Model
             return numOfMatches;
         }
 
-        public static Spreadsheet.SharedStringItem GenerateSharedStringItemFromRuns(List<Spreadsheet.Run> runs)
+        private static Spreadsheet.SharedStringItem GenerateSharedStringItemFromRuns(List<Spreadsheet.Run> runs)
         {
             var sharedStringItem = new Spreadsheet.SharedStringItem();
 
@@ -630,13 +649,33 @@ namespace TextReplace.MVVM.Model
             return sharedStringItem;
         }
 
+        private static UInt32Value UpdateCellFormatting(
+            Spreadsheet.Cell cell,
+            Dictionary<UInt32Value, UInt32Value> OldStyleIndexToReplacedStyleIndexMap,
+            WorkbookPart wbPart,
+            string highlightColorString,
+            ref UInt32Value highlightFillId)
+        {
+            var styleIndex = cell.StyleIndex ?? 0;
+
+            // if a new cell formatting was *not* created yet for this cell's formatting,
+            // create one and update the map to reflect it
+            if (OldStyleIndexToReplacedStyleIndexMap.ContainsKey(styleIndex) == false)
+            {
+                var newStyleIndex = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + highlightColorString, styleIndex, ref highlightFillId);
+                OldStyleIndexToReplacedStyleIndexMap[styleIndex] = newStyleIndex;
+            }
+
+            return OldStyleIndexToReplacedStyleIndexMap[styleIndex];
+        }
+
         /// <summary>
         /// Appends a cell format onto the spreadsheet that highlights a cell with the given color
         /// </summary>
         /// <param name="wbPart"></param>
         /// <param name="argbBackground"></param>
         /// <returns>The id of the cell format that was created.</returns>
-        public static uint AppendSpreadSheetCellFormatHighlighting(WorkbookPart wbPart, string argbBackground)
+        private static uint AppendSpreadSheetCellFormatHighlighting(WorkbookPart wbPart, string argbBackground, UInt32Value styleindex, ref UInt32Value highlightFillId)
         {
             // get the style sheet or create one if it does not exist
             var workStylePart = wbPart.WorkbookStylesPart;
@@ -652,62 +691,94 @@ namespace TextReplace.MVVM.Model
                 stylesheet = workStylePart.Stylesheet;
             }
 
-            // create the background for the cell
-            var fill = new Spreadsheet.Fill();
-
-            var patternFill = new Spreadsheet.PatternFill() { PatternType = Spreadsheet.PatternValues.Solid };
-            var foregroundColor = new Spreadsheet.ForegroundColor() { Rgb = argbBackground };
-            var backgroundColor = new Spreadsheet.BackgroundColor() { Indexed = (UInt32Value)64U };
-
-            patternFill.Append(foregroundColor);
-            patternFill.Append(backgroundColor);
-            fill.Append(patternFill);
-
-            // if the cell didnt have a fills child, create one and append it to the stylesheet
-            var fills = stylesheet.GetFirstChild<Spreadsheet.Fills>();
-            if (fills == null)
+            // if no new fill to match our background color has been created,
+            // create a new fill and save the id to reapply in other cells if needed
+            if (highlightFillId == 0)
             {
-                fills = new Spreadsheet.Fills();
-                fills.Append(fill);
-                stylesheet.AppendChild(fills);
-            }
-            else
-            {
-                fills.Append(fill);
+                // create the background for the cell
+                var fill = new Spreadsheet.Fill();
+
+                var patternFill = new Spreadsheet.PatternFill() { PatternType = Spreadsheet.PatternValues.Solid };
+                var foregroundColor = new Spreadsheet.ForegroundColor() { Rgb = argbBackground };
+                var backgroundColor = new Spreadsheet.BackgroundColor() { Indexed = (UInt32Value)64U };
+
+                patternFill.Append(foregroundColor);
+                patternFill.Append(backgroundColor);
+                fill.Append(patternFill);
+
+                // if the cell didnt have a fills child, create one and append it to the stylesheet
+                var fills = stylesheet.GetFirstChild<Spreadsheet.Fills>();
+                if (fills == null)
+                {
+                    fills = new Spreadsheet.Fills();
+                    fills.Append(fill);
+                    stylesheet.AppendChild(fills);
+                }
+                else
+                {
+                    fills.Append(fill);
+                }
+
+                highlightFillId = fills.Count ?? 0;
             }
 
-            // add the cell format onto the stylesheet
-            var cellFormats = stylesheet.GetFirstChild<Spreadsheet.CellFormats>();
-            var cellFormat1 = new Spreadsheet.CellFormat()
+            // create new cell formats for if they dont already exist in the stylesheet
+            var defaultCellFormat = new Spreadsheet.CellFormat()
             {
                 FontId = 0,
                 FillId = 0,
                 BorderId = 0
             };
-            var cellFormat2 = new Spreadsheet.CellFormat()
+            var defaultCellFormatHighlighted = new Spreadsheet.CellFormat()
             {
-                FillId = 2,
+                FillId = highlightFillId,
                 ApplyFill = true
             };
 
-            uint count;
+            var cellFormats = stylesheet.GetFirstChild<Spreadsheet.CellFormats>();
+
+            // if the stylesheet does not have a cellformats tag, add it in and
+            // append a default cell format as well as the new highlighted cell format
             if (cellFormats == null)
             {
                 cellFormats = new Spreadsheet.CellFormats();
-                count = cellFormats.Count ?? 0;
-                cellFormats.Count = count + 1;
-                cellFormats.Append(cellFormat1);
-                cellFormats.Append(cellFormat1);
+                cellFormats.Count = (cellFormats.Count ?? 0) + 2;
+                cellFormats.Append(defaultCellFormat);
+                cellFormats.Append(defaultCellFormatHighlighted);
                 stylesheet.AppendChild(cellFormats);
-            }
-            else
-            {
-                count = cellFormats.Count ?? 0;
-                cellFormats.Count = count + 1;
-                cellFormats.Append(cellFormat2);
+
+                return cellFormats.Count - 1;
             }
 
-            return cellFormats.Count;
+            // get the cell formatting used by the given cell
+            uint styleIndexUint = styleindex;
+            var cellFormat = cellFormats.ToList()[(int)styleIndexUint] as Spreadsheet.CellFormat;
+
+            // if the cell formatting could not be found, use default cell formatting with the highlighted background
+            if (cellFormat == null)
+            {
+                cellFormats.Count = (cellFormats.Count ?? 0) + 1;
+                cellFormats.Append(defaultCellFormatHighlighted);
+                return cellFormats.Count - 1;
+            }
+
+            // create the new cell formatting
+            var newCellFormat = cellFormat.CloneNode(true) as Spreadsheet.CellFormat;
+
+            if (newCellFormat == null)
+            {
+                cellFormats.Count = (cellFormats.Count ?? 0) + 1;
+                cellFormats.Append(defaultCellFormatHighlighted);
+                return cellFormats.Count;
+            }
+
+            // apply the background color to the cells formatting
+            newCellFormat.FillId = highlightFillId;
+            newCellFormat.ApplyFill = true;
+            cellFormats.Count = (cellFormats.Count ?? 0) + 1;
+            cellFormats.Append(newCellFormat);
+
+            return cellFormats.Count - 1;
         }
 
         public static void UpdateOutputFiles(List<SourceFile> files)
@@ -761,6 +832,9 @@ namespace TextReplace.MVVM.Model
                 SelectedFile.ShortFileName = OutputFiles[i].ShortFileName;
             }
 
+            // update the selected file first to prevent issue with viewmodel
+            // updating its data with an outdated selected file
+            WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
             WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
         }
 
@@ -793,7 +867,7 @@ namespace TextReplace.MVVM.Model
         }
     }
 
-    class OutputFile
+    public class OutputFile
     {
         public string FileName { get; set; }
         public string ShortFileName { get; set; }
@@ -831,15 +905,21 @@ namespace TextReplace.MVVM.Model
         private static string GenerateDestFileName(SourceFile file)
         {
             string? directory = (file.OutputDirectory == string.Empty) ?
-                Path.GetDirectoryName(file.FileName) :
+                Path.GetDirectoryName(file.FileName)?.Replace("\\", "/") :
                 file.OutputDirectory;
+
+            directory ??= "";
 
             string suffix = (file.Suffix == string.Empty) ?
                 "-replacify" :
                 file.Suffix;
 
-            return string.Format(@"{0}\{1}{2}{3}",
+            // if the directory ends in a slash, dont include another one when generating the destination file
+            var appendSlash = directory.EndsWith("/") ? "" : "/";
+
+            return string.Format(@"{0}{1}{2}{3}{4}",
                                  directory,
+                                 appendSlash,
                                  Path.GetFileNameWithoutExtension(file.FileName),
                                  suffix,
                                  Path.GetExtension(file.FileName));

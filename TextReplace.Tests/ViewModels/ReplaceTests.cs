@@ -8,6 +8,9 @@ namespace TextReplace.Tests.ViewModels
 {
     public class ReplaceTests
     {
+        private static readonly string RelativeReplacementsPath = "../../../MockFiles/ReplaceTests/";
+        private static readonly string RelativeGeneratedFilePath = "../../GeneratedTestFiles/ReplaceTests/";
+
         [Fact]
         public void OnFullFileNameChanged_ValidFileName_FileNameIsParsed()
         {
@@ -620,7 +623,7 @@ namespace TextReplace.Tests.ViewModels
             ReplaceViewModel.RemoveAllPhrases();
 
             // Act
-            vm.SetSelectedPhraseCommand.Execute(new ReplacePhraseWrapper("Item1", "Item2"));
+            ReplaceViewModel.SetSelectedPhraseCommand.Execute(new ReplacePhraseWrapper("Item1", "Item2"));
 
             // Assert
             Assert.Equal("Item1", vm.SelectedPhrase.Item1);
@@ -641,7 +644,7 @@ namespace TextReplace.Tests.ViewModels
             vm.AddNewPhrase(expected, "", Core.Enums.InsertReplacePhraseAtEnum.Bottom);
 
             // Act
-            vm.SetSelectedPhraseCommand.Execute(null);
+            ReplaceViewModel.SetSelectedPhraseCommand.Execute(null);
 
             // Assert
             Assert.Equal(expected, vm.SelectedPhrase.Item1);
@@ -667,12 +670,8 @@ namespace TextReplace.Tests.ViewModels
                 ("text;with;semicolons", "text;with;semicolons1")
             };
 
-            // relative file path to the TextReplace.Tests folder
-            var relativeFilepath = "../../../MockFiles/MockReplacements/"; // TextReplace.Tests/
-            var tempFilePath = "../../GeneratedTestFiles/"; // TextReplace.Tests/bin/
-
-            var verificationFilename = relativeFilepath + filename;
-            var tempFilename = tempFilePath + filename;
+            var verificationFilename = RelativeReplacementsPath + filename;
+            var tempFilename = RelativeGeneratedFilePath + filename;
 
             var vm = new ReplaceViewModel();
             VMHelper.RegisterMessenger(vm);
@@ -692,7 +691,7 @@ namespace TextReplace.Tests.ViewModels
             {
                 // Custom method for comparing excel files due to
                 // unique ids being generated for each file by OpenXML
-                Assert.True(FileComparer.FilesAreEqual_Excel(verificationFilename, tempFilename));
+                Assert.True(FileComparer.FilesAreEqual_OpenXml(verificationFilename, tempFilename));
             }
             else
             {
@@ -700,7 +699,7 @@ namespace TextReplace.Tests.ViewModels
             }
 
             // Cleanup
-            // Directory.Delete(tempFilePath, true);
+            // File.Delete(tempFilename);
             VMHelper.UnregisterMessenger(vm);
         }
 
@@ -795,9 +794,7 @@ namespace TextReplace.Tests.ViewModels
                 ("text;with;semicolons", "text;with;semicolons1")
             };
 
-            // relative file path to the TextReplace.Tests folder
-            var mockFilePath = "../../../MockFiles/MockReplacements/";
-            var mockFileName = mockFilePath + filename;
+            var mockFileName = RelativeReplacementsPath + filename;
 
             var vm = new ReplaceViewModel();
             VMHelper.RegisterMessenger(vm);
@@ -837,9 +834,7 @@ namespace TextReplace.Tests.ViewModels
         public void SetNewReplacePhrasesFromFile_InvalidPhrases_ReturnFalse(string filename)
         {
             // Arrange
-            // relative file path to the TextReplace.Tests folder
-            var mockFilePath = "../../../MockFiles/MockReplacements/";
-            var mockFileName = mockFilePath + filename;
+            var mockFileName = RelativeReplacementsPath + filename;
 
             // Act
             var actual = ReplaceViewModel.SetNewReplacePhrasesFromFile(mockFileName);

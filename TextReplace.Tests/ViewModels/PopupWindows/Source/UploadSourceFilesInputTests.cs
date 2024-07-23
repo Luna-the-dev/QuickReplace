@@ -5,6 +5,8 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Source
 {
     public class UploadSourceFilesInputTests
     {
+        private static readonly string RelativeSourcesPath = "../../../MockFiles/SourcesTests/";
+
         [Fact]
         public void OnFullFileNamesChanged_SingleFile_FileNameOrCountIsFileName()
         {
@@ -33,15 +35,12 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Source
             var vm = new UploadSourceFilesInputViewModel();
             VMHelper.RegisterMessenger(vm);
 
-            // relative file path to the TextReplace.Tests folder
-            var relativeFilepath = "../../../MockFiles/MockSources/";
-
             var fileNames = new List<string>()
             {
-                relativeFilepath + "source.txt",
-                relativeFilepath + "source.csv",
-                relativeFilepath + "source.tsv",
-                relativeFilepath + "source.xlsx"
+                RelativeSourcesPath + "source.txt",
+                RelativeSourcesPath + "source.csv",
+                RelativeSourcesPath + "source.tsv",
+                RelativeSourcesPath + "source.xlsx"
             };
 
             var expected = $"{fileNames.Count} files uploaded.";
@@ -62,12 +61,9 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Source
             var vm = new UploadSourceFilesInputViewModel();
             VMHelper.RegisterMessenger(vm);
 
-            // relative file path to the TextReplace.Tests folder
-            var relativeFilepath = "../../../MockFiles/MockSources/";
-
             var fileName = new List<string>()
             {
-                relativeFilepath + "source.txt"
+                RelativeSourcesPath + "source.txt"
             };
 
             // Act
@@ -93,12 +89,9 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Source
             var vm = new UploadSourceFilesInputViewModel();
             VMHelper.RegisterMessenger(vm);
 
-            // relative file path to the TextReplace.Tests folder
-            var relativeFilepath = "../../../MockFiles/MockSources/";
-
             var fileName = new List<string>()
             {
-                relativeFilepath + filename
+                RelativeSourcesPath + filename
             };
 
             // Act

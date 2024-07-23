@@ -199,7 +199,7 @@ namespace TextReplace.MVVM.Model
         /// <param name="delimiter"></param>
         public static void SavePhrasesToFile(string fileName, bool shouldSort, string delimiter)
         {
-            var directory = Path.GetDirectoryName(fileName);
+            var directory = Path.GetDirectoryName(fileName)?.Replace("\\", "/");
             if (directory == null)
             {
                 throw new DirectoryNotFoundException($"Directory was not found: {fileName}");

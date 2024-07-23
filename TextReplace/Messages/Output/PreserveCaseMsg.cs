@@ -2,7 +2,7 @@
 
 namespace TextReplace.Messages.Replace
 {
-    class PreserveCaseMsg(bool value) : ValueChangedMessage<bool>(value)
+    public class PreserveCaseMsg(bool value) : ValueChangedMessage<bool>(value)
     {
     }
 }

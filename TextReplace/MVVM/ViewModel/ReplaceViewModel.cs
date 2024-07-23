@@ -68,7 +68,7 @@ namespace TextReplace.MVVM.ViewModel
         }
 
         public RelayCommand ToggleSortCommand => new RelayCommand(ToggleSort);
-        public RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
+        public static RelayCommand<object> SetSelectedPhraseCommand => new RelayCommand<object>(SetSelectedPhrase);
 
         protected override void OnActivated()
         {
@@ -89,7 +89,7 @@ namespace TextReplace.MVVM.ViewModel
         /// Sets the selected phrase
         /// </summary>
         /// <param name="phrase"></param>
-        private void SetSelectedPhrase(object? phrase)
+        private static void SetSelectedPhrase(object? phrase)
         {
             // for some reason if i pass in the ReplacePhrase, this doesn't fire
             // on the first click, however if i pass it as a generic obect and

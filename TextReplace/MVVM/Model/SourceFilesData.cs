@@ -237,6 +237,7 @@ namespace TextReplace.MVVM.Model
         public static void RemoveAllSourceFiles()
         {
             SourceFiles = [];
+            OutputData.UpdateOutputFiles(SourceFiles);
         }
     }
 

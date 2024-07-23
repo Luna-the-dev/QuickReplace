@@ -3,7 +3,7 @@ using TextReplace.MVVM.Model;
 
 namespace TextReplace.Messages.Replace
 {
-    class SelectedOutputFileMsg(OutputFile value) : ValueChangedMessage<OutputFile>(value)
+    public class SelectedOutputFileMsg(OutputFile value) : ValueChangedMessage<OutputFile>(value)
     {
     }
 }

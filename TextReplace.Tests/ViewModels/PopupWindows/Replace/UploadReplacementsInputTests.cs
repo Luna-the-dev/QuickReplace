@@ -4,6 +4,8 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Replace
 {
     public class UploadReplacementsInputTests
     {
+        private static readonly string RelativeReplacementsPath = "../../../MockFiles/ReplaceTests/";
+
         [Theory]
         [InlineData("replacements.csv")]
         [InlineData("replacements.tsv")]
@@ -13,8 +15,7 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Replace
         public void ValidateFile_ValidReplacePhrases_FileIsValid(string filename)
         {
             // Arrange
-            var mockFilePath = "../../../MockFiles/MockReplacements/";
-            var mockFileName = mockFilePath + filename;
+            var mockFileName = RelativeReplacementsPath + filename;
 
             var vm = new UploadReplacementsInputViewModel();
 
@@ -34,8 +35,7 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Replace
         public void ValidateFile_InvalidReplacePhrases_FileIsInvalid(string filename)
         {
             // Arrange
-            var mockFilePath = "../../../MockFiles/MockReplacements/";
-            var mockFileName = mockFilePath + filename;
+            var mockFileName = RelativeReplacementsPath + filename;
 
             var vm = new UploadReplacementsInputViewModel();
 
