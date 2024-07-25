@@ -218,7 +218,7 @@ namespace TextReplace.MVVM.Model
                 throw new DirectoryNotFoundException($"Directory was not found: {fileName}");
             }
 
-            if (Path.GetExtension(fileName) == ".txt" && DataValidation.IsDelimiterValid(delimiter) == false)
+            if (FileValidation.IsTextFile(Path.GetExtension(fileName)) && DataValidation.IsDelimiterValid(delimiter) == false)
             {
                 IsSavingReplacementsInProgress = false;
                 throw new InvalidOperationException($"Invalid delimiter: {delimiter}");

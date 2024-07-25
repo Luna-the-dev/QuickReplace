@@ -287,15 +287,6 @@ namespace TextReplace.MVVM.Model
 
                 throw new NotSupportedException($"Replace operation not supported for file type {Path.GetExtension(src)}");
             }
-            catch (IOException e)
-            {
-                Debug.WriteLine(e);
-                Debug.WriteLine($"Failed to write from {src} to {dest}");
-                // the true is a flag for whether the exception is caused due to the file already being in use
-                var message = (Path.GetFileName(dest), true);
-                WeakReferenceMessenger.Default.Send(new SkipOutputFileMsg(message));
-                return -1;
-            }
             catch (Exception e)
             {
                 Debug.WriteLine(e);
