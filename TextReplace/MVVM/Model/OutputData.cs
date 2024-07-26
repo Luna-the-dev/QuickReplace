@@ -281,7 +281,7 @@ namespace TextReplace.MVVM.Model
 
                 // if source file is excel, only write to excel.
                 // doesnt really make sense to write from excel to docx or something
-                else if (FileValidation.IsExcelFile(src))
+                else if (FileValidation.IsExcelFile(src) && FileValidation.IsExcelFile(dest))
                 {
                     numOfReplacements = ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                     return numOfReplacements;
