@@ -131,8 +131,6 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.UpdateAllSourceFileSuffixes(suffix);
             SourcesViewModel.UpdateAllSourceFileOutputDirectories(outputDirectory);
 
-            Debug.WriteLine(sourceFiles[0]);
-
             var expected = string.Format("{0}/source-resume{1}.docx", outputDirectory, suffix);
 
             // Act
@@ -560,7 +558,7 @@ namespace TextReplace.Tests.ViewModels
             
             if (File.Exists(generatedFileName) == false)
             {
-                File.Create(generatedFileName);
+                File.Create(generatedFileName).Dispose();
             }
 
             SetOutputSettings(vm);
