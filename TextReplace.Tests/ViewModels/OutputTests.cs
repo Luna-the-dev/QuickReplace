@@ -969,17 +969,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.True(actual);
-
-            // Compare the generated file to the mock file
-            if (Path.GetExtension(vm.OutputFiles.First().FileName) == ".xlsx" ||
-                Path.GetExtension(vm.OutputFiles.First().FileName) == ".docx")
-            {
-                Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
-            }
-            else
-            {
-                Assert.True(FileComparer.FilesAreEqual(outputPath + MockFileName, generatedFileName));
-            }
+            Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
 
             // Cleanup
             // File.Delete(generatedFileName);
@@ -1024,17 +1014,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.True(actual);
-
-            // Compare the generated file to the mock file
-            if (Path.GetExtension(vm.OutputFiles.First().FileName) == ".xlsx" ||
-                Path.GetExtension(vm.OutputFiles.First().FileName) == ".docx")
-            {
-                Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
-            }
-            else
-            {
-                Assert.True(FileComparer.FilesAreEqual(outputPath + MockFileName, generatedFileName));
-            }
+            Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
 
             // Cleanup
             // File.Delete(generatedFileName);
@@ -1079,17 +1059,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.True(actual);
-
-            // Compare the generated file to the mock file
-            if (Path.GetExtension(vm.OutputFiles.First().FileName) == ".xlsx" ||
-                Path.GetExtension(vm.OutputFiles.First().FileName) == ".docx")
-            {
-                Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
-            }
-            else
-            {
-                Assert.True(FileComparer.FilesAreEqual(outputPath + MockFileName, generatedFileName));
-            }
+            Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
 
             // Cleanup
             // File.Delete(generatedFileName);
@@ -1134,17 +1104,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.True(actual);
-
-            // Compare the generated file to the mock file
-            if (Path.GetExtension(vm.OutputFiles.First().FileName) == ".xlsx" ||
-                Path.GetExtension(vm.OutputFiles.First().FileName) == ".docx")
-            {
-                Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
-            }
-            else
-            {
-                Assert.True(FileComparer.FilesAreEqual(outputPath + MockFileName, generatedFileName));
-            }
+            Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
 
             // Cleanup
             // File.Delete(generatedFileName);
@@ -1189,17 +1149,7 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.True(actual);
-
-            // Compare the generated file to the mock file
-            if (Path.GetExtension(vm.OutputFiles.First().FileName) == ".xlsx" ||
-                Path.GetExtension(vm.OutputFiles.First().FileName) == ".docx")
-            {
-                Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
-            }
-            else
-            {
-                Assert.True(FileComparer.FilesAreEqual(outputPath + MockFileName, generatedFileName));
-            }
+            Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
 
             // Cleanup
             // File.Delete(generatedFileName);
@@ -1244,17 +1194,55 @@ namespace TextReplace.Tests.ViewModels
 
             // Assert
             Assert.True(actual);
+            Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
 
-            // Compare the generated file to the mock file
-            if (Path.GetExtension(vm.OutputFiles.First().FileName) == ".xlsx" ||
-                Path.GetExtension(vm.OutputFiles.First().FileName) == ".docx")
+            // Cleanup
+            // File.Delete(generatedFileName);
+            VMHelper.UnregisterMessenger(vm);
+        }
+
+        [Theory]
+        [InlineData("source-resume.docx", "output-resume-all-styles.docx")]
+        [InlineData("source-financial-sample.xlsx", "output-financial-sample-all-styles.xlsx")]
+        public async Task ReplaceSelected_AllStyling_ReturnsTrueAndReplacementsPerformed(string sourceFileName, string MockFileName)
+        {
+            // Arrange
+            var vm = new OutputViewModel();
+            VMHelper.RegisterMessenger(vm);
+
+            // set up the replacements
+            ReplaceViewModel.SetNewReplacePhrasesFromFile(RelativeReplacementsPath + "replacements-abbreviations.csv");
+
+            // OutputFiles gets updated by the SourceFiles VM/Model
+            SourcesViewModel.RemoveAllSourceFiles();
+
+            // relative file path to the TextReplace.Tests folder
+            var sourcePath = RelativeSourcesPath + "Normal/";
+            var outputPath = RelativeOutputsPath + "Styling/";
+            var suffix = "-ReplaceSelected_AllStyling";
+
+            var sourceFiles = new List<string>()
             {
-                Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
-            }
-            else
-            {
-                Assert.True(FileComparer.FilesAreEqual(outputPath + MockFileName, generatedFileName));
-            }
+                sourcePath + sourceFileName
+            };
+            SourcesViewModel.AddNewSourceFiles(sourceFiles);
+            SourcesViewModel.UpdateAllSourceFileSuffixes(suffix);
+            SourcesViewModel.UpdateAllSourceFileOutputDirectories(RelativeGeneratedFilePath);
+            OutputViewModel.SetSelectedFileCommand.Execute(vm.OutputFiles.First());
+
+            var generatedFileName = vm.OutputFiles[0].FileName;
+
+            SetOutputSettings(
+                vm, bold: true, italics: true, underline: true, strikethrough: true,
+                highlightColor: new Color() { A = 255, R = 255, G = 0, B = 0 },
+                textColor: new Color() { A = 255, R = 0, G = 0, B = 255 });
+
+            // Act
+            bool actual = await OutputViewModel.ReplaceSelected(false);
+
+            // Assert
+            Assert.True(actual);
+            Assert.True(FileComparer.FilesAreEqual_OpenXml(outputPath + MockFileName, generatedFileName));
 
             // Cleanup
             // File.Delete(generatedFileName);
