@@ -235,17 +235,18 @@ namespace TextReplace.MVVM.Model
         private static int TryWriteReplacementsToFile(Dictionary<string, string> replacePhrases,
             string src, string dest, AhoCorasickStringSearcher matcher, bool wholeWord, bool preserveCase)
         {
-            int numOfReplacements = -1;
-
             try
             {
-                // create a directory for the generated file if it doesnt exist
+                if (File.Exists(src) == false)
+                {
+                    throw new FileNotFoundException($"File \"{src}\" does not exist.");
+                }
+
                 var destFile = new FileInfo(dest);
                 if (destFile.Directory == null)
                 {
                     throw new DirectoryNotFoundException("TryWriteReplacementsToFile(): destination file directory could not be parsed.");
                 }
-                destFile.Directory.Create();
 
                 // source file is csv, tsv, or text
                 if (FileValidation.IsCsvTsvFile(src) || FileValidation.IsTextFile(src))
@@ -253,12 +254,14 @@ namespace TextReplace.MVVM.Model
                     // output file type:
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
-                        numOfReplacements = ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        destFile.Directory.Create();
+                        int numOfReplacements = ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                         return numOfReplacements;
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        numOfReplacements = ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
+                        destFile.Directory.Create();
+                        int numOfReplacements = ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                         return numOfReplacements;
                     }
                 }
@@ -269,12 +272,14 @@ namespace TextReplace.MVVM.Model
                     // output file type:
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
-                        numOfReplacements = ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        destFile.Directory.Create();
+                        int numOfReplacements = ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
                         return numOfReplacements;
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
-                        numOfReplacements = ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
+                        destFile.Directory.Create();
+                        int numOfReplacements = ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                         return numOfReplacements;
                     }
                 }
@@ -283,7 +288,8 @@ namespace TextReplace.MVVM.Model
                 // doesnt really make sense to write from excel to docx or something
                 else if (FileValidation.IsExcelFile(src) && FileValidation.IsExcelFile(dest))
                 {
-                    numOfReplacements = ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
+                    destFile.Directory.Create();
+                    int numOfReplacements = ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                     return numOfReplacements;
                 }
 
