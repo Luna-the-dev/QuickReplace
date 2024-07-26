@@ -254,32 +254,34 @@ namespace TextReplace.MVVM.Model
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
                         numOfReplacements = ReadFromTextCsvTsvWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        return numOfReplacements;
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
                         numOfReplacements = ReadFromTextCsvTsvWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
+                        return numOfReplacements;
                     }
-                    return numOfReplacements;
                 }
 
                 // source file is docx
-                if (FileValidation.IsDocxFile(src))
+                else if (FileValidation.IsDocxFile(src))
                 {
                     // output file type:
                     if (FileValidation.IsCsvTsvFile(dest) || FileValidation.IsTextFile(dest))
                     {
                         numOfReplacements = ReadFromDocxWriteToTextCsvTsv(replacePhrases, src, dest, matcher, wholeWord, preserveCase);
+                        return numOfReplacements;
                     }
                     else if (FileValidation.IsDocxFile(dest))
                     {
                         numOfReplacements = ReadFromDocxWriteToDocx(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
+                        return numOfReplacements;
                     }
-                    return numOfReplacements;
                 }
 
                 // if source file is excel, only write to excel.
                 // doesnt really make sense to write from excel to docx or something
-                if (FileValidation.IsExcelFile(src))
+                else if (FileValidation.IsExcelFile(src))
                 {
                     numOfReplacements = ReadFromExcelWriteToExcel(replacePhrases, src, dest, matcher, OutputFilesStyling, wholeWord, preserveCase);
                     return numOfReplacements;
