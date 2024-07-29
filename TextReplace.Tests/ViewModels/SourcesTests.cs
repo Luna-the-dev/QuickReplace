@@ -210,16 +210,16 @@ namespace TextReplace.Tests.ViewModels
                 RelativeSourcesPath + "source.xlsx"
             };
 
-            SourcesViewModel.UpdateAllSourceFileSuffixes("-replacify");
+            SourcesViewModel.UpdateAllSourceFileSuffixes("-QuickReplace");
 
             // Act
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
             // Assert
-            Assert.Equal("-replacify", vm.SourceFiles[0].Suffix);
-            Assert.Equal("-replacify", vm.SourceFiles[1].Suffix);
-            Assert.Equal("-replacify", vm.SourceFiles[2].Suffix);
-            Assert.Equal("-replacify", vm.SelectedFile.Suffix);
+            Assert.Equal("-QuickReplace", vm.SourceFiles[0].Suffix);
+            Assert.Equal("-QuickReplace", vm.SourceFiles[1].Suffix);
+            Assert.Equal("-QuickReplace", vm.SourceFiles[2].Suffix);
+            Assert.Equal("-QuickReplace", vm.SelectedFile.Suffix);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -543,11 +543,11 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.SetSelectedFileCommand.Execute(vm.SourceFiles[1]);
 
             // Act
-            vm.UpdateSourceFileSuffix("-replacify");
+            vm.UpdateSourceFileSuffix("-QuickReplace");
 
             // Assert
-            Assert.Equal("-replacify", vm.SourceFiles[1].Suffix);
-            Assert.Equal("-replacify", vm.SelectedFile.Suffix);
+            Assert.Equal("-QuickReplace", vm.SourceFiles[1].Suffix);
+            Assert.Equal("-QuickReplace", vm.SelectedFile.Suffix);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -569,13 +569,13 @@ namespace TextReplace.Tests.ViewModels
             SourcesViewModel.AddNewSourceFiles(sourceFiles);
 
             // Act
-            SourcesViewModel.UpdateAllSourceFileSuffixes("-replacify");
+            SourcesViewModel.UpdateAllSourceFileSuffixes("-QuickReplace");
 
             // Assert
-            Assert.Equal("-replacify", vm.SourceFiles[0].Suffix);
-            Assert.Equal("-replacify", vm.SourceFiles[1].Suffix);
-            Assert.Equal("-replacify", vm.SourceFiles[2].Suffix);
-            Assert.Equal("-replacify", vm.SelectedFile.Suffix);
+            Assert.Equal("-QuickReplace", vm.SourceFiles[0].Suffix);
+            Assert.Equal("-QuickReplace", vm.SourceFiles[1].Suffix);
+            Assert.Equal("-QuickReplace", vm.SourceFiles[2].Suffix);
+            Assert.Equal("-QuickReplace", vm.SelectedFile.Suffix);
 
             VMHelper.UnregisterMessenger(vm);
         }

@@ -119,8 +119,8 @@ namespace TextReplace.MVVM.View
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(suffixOption.Text);
             string body = "Please select a suffix to be added to the end of all file names.\n" +
-                    "<u>Note:</u> This defaults to \"-replacify\"";
-            string watermark = "-replacify";
+                    "<u>Note:</u> This defaults to \"-QuickReplace\"";
+            string watermark = "-QuickReplace";
             string currentSuffix = viewModel.DefaultSourceFileOptions.Suffix;
 
             var dialog = new PopupWindows.SetSuffixInputResetWindow(window, title, body, watermark, currentSuffix);
@@ -140,8 +140,8 @@ namespace TextReplace.MVVM.View
             var window = Window.GetWindow(sender as DependencyObject);
             string title = textInfo.ToTitleCase(globalSuffixOption.Text);
             string body = "Please select a suffix to be added to the end of all file names.\n" +
-                    "<u>Note:</u> This defaults to \"-replacify\"";
-            string watermark = "-replacify";
+                    "<u>Note:</u> This defaults to \"-QuickReplace\"";
+            string watermark = "-QuickReplace";
             string currentSuffix = viewModel.DefaultSourceFileOptions.Suffix;
 
             var dialog = new PopupWindows.SetSuffixInputResetWindow(window, title, body, watermark, currentSuffix);

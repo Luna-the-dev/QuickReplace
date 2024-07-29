@@ -119,7 +119,7 @@ namespace TextReplace.MVVM.Model
         static OutputData()
         {
             _userSettings = new ConfigurationBuilder<IUserSettings>()
-                .UseIniFile(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/Replacify/UserSettings.ini")
+                .UseIniFile(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/QuickReplace/UserSettings.ini")
                 .Build();
 
             _wholeWord = UserSettings.WholeWord;
@@ -971,7 +971,7 @@ namespace TextReplace.MVVM.Model
             directory ??= "";
 
             string suffix = (file.Suffix == string.Empty) ?
-                "-replacify" :
+                "-QuickReplace" :
                 file.Suffix;
 
             // if the directory ends in a slash, dont include another one when generating the destination file

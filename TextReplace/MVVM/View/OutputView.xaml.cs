@@ -34,7 +34,7 @@ namespace TextReplace.MVVM.View
         private async void PerformReplacementsOnAllFiles_OnClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = "Replacify";
+            string title = "QuickReplace";
             string body = "Perform replacements on all files.";
 
             var dialog = new PopupWindows.ReplaceFilesWindow(window, title, body);
@@ -77,7 +77,7 @@ namespace TextReplace.MVVM.View
         private async void PerformReplacementsOnSelectedFile_OnClick(object sender, RoutedEventArgs e)
         {
             var window = Window.GetWindow(sender as DependencyObject);
-            string title = "Replacify";
+            string title = "QuickReplace";
             string body = "Perform replacements on the selected file.";
 
             var dialog = new PopupWindows.ReplaceFilesWindow(window, title, body);

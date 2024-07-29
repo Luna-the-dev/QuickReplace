@@ -31,7 +31,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Column="0" Grid.Row="1"
-                   Text="Replacify"
+                   Text="QuickReplace"
                    VerticalAlignment="Center"
                    HorizontalAlignment="Center"
                    Foreground="{StaticResource TextLight}"
@@ -58,7 +58,7 @@
 
             <Button Grid.Column="1" Grid.Row="0"
                     Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsReplacifyEnabled}"
+                    IsEnabled="{Binding IsQuickReplaceEnabled}"
                     Click="PerformReplacementsOnAllFiles_OnClick">
                 <Button.Content>
                     <TextBlock Text="All files"

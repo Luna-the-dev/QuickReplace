@@ -28,7 +28,7 @@ namespace TextReplace.MVVM.ViewModel
             new(OutputData.OutputFiles.Select(OutputFileWrapper.WrapOutputFile));
 
         [ObservableProperty]
-        private bool _isReplacifyEnabled = false;
+        private bool _isQuickReplaceEnabled = false;
 
         [ObservableProperty]
         private OutputFileWrapper _selectedFile = new OutputFileWrapper();
@@ -69,7 +69,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public OutputViewModel()
         {
-            SetIsReplacifyEnabled();
+            SetIsQuickReplaceEnabled();
         }
 
         protected override void OnActivated()
@@ -181,7 +181,7 @@ namespace TextReplace.MVVM.ViewModel
             OutputData.OutputFilesStyling = new OutputFileStyling();
         }
 
-        private void SetIsReplacifyEnabled()
+        private void SetIsQuickReplaceEnabled()
         {
             bool areFilesNeeded = false;
 
@@ -203,12 +203,12 @@ namespace TextReplace.MVVM.ViewModel
             
             if (areFilesNeeded)
             {
-                IsReplacifyEnabled = false;
+                IsQuickReplaceEnabled = false;
                 AreFilesNeeded = true;
                 DoOutputFilesExist = false;
                 return;
             }
-            IsReplacifyEnabled = true;
+            IsQuickReplaceEnabled = true;
             AreFilesNeeded = false;
             DoOutputFilesExist = true;
         }
@@ -284,13 +284,13 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(ReplacePhrasesMsg message)
         {
             // check to see if replacements and source files are uploaded
-            SetIsReplacifyEnabled();
+            SetIsQuickReplaceEnabled();
         }
 
         public void Receive(SourceFilesMsg message)
         {
             // check to see if replacements and source files are uploaded
-            SetIsReplacifyEnabled();
+            SetIsQuickReplaceEnabled();
         }
 
         public void Receive(WholeWordMsg message)

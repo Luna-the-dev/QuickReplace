@@ -30,7 +30,7 @@
                          Command="{Binding SourcesViewCommand}"
                          IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.SourcesView}}"/>
 
-            <RadioButton Content="Replacify"
+            <RadioButton Content="QuickReplace"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding OutputViewCommand}"
                          IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.OutputView}}"/>

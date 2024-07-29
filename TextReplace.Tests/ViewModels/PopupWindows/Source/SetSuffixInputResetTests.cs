@@ -15,7 +15,7 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Source
             vm.ConfirmIsClickable = false;
 
             // Act
-            vm.InputText = "-replacify";
+            vm.InputText = "-QuickReplace";
 
             // Assert
             Assert.True(vm.ConfirmIsClickable);
