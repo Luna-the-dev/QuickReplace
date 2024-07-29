@@ -187,7 +187,21 @@ namespace TextReplace.MVVM.Model
                     didEverythingSucceed = false;
                     continue;
                 }
-                OutputFiles[i].NumOfReplacements = numOfReplacements;
+
+                // updadte the number of replacements made on this file
+                var index = OutputFiles.FindIndex(x => x.FileName == destFiles[i]);
+                if (index != -1)
+                {
+                    OutputFiles[index].NumOfReplacements = numOfReplacements;
+                }
+
+                // if this file is the selected file, update the number of replacements done on SelectedFile too
+                if (SelectedFile.FileName == destFiles[i])
+                {
+                    SelectedFile.NumOfReplacements = numOfReplacements;
+                    WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
+                }
+
                 Debug.WriteLine($"replacements for {Path.GetFileName(srcFiles[i])}: {numOfReplacements}");
             }
 

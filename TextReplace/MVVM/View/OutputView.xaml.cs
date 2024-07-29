@@ -90,6 +90,8 @@ namespace TextReplace.MVVM.View
 
             await OutputViewModel.ReplaceSelected(dialog.OpenFileLocation);
 
+            Debug.WriteLine("hey!");
+
             if (dialog.OpenFileLocation == false)
             {
                 return;
