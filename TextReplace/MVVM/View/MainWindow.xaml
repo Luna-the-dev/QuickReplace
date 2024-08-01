@@ -11,11 +11,11 @@
                  Closed="Window_Closed"
                  mc:Ignorable="d"
                  d:Width="1920" d:Height="1032"
-                 MinWidth="950" MinHeight="600"
+                 MinWidth="920" MinHeight="600"
                  BorderThickness="0"
                  WindowTitleBrush="{StaticResource BackgroundColorDark}"
                  NonActiveWindowTitleBrush="{StaticResource BackgroundColorDark}"
-                 Title="QuickReplace"
+                 Title=""
                  TitleCharacterCasing="Normal"
                  TitleTemplate="{DynamicResource titleTemplate}"
                  WindowButtonCommands="{DynamicResource windowButtonsStyling}"
@@ -29,7 +29,7 @@
     <Border Background="{StaticResource BackgroundColor}">
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition MinWidth="200" MaxWidth="250"/>
+                <ColumnDefinition MinWidth="180" MaxWidth="250"/>
                 <ColumnDefinition Width="6*"/>
             </Grid.ColumnDefinitions>
 
@@ -39,15 +39,8 @@
             </Grid.RowDefinitions>
 
             <!-- QuickReplace text -->
-            <TextBlock Grid.Row="0"
-                       Text="QuickReplace"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Left"
-                       Foreground="White"
-                       FontSize="21"
-                       Margin="30 0 0 0"
-                       FontFamily="/Fonts/#Poppins"/>
-            
+            <Image Source="/Assets/quickreplace-logo.png" Margin="0 12 0 10"/>
+
             <!-- Side bar -->
             <ContentControl Grid.Row="1" Content="{Binding SideBarView}"/>
 

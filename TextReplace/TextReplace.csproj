@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Assets\quickreplace-logo.png" />
     <None Remove="Fonts\Poppins-ExtraLight.ttf" />
     <None Remove="Fonts\Poppins-Regular.ttf" />
   </ItemGroup>
@@ -39,6 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\quickreplace-logo.png" />
     <Resource Include="Fonts\Poppins-ExtraLight.ttf" />
     <Resource Include="Fonts\Poppins-Regular.ttf" />
   </ItemGroup>
