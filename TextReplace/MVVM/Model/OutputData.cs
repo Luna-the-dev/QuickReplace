@@ -517,7 +517,8 @@ namespace TextReplace.MVVM.Model
                 // add the new runs into the paragraph
                 foreach (var run in newRuns)
                 {
-                    paragraph.AppendChild(run);
+                    var cloneRun = run.CloneNode(true);
+                    paragraph.AppendChild(cloneRun);
                 }
             }
             document.MainDocumentPart.Document.Save();
@@ -699,7 +700,8 @@ namespace TextReplace.MVVM.Model
 
             foreach (var run in runs)
             {
-                sharedStringItem.Append(run);
+                var cloneRun = run.CloneNode(true);
+                sharedStringItem.Append(cloneRun);
             }
             
             return sharedStringItem;
