@@ -98,12 +98,18 @@ namespace TextReplace.Core.Validation
         /// <returns>False if the file type is not supported</returns>
         public static bool IsSourceFileTypeValid(string fileName)
         {
-            string extension = Path.GetExtension(fileName).ToLower();
-            return extension switch
+            if (Path.GetExtension(fileName).Equals(".xlsx", StringComparison.CurrentCultureIgnoreCase) ||
+               Path.GetExtension(fileName).Equals(".docx", StringComparison.CurrentCultureIgnoreCase))
             {
-                ".csv" or ".tsv" or ".xlsx" or ".txt" or ".text" or ".docx" => true,
-                _ => false
-            };
+                return true;
+            }
+
+            if (IsFileNonBinary(fileName))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         public static bool IsTextFile(string fileName)
@@ -125,22 +131,42 @@ namespace TextReplace.Core.Validation
             return false;
         }
 
-        public static bool IsCsvTsvFile(string fileName)
-        {
-            if (Path.GetExtension(fileName).Equals(".csv", StringComparison.CurrentCultureIgnoreCase) ||
-                Path.GetExtension(fileName).Equals(".tsv", StringComparison.CurrentCultureIgnoreCase))
-            {
-                return true;
-            }
-            return false;
-        }
-
         public static bool IsDocxFile(string fileName)
         {
             if (Path.GetExtension(fileName).Equals(".docx", StringComparison.CurrentCultureIgnoreCase))
             {
                 return true;
             }
+            return false;
+        }
+
+
+        public static bool IsFileNonBinary(string fileName)
+        {
+            return !IsFileBinary(fileName);
+        }
+
+        public static bool IsFileBinary(string fileName)
+        {
+            const int charsToCheck = 4000;
+            const char nulChar = '\0';
+
+            using var streamReader = new StreamReader(fileName);
+
+            for (var i = 0; i < charsToCheck; i++)
+            {
+                if (streamReader.EndOfStream)
+                {
+                    return false;
+                }
+
+                var ch = (char)streamReader.Read();
+                if (ch == nulChar)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
     }

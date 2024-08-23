@@ -32,8 +32,8 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             string invalidFileName = "";
             foreach (var file in fileNames)
             {
-                if (FileValidation.IsSourceFileTypeValid(file) == false || 
-                    FileValidation.IsInputFileReadable(file) == false)
+                if (FileValidation.IsInputFileReadable(file) == false ||
+                    FileValidation.IsSourceFileTypeValid(file) == false)
                 {
                     invalidFileName = file;
                     break;

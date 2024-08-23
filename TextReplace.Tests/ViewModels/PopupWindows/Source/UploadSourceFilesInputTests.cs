@@ -79,10 +79,10 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Source
         }
 
         [Theory]
-        [InlineData("invalid-file-type-source.bin")]
+        [InlineData("invalid-file-type.bin")]
         [InlineData("unreadable-source.txt")]
         // NOTE: if the "unreadable-source.txt" test is failing, please make sure that the file is
-        // *not* readable. the file is located in TextReplace/TextReplace.Tests/MockFiles/MockSources.
+        // *not* readable. the file is located in TextReplace/TextReplace.Tests/MockFiles/SourceTests.
         public void ValidateFiles_InvalidFile_SetFieldsForInvalidFiles(string filename)
         {
             // Arrange

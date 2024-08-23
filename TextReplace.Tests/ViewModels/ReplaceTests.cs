@@ -1,8 +1,6 @@
 ﻿using TextReplace.MVVM.ViewModel;
 using TextReplace.MVVM.Model;
 using TextReplace.Tests.Common;
-using System.Diagnostics;
-using System.Text;
 
 namespace TextReplace.Tests.ViewModels
 {
@@ -746,7 +744,7 @@ namespace TextReplace.Tests.ViewModels
         public void SavePhrasesToFile_InvalidDelimiterForTextFile_ExceptionThrown(string delimiter)
         {
             // Arrange
-            var filename = @"./filename.txt";
+            var filename = "filename.txt";
 
             var validReplacePhrases = new List<(string, string)>
             {
