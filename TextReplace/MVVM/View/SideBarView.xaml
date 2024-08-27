@@ -15,25 +15,56 @@
 
     <Border Padding="4 8 4 0"
             Background="{StaticResource SideBarBackground}">
-        <StackPanel>
-            <StackPanel.Resources>
+        <DockPanel>
+            <DockPanel.Resources>
                 <local:ActiveViewConverter x:Key="ActiveViewConverter" />
-            </StackPanel.Resources>
+            </DockPanel.Resources>
 
             <RadioButton Content="Replacements"
+                         DockPanel.Dock="Top"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding ReplaceViewCommand}"
                          IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.ReplaceView}}"/>
 
             <RadioButton Content="Sources"
+                         DockPanel.Dock="Top"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding SourcesViewCommand}"
                          IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.SourcesView}}"/>
 
             <RadioButton Content="QuickReplace"
+                         DockPanel.Dock="Top"
                          Style="{StaticResource MenuButtonTheme}"
                          Command="{Binding OutputViewCommand}"
                          IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.OutputView}}"/>
-        </StackPanel>
+
+            <Grid VerticalAlignment="Bottom">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <TextBlock Grid.Row="0"
+                           Margin="6 0 0 6"
+                           FontSize="12"
+                           FontFamily="/Fonts/#Poppins">
+                    <Hyperlink NavigateUri="https://www.quickreplace.io/"
+                               RequestNavigate="Hyperlink_RequestNavigate"
+                               Foreground="#FFAAAAAA"
+                               TextDecorations="None">
+                        Visit our website
+                    </Hyperlink>
+                </TextBlock>
+                
+                <TextBlock Grid.Row="1"
+                           Foreground="Gray"
+                           Margin="6 0 0 8"
+                           FontSize="11"
+                           FontFamily="/Fonts/#Poppins">
+                    © 2024 QuickReplace<LineBreak />
+                    All Rights Reserved.
+                </TextBlock>
+            </Grid>
+        </DockPanel>
     </Border>
 </UserControl>

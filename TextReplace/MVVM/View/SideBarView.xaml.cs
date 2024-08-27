@@ -1,5 +1,7 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Navigation;
 using TextReplace.MVVM.ViewModel;
 
 namespace TextReplace.MVVM.View
@@ -16,6 +18,14 @@ namespace TextReplace.MVVM.View
             var viewModel = (SideBarViewModel)DataContext;
             Loaded += (s, e) => viewModel.IsActive = true;
             Unloaded += (s, e) => viewModel.IsActive = false;
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            var startInfo = new ProcessStartInfo(e.Uri.AbsoluteUri);
+            startInfo.UseShellExecute = true;
+            Process.Start(startInfo);
+            e.Handled = true;
         }
     }
 
