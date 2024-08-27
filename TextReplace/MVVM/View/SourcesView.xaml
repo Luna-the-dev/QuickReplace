@@ -1,105 +1,129 @@
-﻿<UserControl x:Class="TextReplace.MVVM.View.SourcesView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TextReplace.MVVM.View"
-             xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
-             xmlns:userControl="clr-namespace:TextReplace.UserControls"
-             xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
-             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             d:Background="{StaticResource BackgroundColorMedium}">
+﻿<UserControl
+    x:Class="TextReplace.MVVM.View.SourcesView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+    xmlns:local="clr-namespace:TextReplace.MVVM.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:userControl="clr-namespace:TextReplace.UserControls"
+    xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
+    xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
+    d:Background="{StaticResource BackgroundColorMedium}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
 
     <UserControl.DataContext>
-        <viewModel:SourcesViewModel/>
+        <viewModel:SourcesViewModel />
     </UserControl.DataContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MaxWidth="275"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*" MaxWidth="275"/>
+            <ColumnDefinition Width="1*" MaxWidth="275" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" MaxWidth="275" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="15"/>
-            <RowDefinition Height="1*" MinHeight="50" MaxHeight="75"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="1*" MinHeight="50" MaxHeight="75"/>
+            <RowDefinition Height="15" />
+            <RowDefinition
+                Height="1*"
+                MinHeight="50"
+                MaxHeight="75" />
+            <RowDefinition Height="8*" />
+            <RowDefinition
+                Height="1*"
+                MinHeight="50"
+                MaxHeight="75" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="0" Grid.Row="1"
-                   Text="Source Files"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Foreground="{StaticResource TextLight}"
-                   FontSize="20"
-                   FontFamily="/Fonts/#Poppins"/>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontFamily="/Fonts/#Poppins"
+            FontSize="20"
+            Foreground="{StaticResource TextLight}"
+            Text="Source Files" />
 
-        <!-- Left side options -->
-        <Grid Grid.Column="0" Grid.Row="2" Margin="0 5">
+        <!--  Left side options  -->
+        <Grid
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
                 <ColumnDefinition />
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
             </Grid.RowDefinitions>
 
-            <Button Grid.Column="1" Grid.Row="0"
-                    Click="OpenUploadWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}">
+            <Button
+                Grid.Row="0"
+                Grid.Column="1"
+                Click="OpenUploadWindow_OnClick"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Upload"
-                               x:Name="uploadOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="uploadOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Upload" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="1"
-                    IsEnabled="{Binding IsSourceFileUploaded}"
-                    Click="RemoveAllFiles_OnClick"
-                    Style="{StaticResource OptionButtonTheme}">
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Click="RemoveAllFiles_OnClick"
+                IsEnabled="{Binding IsSourceFileUploaded}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Remove All"
-                               x:Name="removeAllOption"
-                               HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="removeAllOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Remove All" />
                 </Button.Content>
             </Button>
         </Grid>
 
-        <!-- Source files view -->
-        <Border Grid.Column="1" Grid.Row="2"
-                Background="{StaticResource BackgroundColor}">
-            <ListBox Grid.Column="1" Grid.Row="2"
-                     x:Name="listBox" Margin="0 4"
-                     BorderThickness="0"
-                     ItemsSource="{Binding SourceFiles}"
-                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     VirtualizingPanel.ScrollUnit="Pixel"
-                     dd:DragDrop.IsDragSource="True"
-                     dd:DragDrop.IsDropTarget="True"
-                     dd:DragDrop.DropScrollingMode="VerticalOnly"
-                     dd:DragDrop.DropHandler="{Binding}">
+        <!--  Source files view  -->
+        <Border
+            Grid.Row="2"
+            Grid.Column="1"
+            Background="{StaticResource BackgroundColor}">
+            <ListBox
+                x:Name="listBox"
+                Grid.Row="2"
+                Grid.Column="1"
+                Margin="0,4"
+                dd:DragDrop.DropHandler="{Binding}"
+                dd:DragDrop.DropScrollingMode="VerticalOnly"
+                dd:DragDrop.IsDragSource="True"
+                dd:DragDrop.IsDropTarget="True"
+                BorderThickness="0"
+                ItemsSource="{Binding SourceFiles}"
+                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                VirtualizingPanel.ScrollUnit="Pixel">
                 <ListBox.Template>
                     <ControlTemplate>
-                        <ScrollViewer Style="{DynamicResource ScrollViewerTheme}"
-                                      PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
-                            <ItemsPresenter/>
+                        <ScrollViewer PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel" Style="{DynamicResource ScrollViewerTheme}">
+                            <ItemsPresenter />
                         </ScrollViewer>
                     </ControlTemplate>
                 </ListBox.Template>
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="{x:Type ListBoxItem}">
-                        <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                        <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -112,257 +136,324 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <RadioButton Command="{Binding Path=DataContext.SetSelectedFileCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                         CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
-                                         Style="{DynamicResource SourceFileTheme}">
+                            <RadioButton
+                                Command="{Binding Path=DataContext.SetSelectedFileCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
+                                Style="{DynamicResource SourceFileTheme}">
                                 <RadioButton.IsChecked>
-                                    <Binding Path="IsSelected"
-                                             RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
-                                             Mode="TwoWay"/>
+                                    <Binding
+                                        Mode="TwoWay"
+                                        Path="IsSelected"
+                                        RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
                                 </RadioButton.IsChecked>
                             </RadioButton>
-                            <Button Width="20" Height="20"
-                                    HorizontalAlignment="Right"
-                                    VerticalAlignment="Top"
-                                    Cursor="Hand"
-                                    BorderThickness="0"
-                                    Click="RemoveSelectedFile_OnClick"
-                                    Style="{DynamicResource SourceFileCloseTheme}"/>
+                            <Button
+                                Width="20"
+                                Height="20"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Top"
+                                BorderThickness="0"
+                                Click="RemoveSelectedFile_OnClick"
+                                Cursor="Hand"
+                                Style="{DynamicResource SourceFileCloseTheme}" />
                         </Grid>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Border>
 
-        <!-- Search bar -->
-        <AdornerDecorator Grid.Column="2" Grid.Row="1"
-                          Width="140" Height="30">
+        <!--  Search bar  -->
+        <AdornerDecorator
+            Grid.Row="1"
+            Grid.Column="2"
+            Width="140"
+            Height="30">
             <Border Background="#353340" CornerRadius="10">
-                <TextBox Style="{DynamicResource InputBar}"
-                         Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox Style="{DynamicResource InputBar}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
                     <wm:WatermarkService.Watermark>
-                        <TextBlock Text="Search"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Left"
-                                   Foreground="LightGray"
-                                   Margin="4 0 0 0"
-                                   FontFamily="/Fonts/#Poppins"/>
+                        <TextBlock
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontFamily="/Fonts/#Poppins"
+                            Foreground="LightGray"
+                            Text="Search" />
                     </wm:WatermarkService.Watermark>
                 </TextBox>
             </Border>
         </AdornerDecorator>
 
-        <!-- Edit function right column -->
-        <Grid Grid.Row="2" Grid.Column="2" Margin="0 5">
+        <!--  Edit function right column  -->
+        <Grid
+            Grid.Row="2"
+            Grid.Column="2"
+            Margin="0,5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
                 <ColumnDefinition />
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="28"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="5"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="28" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <TextBlock Grid.Column="1" Grid.Row="0"
-                       Margin="0 0 0 6"
-                       Text="Modify"
-                       VerticalAlignment="Bottom"
-                       HorizontalAlignment="Center"
-                       Foreground="{StaticResource TextLight}"
-                       FontSize="14"
-                       FontFamily="/Fonts/#Poppins"/>
-            <Border Grid.Column="1" Grid.Row="0"
-                    Margin="0 0 0 4" Width="120"
-                    BorderBrush="{StaticResource TextUnclickable}"
-                    BorderThickness="0 0 0 1"/>
+            <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                Margin="0,0,0,6"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                FontFamily="/Fonts/#Poppins"
+                FontSize="14"
+                Foreground="{StaticResource TextLight}"
+                Text="Modify" />
+            <Border
+                Grid.Row="0"
+                Grid.Column="1"
+                Width="120"
+                Margin="0,0,0,4"
+                BorderBrush="{StaticResource TextUnclickable}"
+                BorderThickness="0,0,0,1" />
 
-            <Button Grid.Column="1" Grid.Row="1"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}"
-                    Click="SetOutputDirectory_OnClick">
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Click="SetOutputDirectory_OnClick"
+                IsEnabled="{Binding IsFileSelected}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Output Directory"
-                               x:Name="outputDirectoryOption"
-                               HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="outputDirectoryOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Output Directory" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="2"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}"
-                    Click="SetSuffix_OnClick">
+            <Button
+                Grid.Row="2"
+                Grid.Column="1"
+                Click="SetSuffix_OnClick"
+                IsEnabled="{Binding IsFileSelected}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="File Suffix"
-                               x:Name="suffixOption"
-                               HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="suffixOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="File Suffix" />
                 </Button.Content>
             </Button>
 
-            <TextBlock Grid.Column="1" Grid.Row="4"
-                       Margin="0 0 0 6"
-                       Text="Global Settings"
-                       VerticalAlignment="Bottom"
-                       HorizontalAlignment="Center"
-                       Foreground="{StaticResource TextLight}"
-                       FontSize="14"
-                       FontFamily="/Fonts/#Poppins"/>
-            <Border Grid.Column="1" Grid.Row="4"
-                    Margin="0 0 0 4" Width="120"
-                    BorderBrush="{StaticResource TextUnclickable}"
-                    BorderThickness="0 0 0 1"/>
+            <TextBlock
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="0,0,0,6"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                FontFamily="/Fonts/#Poppins"
+                FontSize="14"
+                Foreground="{StaticResource TextLight}"
+                Text="Global Settings" />
+            <Border
+                Grid.Row="4"
+                Grid.Column="1"
+                Width="120"
+                Margin="0,0,0,4"
+                BorderBrush="{StaticResource TextUnclickable}"
+                BorderThickness="0,0,0,1" />
 
-            <Button Grid.Column="1" Grid.Row="5"
-                    Style="{StaticResource OptionButtonTheme}"
-                    Click="SetGlobalOutputDirectory_OnClick">
+            <Button
+                Grid.Row="5"
+                Grid.Column="1"
+                Click="SetGlobalOutputDirectory_OnClick"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Output Directory"
-                               x:Name="globalOutputDirectoryOption"
-                               HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="globalOutputDirectoryOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Output Directory" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="6"
-                    Style="{StaticResource OptionButtonTheme}"
-                    Click="SetGlobalSuffix_OnClick">
+            <Button
+                Grid.Row="6"
+                Grid.Column="1"
+                Click="SetGlobalSuffix_OnClick"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="File Suffix"
-                               x:Name="globalSuffixOption"
-                               HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="globalSuffixOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="File Suffix" />
                 </Button.Content>
             </Button>
         </Grid>
     </Grid>
 
-    <!-- User control -->
+    <!--  User control  -->
     <UserControl.Resources>
-        <!-- Style for the middle files scrollviewer -->
+        <!--  Style for the middle files scrollviewer  -->
         <Style x:Key="ScrollViewerTheme" TargetType="{x:Type ScrollViewer}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollViewer}">
                         <Grid x:Name="Grid" Background="{TemplateBinding Background}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
-                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanHorizontallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" CanVerticallyScroll="False" Grid.Column="0" Content="{TemplateBinding Content}" CanContentScroll="{TemplateBinding CanContentScroll}" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
-                            <ScrollBar x:Name="PART_VerticalScrollBar" Style="{StaticResource ScrollbarTheme}" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                            <Rectangle
+                                x:Name="Corner"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                            <ScrollContentPresenter
+                                x:Name="PART_ScrollContentPresenter"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="{TemplateBinding Padding}"
+                                CanContentScroll="{TemplateBinding CanContentScroll}"
+                                CanHorizontallyScroll="False"
+                                CanVerticallyScroll="False"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            <ScrollBar
+                                x:Name="PART_VerticalScrollBar"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                AutomationProperties.AutomationId="VerticalScrollBar"
+                                Cursor="Arrow"
+                                Maximum="{TemplateBinding ScrollableHeight}"
+                                Minimum="0"
+                                Style="{StaticResource ScrollbarTheme}"
+                                ViewportSize="{TemplateBinding ViewportHeight}"
+                                Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- Source file X button styling -->
-        <Style TargetType="{x:Type Button}" x:Key="SourceFileCloseTheme">
-            <Setter Property="Margin" Value="0 8 17 0"/>
-            <Setter Property="Background" Value="Transparent"/>
+        <!--  Source file X button styling  -->
+        <Style x:Key="SourceFileCloseTheme" TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="0,8,17,0" />
+            <Setter Property="Background" Value="Transparent" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Background="{TemplateBinding Background}">
-                            <Path Stretch="Uniform"
-                                  Margin="4"
-                                  Fill="{StaticResource BackgroundColorDark}"
-                                  Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"/>
+                            <Path
+                                Margin="4"
+                                Data="M256,760L200,704L424,480L200,256L256,200L480,424L704,200L760,256L536,480L760,704L704,760L480,536L256,760Z"
+                                Fill="{StaticResource BackgroundColorDark}"
+                                Stretch="Uniform" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
 
-        <!-- Individual source file styling -->
-        <Style TargetType="RadioButton" x:Key="SourceFileTheme">
+        <!--  Individual source file styling  -->
+        <Style x:Key="SourceFileTheme" TargetType="RadioButton">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Border x:Name="border" 
-                                Height="158"
-                                Margin="8 4 14 4"
-                                CornerRadius="4" >
+                        <Border
+                            x:Name="border"
+                            Height="158"
+                            Margin="8,4,14,4"
+                            CornerRadius="4">
                             <Grid>
                                 <Grid.RowDefinitions>
-                                    <RowDefinition Height="2*"/>
-                                    <RowDefinition Height="3*"/>
+                                    <RowDefinition Height="2*" />
+                                    <RowDefinition Height="3*" />
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Margin="10 0 30 0"
-                                           Text="{Binding ShortFileName}"
-                                           TextWrapping="NoWrap"
-                                           TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="18"
-                                           Foreground="{StaticResource TextLight}"
-                                           VerticalAlignment="Center"/>
-                                <Border Grid.Row="1"
-                                        x:Name="innerBorder"
-                                        Margin="6 0 6 7" Padding="10"
-                                        CornerRadius="4"
-                                        VerticalAlignment="Stretch"
-                                        BorderThickness="0">
+                                <TextBlock
+                                    Grid.Row="0"
+                                    Margin="10,0,30,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Fonts/#Poppins"
+                                    FontSize="18"
+                                    Foreground="{StaticResource TextLight}"
+                                    Text="{Binding ShortFileName}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap" />
+                                <Border
+                                    x:Name="innerBorder"
+                                    Grid.Row="1"
+                                    Margin="6,0,6,7"
+                                    Padding="10"
+                                    VerticalAlignment="Stretch"
+                                    BorderThickness="0"
+                                    CornerRadius="4">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
                                             <RowDefinition />
                                         </Grid.RowDefinitions>
 
-                                        <Grid Grid.Row="0" Margin="0 0 0 5">
-                                            <TextBlock Text="Directory: "
-                                                       FontSize="15"
-                                                       FontFamily="/Fonts/#Poppins"
-                                                       Foreground="{StaticResource TextLight}"
-                                                       VerticalAlignment="Center"/>
-                                            <userControl:RollingText Margin="78 0 0 0"
-                                                                     Text="{Binding OutputDirectoryText}"
-                                                                     Foreground="{StaticResource TextLight}"
-                                                                     FontSize="15"
-                                                                     FontFamily="/Fonts/#Poppins"/>
+                                        <Grid Grid.Row="0" Margin="0,0,0,5">
+                                            <TextBlock
+                                                VerticalAlignment="Center"
+                                                FontFamily="/Fonts/#Poppins"
+                                                FontSize="15"
+                                                Foreground="{StaticResource TextLight}"
+                                                Text="Directory: " />
+                                            <userControl:RollingText
+                                                Margin="78,0,0,0"
+                                                FontFamily="/Fonts/#Poppins"
+                                                FontSize="15"
+                                                Foreground="{StaticResource TextLight}"
+                                                Text="{Binding OutputDirectoryText}" />
                                         </Grid>
 
-                                        <TextBlock Grid.Row="1" Margin="0 5 0 0"
-                                                   Text="{Binding SuffixText, StringFormat=Suffix:  {0}}"
-                                                   TextWrapping="NoWrap"
-                                                   TextTrimming="CharacterEllipsis"
-                                                   FontSize="15"
-                                                   FontFamily="/Fonts/#Poppins"
-                                                   Foreground="{StaticResource TextLight}"
-                                                   VerticalAlignment="Center"/>
+                                        <TextBlock
+                                            Grid.Row="1"
+                                            Margin="0,5,0,0"
+                                            VerticalAlignment="Center"
+                                            FontFamily="/Fonts/#Poppins"
+                                            FontSize="15"
+                                            Foreground="{StaticResource TextLight}"
+                                            Text="{Binding SuffixText, StringFormat=Suffix:  {0}}"
+                                            TextTrimming="CharacterEllipsis"
+                                            TextWrapping="NoWrap" />
                                     </Grid>
                                 </Border>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="RadioButton.IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnHighlighted}"/>
-                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnHighlightedShadow}"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnHighlighted}" />
+                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnHighlightedShadow}" />
                             </Trigger>
                             <Trigger Property="RadioButton.IsChecked" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}"/>
-                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnExtraDark}"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}" />
+                                <Setter TargetName="innerBorder" Property="Background" Value="{StaticResource BtnExtraDark}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

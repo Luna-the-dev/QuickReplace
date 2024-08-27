@@ -1,118 +1,151 @@
-﻿<UserControl x:Class="TextReplace.MVVM.View.ReplaceView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TextReplace.MVVM.View"
-             xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
-             xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
-             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
-             d:Background="{StaticResource BackgroundColorMedium}">
+﻿<UserControl
+    x:Class="TextReplace.MVVM.View.ReplaceView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+    xmlns:local="clr-namespace:TextReplace.MVVM.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewModel="clr-namespace:TextReplace.MVVM.ViewModel"
+    xmlns:wm="clr-namespace:TextReplace.Core.InputWatermark"
+    d:Background="{StaticResource BackgroundColorMedium}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
 
     <UserControl.DataContext>
-        <viewModel:ReplaceViewModel/>
+        <viewModel:ReplaceViewModel />
     </UserControl.DataContext>
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1*" MaxWidth="275"/>
-            <ColumnDefinition Width="2*"/>
-            <ColumnDefinition Width="1*" MaxWidth="275"/>
+            <ColumnDefinition Width="1*" MaxWidth="275" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="1*" MaxWidth="275" />
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="15"/>
-            <RowDefinition Height="1*" MinHeight="50" MaxHeight="75"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="1*" MinHeight="50" MaxHeight="75"/>
+            <RowDefinition Height="15" />
+            <RowDefinition
+                Height="1*"
+                MinHeight="50"
+                MaxHeight="75" />
+            <RowDefinition Height="8*" />
+            <RowDefinition
+                Height="1*"
+                MinHeight="50"
+                MaxHeight="75" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Column="0" Grid.Row="1"
-                   Text="Replacements"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   Foreground="{StaticResource TextLight}"
-                   FontSize="20"
-                   FontFamily="/Fonts/#Poppins"/>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontFamily="/Fonts/#Poppins"
+            FontSize="20"
+            Foreground="{StaticResource TextLight}"
+            Text="Replacements" />
 
-        <TextBlock Grid.Column="1" Grid.Row="1"
-                   IsEnabled="{Binding IsFileSelected}"
-                   Style="{DynamicResource FileNameTheme}"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Left"
-                   TextTrimming="CharacterEllipsis"
-                   FontSize="18"
-                   FontFamily="/Fonts/#Poppins"/>
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="1"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Center"
+            FontFamily="/Fonts/#Poppins"
+            FontSize="18"
+            IsEnabled="{Binding IsFileSelected}"
+            Style="{DynamicResource FileNameTheme}"
+            TextTrimming="CharacterEllipsis" />
 
-        <!-- Left side options -->
-        <Grid Grid.Column="0" Grid.Row="2" Margin="0 5">
+        <!--  Left side options  -->
+        <Grid
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="0,5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
                 <ColumnDefinition />
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
                 <RowDefinition />
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
             </Grid.RowDefinitions>
 
-            <Button Grid.Column="1" Grid.Row="0"
-                    Click="OpenUploadWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}">
+            <Button
+                Grid.Row="0"
+                Grid.Column="1"
+                Click="OpenUploadWindow_OnClick"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Upload"
-                               x:Name="uploadOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="uploadOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Upload" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="1"
-                    Click="OpenRemoveAllWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                Click="OpenRemoveAllWindow_OnClick"
+                IsEnabled="{Binding IsPhraseSelected}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Remove All"
-                               x:Name="removeAllOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="removeAllOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Remove All" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="3"
-                    Click="OpenSaveWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsUnsaved}">
+            <Button
+                Grid.Row="3"
+                Grid.Column="1"
+                Click="OpenSaveWindow_OnClick"
+                IsEnabled="{Binding IsUnsaved}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Save"
-                               x:Name="saveOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="saveOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Save" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="4"
-                    Click="OpenSaveAsWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsFileSelected}">
+            <Button
+                Grid.Row="4"
+                Grid.Column="1"
+                Click="OpenSaveAsWindow_OnClick"
+                IsEnabled="{Binding IsFileSelected}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Save as"
-                               x:Name="saveAsOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="saveAsOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Save as" />
                 </Button.Content>
             </Button>
         </Grid>
 
-        <!-- Replace phrases view -->
-        <Border Grid.Column="1" Grid.Row="2"
-                Background="{StaticResource BackgroundColor}">
+        <!--  Replace phrases view  -->
+        <Border
+            Grid.Row="2"
+            Grid.Column="1"
+            Background="{StaticResource BackgroundColor}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition />
@@ -124,51 +157,60 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Column="0" Grid.Row="0"
-                           Margin="22.5 0 0 4"
-                           Text="Original"
-                           Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}"
-                           d:Visibility="Visible"
-                           FontFamily="/Fonts/#Poppins" FontSize="16"
-                           Foreground="{StaticResource TextLight}"
-                           VerticalAlignment="Center"/>
-                <TextBlock Grid.Column="1" Grid.Row="0"
-                           Margin="-3 0 0 4"
-                           Text="Replacement"
-                           Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}"
-                           d:Visibility="Visible"
-                           FontFamily="/Fonts/#Poppins" FontSize="16"
-                           Foreground="{StaticResource TextLight}"
-                           VerticalAlignment="Center"/>
-                <Border Grid.ColumnSpan="2" Grid.Row="0"
-                        Margin="15 0 15 8"
-                        Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}"
-                        d:Visibility="Visible"
-                        BorderBrush="{StaticResource BackgroundColorDark}"
-                        BorderThickness="0 0 0 2"/>
-                <ListBox Grid.ColumnSpan="2" Grid.Row="1"
-                         x:Name="listBox"
-                         Margin="0 4"
-                         Background="Transparent"
-                         BorderThickness="0"
-                         ItemsSource="{Binding ReplacePhrases}"
-                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                         VirtualizingPanel.ScrollUnit="Pixel"
-                         dd:DragDrop.IsDragSource="True"
-                         dd:DragDrop.IsDropTarget="True"
-                         dd:DragDrop.DropScrollingMode="VerticalOnly"
-                         dd:DragDrop.DropHandler="{Binding}">
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Margin="22.5,0,0,4"
+                    VerticalAlignment="Center"
+                    d:Visibility="Visible"
+                    FontFamily="/Fonts/#Poppins"
+                    FontSize="16"
+                    Foreground="{StaticResource TextLight}"
+                    Text="Original"
+                    Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="-3,0,0,4"
+                    VerticalAlignment="Center"
+                    d:Visibility="Visible"
+                    FontFamily="/Fonts/#Poppins"
+                    FontSize="16"
+                    Foreground="{StaticResource TextLight}"
+                    Text="Replacement"
+                    Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <Border
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="15,0,15,8"
+                    d:Visibility="Visible"
+                    BorderBrush="{StaticResource BackgroundColorDark}"
+                    BorderThickness="0,0,0,2"
+                    Visibility="{Binding DoesReplacePhraseExist, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                <ListBox
+                    x:Name="listBox"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Margin="0,4"
+                    dd:DragDrop.DropHandler="{Binding}"
+                    dd:DragDrop.DropScrollingMode="VerticalOnly"
+                    dd:DragDrop.IsDragSource="True"
+                    dd:DragDrop.IsDropTarget="True"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemsSource="{Binding ReplacePhrases}"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    VirtualizingPanel.ScrollUnit="Pixel">
                     <ListBox.Template>
                         <ControlTemplate>
-                            <ScrollViewer Style="{DynamicResource ScrollViewerTheme}"
-                                          PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel">
-                                <ItemsPresenter/>
+                            <ScrollViewer PreviewMouseWheel="ListBoxScrollViewer_PreviewMouseWheel" Style="{DynamicResource ScrollViewerTheme}">
+                                <ItemsPresenter />
                             </ScrollViewer>
                         </ControlTemplate>
                     </ListBox.Template>
                     <ListBox.ItemContainerStyle>
                         <Style TargetType="{x:Type ListBoxItem}">
-                            <Setter Property="IsSelected" Value="{Binding IsSelected}"/>
+                            <Setter Property="IsSelected" Value="{Binding IsSelected}" />
                             <Setter Property="Template">
                                 <Setter.Value>
                                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -180,13 +222,15 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <RadioButton Command="{Binding Path=DataContext.SetSelectedPhraseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                         CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
-                                         Style="{DynamicResource ReplacePhraseTheme}">
+                            <RadioButton
+                                Command="{Binding Path=DataContext.SetSelectedPhraseCommand, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                CommandParameter="{Binding ElementName=listBox, Path=SelectedItem}"
+                                Style="{DynamicResource ReplacePhraseTheme}">
                                 <RadioButton.IsChecked>
-                                    <Binding Path="IsSelected"
-                                             RelativeSource="{RelativeSource AncestorType=ListBoxItem}"
-                                             Mode="TwoWay"/>
+                                    <Binding
+                                        Mode="TwoWay"
+                                        Path="IsSelected"
+                                        RelativeSource="{RelativeSource AncestorType=ListBoxItem}" />
                                 </RadioButton.IsChecked>
                             </RadioButton>
                         </DataTemplate>
@@ -195,190 +239,251 @@
             </Grid>
         </Border>
 
-        <!-- Search bar -->
-        <AdornerDecorator Grid.Column="2" Grid.Row="1" Width="140" Height="30">
+        <!--  Search bar  -->
+        <AdornerDecorator
+            Grid.Row="1"
+            Grid.Column="2"
+            Width="140"
+            Height="30">
             <Border Background="#353340" CornerRadius="10">
-                <TextBox Style="{DynamicResource InputBar}"
-                 Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
+                <TextBox Style="{DynamicResource InputBar}" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}">
                     <wm:WatermarkService.Watermark>
-                        <TextBlock Text="Search"
-                           VerticalAlignment="Center"
-                           HorizontalAlignment="Left"
-                           Foreground="LightGray"
-                           Margin="4 0 0 0"
-                           FontFamily="/Fonts/#Poppins"/>
+                        <TextBlock
+                            Margin="4,0,0,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            FontFamily="/Fonts/#Poppins"
+                            Foreground="LightGray"
+                            Text="Search" />
                     </wm:WatermarkService.Watermark>
                 </TextBox>
             </Border>
         </AdornerDecorator>
 
-        <!-- Edit function right column -->
-        <Grid Grid.Row="2" Grid.Column="2" Margin="0 5">
+        <!--  Edit function right column  -->
+        <Grid
+            Grid.Row="2"
+            Grid.Column="2"
+            Margin="0,5">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
                 <ColumnDefinition />
-                <ColumnDefinition Width="22"/>
+                <ColumnDefinition Width="22" />
             </Grid.ColumnDefinitions>
 
             <Grid.RowDefinitions>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="40"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="40" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
+                <RowDefinition Height="50" />
                 <RowDefinition />
             </Grid.RowDefinitions>
 
-            <ToggleButton Grid.Column="1" Grid.Row="0"
-                          Command="{Binding ToggleSortCommand}"
-                          IsEnabled="{Binding IsFileSelected}"
-                          IsChecked="{Binding SortReplacePhrases}"
-                          Style="{StaticResource OptionToggleButtonTheme}">
+            <ToggleButton
+                Grid.Row="0"
+                Grid.Column="1"
+                Command="{Binding ToggleSortCommand}"
+                IsChecked="{Binding SortReplacePhrases}"
+                IsEnabled="{Binding IsFileSelected}"
+                Style="{StaticResource OptionToggleButtonTheme}">
                 <ToggleButton.Content>
-                    <TextBlock Text="Sort" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Sort" />
                 </ToggleButton.Content>
             </ToggleButton>
 
-            <TextBlock Grid.Column="1" Grid.Row="1"
-                       Margin="0 0 0 6"
-                       Text="Modify"
-                       VerticalAlignment="Bottom"
-                       HorizontalAlignment="Center"
-                       Foreground="{StaticResource TextLight}"
-                       FontSize="14"
-                       FontFamily="/Fonts/#Poppins"/>
-            <Border Grid.Column="1" Grid.Row="1"
-                    Margin="0 0 0 4" Width="120"
-                    BorderBrush="{StaticResource TextUnclickable}"
-                    BorderThickness="0 0 0 1"/>
+            <TextBlock
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="0,0,0,6"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                FontFamily="/Fonts/#Poppins"
+                FontSize="14"
+                Foreground="{StaticResource TextLight}"
+                Text="Modify" />
+            <Border
+                Grid.Row="1"
+                Grid.Column="1"
+                Width="120"
+                Margin="0,0,0,4"
+                BorderBrush="{StaticResource TextUnclickable}"
+                BorderThickness="0,0,0,1" />
 
-            <Button Grid.Column="1" Grid.Row="2"
-                    Click="OpenAddWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}">
+            <Button
+                Grid.Row="2"
+                Grid.Column="1"
+                Click="OpenAddWindow_OnClick"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Add"
-                               x:Name="addMenuOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="addMenuOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Add" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="3"
-                    Click="OpenEditWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
+            <Button
+                Grid.Row="3"
+                Grid.Column="1"
+                Click="OpenEditWindow_OnClick"
+                IsEnabled="{Binding IsPhraseSelected}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Edit"
-                               x:Name="editMenuOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="editMenuOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Edit" />
                 </Button.Content>
             </Button>
 
-            <Button Grid.Column="1" Grid.Row="4"
-                    Click="OpenRemoveWindow_OnClick"
-                    Style="{StaticResource OptionButtonTheme}"
-                    IsEnabled="{Binding IsPhraseSelected}">
+            <Button
+                Grid.Row="4"
+                Grid.Column="1"
+                Click="OpenRemoveWindow_OnClick"
+                IsEnabled="{Binding IsPhraseSelected}"
+                Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
-                    <TextBlock Text="Remove"
-                               x:Name="removeMenuOption" HorizontalAlignment="Center"
-                               FontFamily="/Fonts/#Poppins"
-                               Foreground="{StaticResource TextLight}"/>
+                    <TextBlock
+                        x:Name="removeMenuOption"
+                        HorizontalAlignment="Center"
+                        FontFamily="/Fonts/#Poppins"
+                        Foreground="{StaticResource TextLight}"
+                        Text="Remove" />
                 </Button.Content>
             </Button>
         </Grid>
 
     </Grid>
 
-    
-    <!-- User control -->
+
+    <!--  User control  -->
     <UserControl.Resources>
-        <!-- Style for file name -->
+        <!--  Style for file name  -->
         <Style x:Key="FileNameTheme" TargetType="{x:Type TextBlock}">
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="True">
-                    <Setter Property="Text" Value="{Binding FileName}"/>
-                    <Setter Property="Foreground" Value="{StaticResource TextLight}"/>
+                    <Setter Property="Text" Value="{Binding FileName}" />
+                    <Setter Property="Foreground" Value="{StaticResource TextLight}" />
                 </Trigger>
 
                 <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Text" Value="No file selected."/>
-                    <Setter Property="Foreground" Value="{StaticResource TextUnclickable}"/>
+                    <Setter Property="Text" Value="No file selected." />
+                    <Setter Property="Foreground" Value="{StaticResource TextUnclickable}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- Style for the middle replacements scrollviewer -->
+        <!--  Style for the middle replacements scrollviewer  -->
         <Style x:Key="ScrollViewerTheme" TargetType="{x:Type ScrollViewer}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ScrollViewer}">
                         <Grid x:Name="Grid" Background="{TemplateBinding Background}">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
-                            <Rectangle x:Name="Corner" Grid.Column="1" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Grid.Row="1"/>
-                            <ScrollContentPresenter x:Name="PART_ScrollContentPresenter" CanHorizontallyScroll="False" ContentTemplate="{TemplateBinding ContentTemplate}" CanVerticallyScroll="False" Grid.Column="0" Content="{TemplateBinding Content}" CanContentScroll="{TemplateBinding CanContentScroll}" Margin="{TemplateBinding Padding}" Grid.Row="0"/>
-                            <ScrollBar x:Name="PART_VerticalScrollBar" Style="{StaticResource ScrollbarTheme}" AutomationProperties.AutomationId="VerticalScrollBar" Cursor="Arrow" Grid.Column="1" Maximum="{TemplateBinding ScrollableHeight}" Minimum="0" Grid.Row="0" Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" ViewportSize="{TemplateBinding ViewportHeight}" Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"/>
+                            <Rectangle
+                                x:Name="Corner"
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" />
+                            <ScrollContentPresenter
+                                x:Name="PART_ScrollContentPresenter"
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Margin="{TemplateBinding Padding}"
+                                CanContentScroll="{TemplateBinding CanContentScroll}"
+                                CanHorizontallyScroll="False"
+                                CanVerticallyScroll="False"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            <ScrollBar
+                                x:Name="PART_VerticalScrollBar"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                AutomationProperties.AutomationId="VerticalScrollBar"
+                                Cursor="Arrow"
+                                Maximum="{TemplateBinding ScrollableHeight}"
+                                Minimum="0"
+                                Style="{StaticResource ScrollbarTheme}"
+                                ViewportSize="{TemplateBinding ViewportHeight}"
+                                Visibility="{TemplateBinding ComputedVerticalScrollBarVisibility}"
+                                Value="{Binding VerticalOffset, Mode=OneWay, RelativeSource={RelativeSource Mode=TemplatedParent}}" />
                         </Grid>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsEnabled" Value="false">
-                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-        <!-- Individual replace phrase styling -->
-        <Style TargetType="RadioButton" x:Key="ReplacePhraseTheme">
+        <!--  Individual replace phrase styling  -->
+        <Style x:Key="ReplacePhraseTheme" TargetType="RadioButton">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate>
-                        <Border x:Name="border" Background="{StaticResource BtnLight}"
-                                CornerRadius="4" Height="35" Margin="8 2 14 2">
+                        <Border
+                            x:Name="border"
+                            Height="35"
+                            Margin="8,2,14,2"
+                            Background="{StaticResource BtnLight}"
+                            CornerRadius="4">
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1"/>
-                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*" />
+                                    <ColumnDefinition Width="1" />
+                                    <ColumnDefinition Width="1*" />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0"
-                                           Margin="15 0 25 0"
-                                           Text="{Binding Item1}"
-                                           TextWrapping="NoWrap"
-                                           TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="16"
-                                           Foreground="{StaticResource TextLight}"
-                                           VerticalAlignment="Center"/>
-                                <Border Grid.Column="1"
-                                        Margin="-15 5"
-                                        BorderBrush="{StaticResource TextUnclickable}"
-                                        BorderThickness="1 0 0 0"/>
-                                <TextBlock Grid.Column="2"
-                                           Margin="0 0 10 0"
-                                           Text="{Binding Item2}"
-                                           TextWrapping="NoWrap"
-                                           TextTrimming="CharacterEllipsis"
-                                           FontFamily="/Fonts/#Poppins" FontSize="16"
-                                           Foreground="{StaticResource TextLight}"
-                                           VerticalAlignment="Center"/>
+                                <TextBlock
+                                    Grid.Column="0"
+                                    Margin="15,0,25,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Fonts/#Poppins"
+                                    FontSize="16"
+                                    Foreground="{StaticResource TextLight}"
+                                    Text="{Binding Item1}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap" />
+                                <Border
+                                    Grid.Column="1"
+                                    Margin="-15,5"
+                                    BorderBrush="{StaticResource TextUnclickable}"
+                                    BorderThickness="1,0,0,0" />
+                                <TextBlock
+                                    Grid.Column="2"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    FontFamily="/Fonts/#Poppins"
+                                    FontSize="16"
+                                    Foreground="{StaticResource TextLight}"
+                                    Text="{Binding Item2}"
+                                    TextTrimming="CharacterEllipsis"
+                                    TextWrapping="NoWrap" />
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="RadioButton.IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnHighlighted}"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnHighlighted}" />
                             </Trigger>
                             <Trigger Property="RadioButton.IsChecked" Value="False">
-                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}"/>
+                                <Setter TargetName="border" Property="Background" Value="{StaticResource BtnLight}" />
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

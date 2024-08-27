@@ -1,27 +1,32 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mah="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro">
 
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.Buttons.xaml" />
     </ResourceDictionary.MergedDictionaries>
 
-    <!-- Title styling -->
+    <!--  Title styling  -->
     <DataTemplate x:Key="titleTemplate">
-        <TextBlock Text="{TemplateBinding Content}"
-               VerticalAlignment="Center"
-               Margin="8 -1 8 0"
-               Foreground="{StaticResource TextMedium}"
-               FontWeight="Normal"
-               FontSize="12"
-               FontFamily="/Fonts/#Poppins"/>
+        <TextBlock
+            Margin="8,-1,8,0"
+            VerticalAlignment="Center"
+            FontFamily="/Fonts/#Poppins"
+            FontSize="12"
+            FontWeight="Normal"
+            Foreground="{StaticResource TextMedium}"
+            Text="{TemplateBinding Content}" />
     </DataTemplate>
 
-    <!-- Min/max/close button styling -->
+    <!--  Min/max/close button styling  -->
     <mah:WindowButtonCommands x:Key="windowButtonsStyling" Style="{DynamicResource CustomWindowButtonCommandsStyle}" />
 
-    <!-- Individual close button styling (use windowButtonsStyling) -->
-    <Style x:Key="CustomLightMetroWindowButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Light}">
+    <!--  Individual close button styling (use windowButtonsStyling)  -->
+    <Style
+        x:Key="CustomLightMetroWindowButtonStyle"
+        BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Light}"
+        TargetType="{x:Type Button}">
         <Setter Property="Foreground" Value="{StaticResource TextMedium}" />
         <Setter Property="Background" Value="Transparent" />
         <Style.Triggers>
@@ -35,7 +40,10 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="CustomDarkMetroWindowButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Dark}">
+    <Style
+        x:Key="CustomDarkMetroWindowButtonStyle"
+        BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Dark}"
+        TargetType="{x:Type Button}">
         <Setter Property="Foreground" Value="{StaticResource TextMedium}" />
         <Setter Property="Background" Value="Transparent" />
         <Style.Triggers>
@@ -49,7 +57,10 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="CustomLightMetroWindowCloseButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Close.Light.Win10}">
+    <Style
+        x:Key="CustomLightMetroWindowCloseButtonStyle"
+        BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Close.Light.Win10}"
+        TargetType="{x:Type Button}">
         <Setter Property="Foreground" Value="{StaticResource TextMedium}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -58,7 +69,10 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="CustomDarkMetroWindowCloseButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Close.Dark.Win10}">
+    <Style
+        x:Key="CustomDarkMetroWindowCloseButtonStyle"
+        BasedOn="{StaticResource MahApps.Styles.Button.MetroWindow.Close.Dark.Win10}"
+        TargetType="{x:Type Button}">
         <Setter Property="Foreground" Value="{StaticResource TextMedium}" />
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
@@ -67,8 +81,11 @@
         </Style.Triggers>
     </Style>
 
-    <!-- Close button styling -->
-    <Style x:Key="CustomWindowButtonCommandsStyle" TargetType="{x:Type mah:WindowButtonCommands}" BasedOn="{StaticResource {x:Type mah:WindowButtonCommands}}">
+    <!--  Close button styling  -->
+    <Style
+        x:Key="CustomWindowButtonCommandsStyle"
+        BasedOn="{StaticResource {x:Type mah:WindowButtonCommands}}"
+        TargetType="{x:Type mah:WindowButtonCommands}">
         <Setter Property="LightMinButtonStyle" Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
         <Setter Property="LightMaxButtonStyle" Value="{StaticResource CustomLightMetroWindowButtonStyle}" />
         <Setter Property="LightCloseButtonStyle" Value="{StaticResource CustomLightMetroWindowCloseButtonStyle}" />
@@ -77,5 +94,5 @@
         <Setter Property="DarkMaxButtonStyle" Value="{StaticResource CustomDarkMetroWindowButtonStyle}" />
         <Setter Property="DarkCloseButtonStyle" Value="{StaticResource CustomDarkMetroWindowCloseButtonStyle}" />
     </Style>
-    
+
 </ResourceDictionary>

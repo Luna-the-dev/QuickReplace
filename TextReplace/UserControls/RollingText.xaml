@@ -1,30 +1,33 @@
-﻿<UserControl x:Class="TextReplace.UserControls.RollingText"
-             x:Name="rollingTextUserControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TextReplace.UserControls"
-             mc:Ignorable="d" 
-             d:DesignHeight="30" d:DesignWidth="200">
+﻿<UserControl
+    x:Class="TextReplace.UserControls.RollingText"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:TextReplace.UserControls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="rollingTextUserControl"
+    d:DesignHeight="30"
+    d:DesignWidth="200"
+    mc:Ignorable="d">
 
     <UserControl.Resources>
         <Style TargetType="TextBlock">
-            <Setter Property="Foreground" Value="{Binding Foreground, ElementName=rollingTextUserControl, Mode=OneWay}"/>
-            <Setter Property="FontSize" Value="{Binding FontSize, ElementName=rollingTextUserControl, Mode=OneWay}"/>
-            <Setter Property="FontWeight" Value="{Binding FontWeight, ElementName=rollingTextUserControl, Mode=OneWay}"/>
-            <Setter Property="FontFamily" Value="{Binding FontFamily, ElementName=rollingTextUserControl, Mode=OneWay}"/>
+            <Setter Property="Foreground" Value="{Binding Foreground, ElementName=rollingTextUserControl, Mode=OneWay}" />
+            <Setter Property="FontSize" Value="{Binding FontSize, ElementName=rollingTextUserControl, Mode=OneWay}" />
+            <Setter Property="FontWeight" Value="{Binding FontWeight, ElementName=rollingTextUserControl, Mode=OneWay}" />
+            <Setter Property="FontFamily" Value="{Binding FontFamily, ElementName=rollingTextUserControl, Mode=OneWay}" />
         </Style>
     </UserControl.Resources>
 
     <Grid x:Name="rootGrid" SizeChanged="UpdateAnimation_OnSizeChanged">
-        <StackPanel Orientation="Horizontal" x:Name="stack">
-            <TextBlock Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=Text}"
-                       x:Name="rollingText" 
-                       Canvas.Left="0"                       
-                       HorizontalAlignment="Stretch"
-                       VerticalAlignment="Center"
-                       SizeChanged="UpdateAnimation_OnSizeChanged"/>
+        <StackPanel x:Name="stack" Orientation="Horizontal">
+            <TextBlock
+                x:Name="rollingText"
+                Canvas.Left="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Center"
+                SizeChanged="UpdateAnimation_OnSizeChanged"
+                Text="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:RollingText}}, Path=Text}" />
         </StackPanel>
     </Grid>
 
