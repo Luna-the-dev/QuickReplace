@@ -23,7 +23,7 @@ namespace TextReplace.Tests.ViewModels
             vm.IsFileSelected = false;
 
             // Act
-            vm.SelectedFile = new OutputFileWrapper("filename", "", "", -1);
+            vm.SelectedFile = new OutputFileWrapper("filename", "", "", -1, "");
 
             // Assert
             Assert.True(vm.IsFileSelected);
@@ -521,7 +521,7 @@ namespace TextReplace.Tests.ViewModels
             // OutputFiles gets updated by the SourceFiles VM/Model
             SourcesViewModel.RemoveAllSourceFiles();
 
-            vm.OutputFiles.Add(new OutputFileWrapper(RelativeGeneratedFilePath + sourceFileName, "", "", -1));
+            vm.OutputFiles.Add(new OutputFileWrapper(RelativeGeneratedFilePath + sourceFileName, "", "", -1, ""));
             OutputViewModel.SetSelectedFileCommand.Execute(vm.OutputFiles[0]);
 
             var generatedFileName = vm.OutputFiles[0].FileName;
@@ -551,7 +551,7 @@ namespace TextReplace.Tests.ViewModels
             // OutputFiles gets updated by the SourceFiles VM/Model
             SourcesViewModel.RemoveAllSourceFiles();
 
-            vm.OutputFiles.Add(new OutputFileWrapper("source-resume.txt", "", "", -1));
+            vm.OutputFiles.Add(new OutputFileWrapper("source-resume.txt", "", "", -1, ""));
             OutputViewModel.SetSelectedFileCommand.Execute(vm.OutputFiles[0]);
 
             var generatedFileName = vm.OutputFiles[0].FileName;

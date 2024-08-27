@@ -159,7 +159,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public void SetSelectedOutputFileType(OutputFileTypeEnum fileType)
         {
-            OutputData.SetOutputFileType(SelectedFile.SourceFileName, fileType);
+            OutputData.SetOutputFileType(SelectedFile.Id, fileType);
         }
 
         public static void SetAllOutputFileTypes(OutputFileTypeEnum fileType)
@@ -316,6 +316,7 @@ namespace TextReplace.MVVM.ViewModel
         public string SourceFileName { get; set; }
         public int NumOfReplacements { get; set; }
         public string NumOfReplacementsString { get; set; }
+        public string Id { get; set; }
         public bool IsSelected { get; set; }
 
         public OutputFileWrapper()
@@ -326,6 +327,7 @@ namespace TextReplace.MVVM.ViewModel
             NumOfReplacements = -1;
             NumOfReplacementsString = string.Empty;
             SetNumOfReplacementsString();
+            Id = string.Empty;
             IsSelected = false;
         }
 
@@ -337,6 +339,7 @@ namespace TextReplace.MVVM.ViewModel
             NumOfReplacements = file.NumOfReplacements;
             NumOfReplacementsString = string.Empty;
             SetNumOfReplacementsString();
+            Id = file.Id;
             IsSelected = isSelected;
         }
 
@@ -345,9 +348,10 @@ namespace TextReplace.MVVM.ViewModel
             string shortFileName,
             string sourceFileName,
             int numOfReplacements,
+            string id,
             bool isSelected = false)
         {
-            var file = new OutputFile(fileName, shortFileName, sourceFileName, numOfReplacements);
+            var file = new OutputFile(fileName, shortFileName, sourceFileName, numOfReplacements, id);
 
             FileName = file.FileName;
             ShortFileName = file.ShortFileName;
@@ -355,6 +359,7 @@ namespace TextReplace.MVVM.ViewModel
             NumOfReplacements = file.NumOfReplacements;
             NumOfReplacementsString = string.Empty;
             SetNumOfReplacementsString();
+            Id = file.Id;
             IsSelected = isSelected;
         }
 
@@ -376,7 +381,7 @@ namespace TextReplace.MVVM.ViewModel
 
         public static OutputFile UnwrapOutputFile(OutputFileWrapper file)
         {
-            return new OutputFile(file.FileName, file.ShortFileName, file.SourceFileName, file.NumOfReplacements);
+            return new OutputFile(file.FileName, file.ShortFileName, file.SourceFileName, file.NumOfReplacements, file.Id);
         }
     }
 }

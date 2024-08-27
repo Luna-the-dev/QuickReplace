@@ -246,6 +246,7 @@ namespace TextReplace.MVVM.Model
         public string ShortFileName { get; set; }
         public string OutputDirectory { get; set; }
         public string Suffix { get; set; }
+        public string Id { get; set; }
 
         public SourceFile()
         {
@@ -253,6 +254,7 @@ namespace TextReplace.MVVM.Model
             ShortFileName = string.Empty;
             OutputDirectory = string.Empty;
             Suffix = string.Empty;
+            Id = string.Empty;
         }
 
         public SourceFile(
@@ -264,6 +266,7 @@ namespace TextReplace.MVVM.Model
             ShortFileName = Path.GetFileName(fileName);
             OutputDirectory = outputDirectory;
             Suffix = suffix;
+            Id = Guid.NewGuid().ToString();
         }
     }
 }

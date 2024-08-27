@@ -851,6 +851,16 @@ namespace TextReplace.MVVM.Model
 
         public static void UpdateOutputFiles(List<SourceFile> files)
         {
+            // if the file from the list of source files existed in the list of output files,
+            // use the file extension of the one from the output file rather than the source file.
+            // this prevents the file conversion settings from being reverted when the output files are updated.
+            foreach (var outFile in OutputFiles)
+            {
+                files.Where(x => x.Id == outFile.Id)
+                    .ToList()
+                    .ForEach(x => x.FileName = Path.ChangeExtension(x.FileName, Path.GetExtension(outFile.FileName)));
+            }
+
             OutputFiles = new List<OutputFile>(files.Select(x => new OutputFile(x)));
         }
 
@@ -869,15 +879,15 @@ namespace TextReplace.MVVM.Model
         }
 
         /// <summary>
-        /// Sets the file type of an output file by the name of its source file
+        /// Sets the file type of an output file by the name of its source file id
         /// (Since fileName is not unique)
         /// </summary>
-        /// <param name="sourceFileName"></param>
+        /// <param name="sourceFileId"></param>
         /// <param name="fileType"></param>
         /// <exception cref="ArgumentException"></exception>
-        public static void SetOutputFileType(string sourceFileName, OutputFileTypeEnum fileType)
+        public static void SetOutputFileType(string sourceFileId, OutputFileTypeEnum fileType)
         {
-            int i = OutputFiles.FindIndex(x => x.SourceFileName == sourceFileName);
+            int i = OutputFiles.FindIndex(x => x.Id == sourceFileId);
             if (i == -1)
             {
                 throw new ArgumentException("SetOutputFileType() could not find name");
@@ -891,10 +901,10 @@ namespace TextReplace.MVVM.Model
 
             OutputFiles[i].FileName = Path.ChangeExtension(
                 OutputFiles[i].FileName,
-                OutputFileTypeClass.OutputFileTypeString(fileType, OutputFiles[i].SourceFileName));
+                OutputFileTypeClass.OutputFileTypeString(fileType, OutputFiles[i].FileName));
             OutputFiles[i].ShortFileName = Path.GetFileName(OutputFiles[i].FileName);
 
-            if (SelectedFile.SourceFileName == sourceFileName)
+            if (SelectedFile.Id == sourceFileId)
             {
                 SelectedFile.FileName = OutputFiles[i].FileName;
                 SelectedFile.ShortFileName = OutputFiles[i].ShortFileName;
@@ -922,10 +932,10 @@ namespace TextReplace.MVVM.Model
 
                 outputFile.FileName = Path.ChangeExtension(
                     outputFile.FileName,
-                    OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.SourceFileName));
+                    OutputFileTypeClass.OutputFileTypeString(fileType, outputFile.FileName));
                 outputFile.ShortFileName = Path.GetFileName(outputFile.FileName);
 
-                if (SelectedFile.SourceFileName == outputFile.SourceFileName)
+                if (SelectedFile.Id == outputFile.Id)
                 {
                     SelectedFile.FileName = outputFile.FileName;
                     SelectedFile.ShortFileName = outputFile.ShortFileName;
@@ -945,6 +955,7 @@ namespace TextReplace.MVVM.Model
         public string ShortFileName { get; set; }
         public string SourceFileName { get; set; }
         public int NumOfReplacements { get; set; }
+        public string Id { get; set; }
 
         public OutputFile()
         {
@@ -952,6 +963,7 @@ namespace TextReplace.MVVM.Model
             ShortFileName = string.Empty;
             SourceFileName = string.Empty;
             NumOfReplacements = -1;
+            Id = string.Empty;
         }
 
         public OutputFile(SourceFile file)
@@ -960,18 +972,21 @@ namespace TextReplace.MVVM.Model
             ShortFileName = Path.GetFileName(FileName);
             SourceFileName = file.FileName;
             NumOfReplacements = -1;
+            Id = file.Id;
         }
 
         public OutputFile(
             string fileName,
             string shortFileName,
             string sourceFileName,
-            int numOfReplacements)
+            int numOfReplacements,
+            string id)
         {
             FileName = fileName;
             ShortFileName = shortFileName;
             SourceFileName = sourceFileName;
             NumOfReplacements = numOfReplacements;
+            Id = id;
         }
 
         private static string GenerateDestFileName(SourceFile file)
