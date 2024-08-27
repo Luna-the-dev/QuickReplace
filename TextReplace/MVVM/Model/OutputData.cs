@@ -52,6 +52,14 @@ namespace TextReplace.MVVM.Model
             set
             {
                 _outputFilesStyling = value;
+
+                var isStyled = value.Bold ||
+                    value.Italics ||
+                    value.Underline ||
+                    value.Strikethrough ||
+                    value.IsHighlighted ||
+                    value.IsTextColored;
+                WeakReferenceMessenger.Default.Send(new IsStyledMsg(isStyled));
             }
         }
 

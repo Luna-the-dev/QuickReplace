@@ -21,6 +21,7 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<WholeWordMsg>,
         IRecipient<CaseSensitiveMsg>,
         IRecipient<PreserveCaseMsg>,
+        IRecipient<IsStyledMsg>,
         IDropTarget
     {   
         [ObservableProperty]
@@ -61,6 +62,13 @@ namespace TextReplace.MVVM.ViewModel
         private bool _isCaseSensitive = OutputData.CaseSensitive;
         [ObservableProperty]
         private bool _isPreserveCase = OutputData.PreserveCase;
+        [ObservableProperty]
+        private bool _isStyled = OutputData.OutputFilesStyling.Bold ||
+                    OutputData.OutputFilesStyling.Italics ||
+                    OutputData.OutputFilesStyling.Underline ||
+                    OutputData.OutputFilesStyling.Strikethrough ||
+                    OutputData.OutputFilesStyling.IsHighlighted ||
+                    OutputData.OutputFilesStyling.IsTextColored;
 
         public static RelayCommand<object> SetSelectedFileCommand => new RelayCommand<object>(SetSelectedFile);
         public static RelayCommand ToggleWholeWordCommand => new RelayCommand(ToggleWholeWord);
@@ -306,6 +314,11 @@ namespace TextReplace.MVVM.ViewModel
         public void Receive(PreserveCaseMsg message)
         {
             IsPreserveCase = message.Value;
+        }
+
+        public void Receive(IsStyledMsg message)
+        {
+            IsStyled = message.Value;
         }
     }
 

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using TextReplace.Messages.Output;
 using TextReplace.MVVM.ViewModel;
 
@@ -146,6 +147,9 @@ namespace TextReplace.MVVM.View
 
         private void OpenOutputStylingWindow_OnClick(object sender, RoutedEventArgs e)
         {
+            // revert the toggle button changing its checked state
+            ((ToggleButton)sender).IsChecked = !((ToggleButton)sender).IsChecked;
+
             var window = Window.GetWindow(sender as DependencyObject);
             string title = "Styling";
             string body = "Select the styling properties that will be applied to the replacements in the output files.\n" +

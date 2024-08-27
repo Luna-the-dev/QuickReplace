@@ -274,17 +274,18 @@
                 </ToggleButton.Content>
             </ToggleButton>
 
-            <Button Grid.Column="1" Grid.Row="4"
-                    Style="{StaticResource OptionButtonTheme}"
-                    Click="OpenOutputStylingWindow_OnClick">
-                <Button.Content>
+            <ToggleButton Grid.Column="1" Grid.Row="4"
+                          Style="{StaticResource OptionToggleButtonTheme}"
+                          Click="OpenOutputStylingWindow_OnClick"
+                          IsChecked="{Binding IsStyled}">
+                <ToggleButton.Content>
                     <TextBlock Text="Styling"
                                x:Name="stylingOption"
                                HorizontalAlignment="Center"
                                FontFamily="/Fonts/#Poppins"
                                Foreground="{StaticResource TextLight}"/>
-                </Button.Content>
-            </Button>
+                </ToggleButton.Content>
+            </ToggleButton>
         </Grid>
     </Grid>
 
