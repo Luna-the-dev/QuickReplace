@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Windows;
+﻿using System.Windows;
 
 namespace TextReplace.MVVM.View.PopupWindows
 {
@@ -22,28 +19,5 @@ namespace TextReplace.MVVM.View.PopupWindows
             Width = width;
             Height = height;
         }
-
-        // Returns true if the current application has focus, false otherwise
-        private static bool ApplicationIsActivated()
-        {
-            var activatedHandle = GetForegroundWindow();
-            if (activatedHandle == IntPtr.Zero)
-            {
-                return false;       // No window is currently activated
-            }
-
-            var procId = Process.GetCurrentProcess().Id;
-            int activeProcId;
-            GetWindowThreadProcessId(activatedHandle, out activeProcId);
-
-            return activeProcId == procId;
-        }
-
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
     }
 }
