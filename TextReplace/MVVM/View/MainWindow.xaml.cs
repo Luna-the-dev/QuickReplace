@@ -1,8 +1,10 @@
-﻿using MahApps.Metro.Controls;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using MahApps.Metro.Controls;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Media.Effects;
+using TextReplace.Messages;
 using TextReplace.MVVM.View.PopupWindows;
 using TextReplace.MVVM.ViewModel;
 
@@ -39,6 +41,22 @@ namespace TextReplace.MVVM.View
                     ChildContent.IsHitTestVisible = true;
                 }
             };
+
+            SizeChanged += (s, e) =>
+            {
+                var leftOffset = Left + (ActualWidth * (0.15 / 2));
+                var topOffset = Top + (ActualHeight * (0.15 / 2));
+                WeakReferenceMessenger.Default.Send(new WindowLocationMsg((leftOffset, topOffset)));
+                WeakReferenceMessenger.Default.Send(new WindowSizeMsg((Width * 0.85, Height * 0.85)));
+            };
+
+            LocationChanged += (s, e) =>
+            {
+                var leftOffset = Left + (ActualWidth * (0.15 / 2));
+                var topOffset = Top + (ActualHeight * (0.15 / 2));
+                WeakReferenceMessenger.Default.Send(new WindowLocationMsg((leftOffset, topOffset)));
+                WeakReferenceMessenger.Default.Send(new WindowSizeMsg((Width * 0.85, Height * 0.85)));
+            };
         }
 
         private void OpenHowToUseWindow_OnClick(object sender, RoutedEventArgs e)
@@ -55,7 +73,7 @@ namespace TextReplace.MVVM.View
             Opacity = 0.5;
             Effect = new BlurEffect();
 
-            _htuWindow = new HowToUseWindow(window, (int)(Width * 0.85), (int)(Height * 0.85));
+            _htuWindow = new HowToUseWindow(window, (Width * 0.85), (Height * 0.85));
             _htuWindow.Closing += (sender, args) => { _htuWindow.Owner = null; };
 
             ChildContent.IsHitTestVisible = false;

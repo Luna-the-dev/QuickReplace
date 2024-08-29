@@ -2,7 +2,7 @@
 
 namespace TextReplace.Messages
 {
-    class ActiveContentViewMsg(object value) : ValueChangedMessage<object>(value)
+    class WindowLocationMsg((double, double) value) : ValueChangedMessage<(double, double)>(value)
     {
     }
 }

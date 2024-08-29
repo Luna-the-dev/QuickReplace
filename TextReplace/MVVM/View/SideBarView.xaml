@@ -30,7 +30,7 @@
 
             <RadioButton
                 Command="{Binding SourcesViewCommand}"
-                Content="Sources"
+                Content="Source Files"
                 DockPanel.Dock="Top"
                 IsChecked="{Binding Path=SelectedView, Converter={StaticResource ActiveViewConverter}, ConverterParameter={x:Static viewModel:SelectedViewEnum.SourcesView}}"
                 Style="{StaticResource MenuButtonTheme}" />
