@@ -2,7 +2,6 @@
 using MahApps.Metro.Controls;
 using System.ComponentModel;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Media.Effects;
 using TextReplace.Messages;
 using TextReplace.MVVM.View.PopupWindows;

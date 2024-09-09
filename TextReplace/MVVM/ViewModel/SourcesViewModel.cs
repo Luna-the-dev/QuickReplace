@@ -5,7 +5,6 @@ using GongSolutions.Wpf.DragDrop;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
 using TextReplace.MVVM.Model;
 
@@ -124,7 +123,7 @@ namespace TextReplace.MVVM.ViewModel
                 {
                     return true;
                 }
-            
+
                 SourceFilesData.MoveSourceFile(oldIndex, newIndex);
 
                 return true;

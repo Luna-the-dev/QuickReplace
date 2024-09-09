@@ -110,7 +110,7 @@ namespace TextReplace.MVVM.View
                 Window.GetWindow(sender as DependencyObject).DragMove();
             }
         }
-        
+
         private void MinimizeBtn_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.MainWindow.WindowState = WindowState.Minimized;

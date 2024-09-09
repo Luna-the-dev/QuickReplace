@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using TextReplace.Core.Validation;
 
 namespace TextReplace.MVVM.ViewModel.PopupWindows

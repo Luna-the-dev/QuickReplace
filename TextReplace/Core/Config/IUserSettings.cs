@@ -1,6 +1,4 @@
-﻿using Config.Net;
-
-namespace TextReplace.Core.Config
+﻿namespace TextReplace.Core.Config
 {
     public interface IUserSettings
     {

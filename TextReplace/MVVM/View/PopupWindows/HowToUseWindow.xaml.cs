@@ -1,8 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
-using System.Diagnostics;
 using System.Windows;
 using TextReplace.Messages;
-using TextReplace.Messages.Output;
 
 namespace TextReplace.MVVM.View.PopupWindows
 {

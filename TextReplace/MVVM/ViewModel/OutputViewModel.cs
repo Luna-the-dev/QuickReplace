@@ -6,9 +6,9 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Media;
 using TextReplace.Core.Enums;
+using TextReplace.Messages.Output;
 using TextReplace.Messages.Replace;
 using TextReplace.Messages.Sources;
-using TextReplace.Messages.Output;
 using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
@@ -23,7 +23,7 @@ namespace TextReplace.MVVM.ViewModel
         IRecipient<PreserveCaseMsg>,
         IRecipient<IsStyledMsg>,
         IDropTarget
-    {   
+    {
         [ObservableProperty]
         private ObservableCollection<OutputFileWrapper> _outputFiles =
             new(OutputData.OutputFiles.Select(OutputFileWrapper.WrapOutputFile));
@@ -208,7 +208,7 @@ namespace TextReplace.MVVM.ViewModel
                 FilesNeededText = "Please upload Source Files.";
                 areFilesNeeded = true;
             }
-            
+
             if (areFilesNeeded)
             {
                 IsQuickReplaceEnabled = false;

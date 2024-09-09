@@ -170,7 +170,7 @@ namespace TextReplace.MVVM.View
             var window = Window.GetWindow(this);
             string title = "Error";
             string body;
-            
+
             if (fileIsInUse)
             {
                 body = $"Replacements could not be performed on <u>{fileName}</u> because the file is already in use.";

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
@@ -23,7 +22,7 @@ namespace TextReplace.UserControls
                 propertyType: typeof(string),
                 ownerType: typeof(RollingText),
                 typeMetadata: new PropertyMetadata(string.Empty));
-        
+
         public Duration Duration
         {
             get { return (Duration)GetValue(DurationProperty); }

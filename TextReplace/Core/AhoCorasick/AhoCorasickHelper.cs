@@ -1,7 +1,7 @@
 ﻿using DocumentFormat.OpenXml;
 using TextReplace.MVVM.Model;
-using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
 using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
+using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
 
 namespace TextReplace.Core.AhoCorasick
 {
@@ -131,7 +131,7 @@ namespace TextReplace.Core.AhoCorasick
             for (int i = 0; i < runs.Count; i++)
             {
                 // while there is a match left inside of the current run
-                while (matchIndex < matches.Count && matches[matchIndex].Position < runPtrs[i+1])
+                while (matchIndex < matches.Count && matches[matchIndex].Position < runPtrs[i + 1])
                 {
                     // if we are looking for whole word matches only,
                     // check if this match is a whole word
@@ -199,7 +199,7 @@ namespace TextReplace.Core.AhoCorasick
                 // if a replacement run was made but extended beyond the next item in runIndices, this will be false
 
                 // the replacement subrun exceeded the start of the next run
-                if (runPtr >= runPtrs[i+1])
+                if (runPtr >= runPtrs[i + 1])
                 {
                     continue;
                 }

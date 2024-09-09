@@ -1,16 +1,16 @@
-﻿using System.Diagnostics;
-using System.IO;
-using TextReplace.Core.Validation;
+﻿using ClosedXML.Excel;
 using CommunityToolkit.Mvvm.Messaging;
-using TextReplace.Messages.Replace;
-using CsvHelper.Configuration;
 using CsvHelper;
-using System.Globalization;
-using System.Text;
+using CsvHelper.Configuration;
 using CsvHelper.Configuration.Attributes;
 using ExcelDataReader;
 using System.Data;
-using ClosedXML.Excel;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO;
+using System.Text;
+using TextReplace.Core.Validation;
+using TextReplace.Messages.Replace;
 
 namespace TextReplace.MVVM.Model
 {
@@ -266,8 +266,8 @@ namespace TextReplace.MVVM.Model
 
             for (int i = 0; i < phrases.Count; i++)
             {
-                worksheet.Cell(i+1, 1).Value = phrases[i].Item1;
-                worksheet.Cell(i+1, 2).Value = phrases[i].Item2;
+                worksheet.Cell(i + 1, 1).Value = phrases[i].Item1;
+                worksheet.Cell(i + 1, 2).Value = phrases[i].Item2;
             }
 
             worksheet.Columns().AdjustToContents();

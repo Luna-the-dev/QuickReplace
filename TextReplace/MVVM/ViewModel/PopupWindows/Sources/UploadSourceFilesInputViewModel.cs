@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.Validation;
 
@@ -43,7 +42,7 @@ namespace TextReplace.MVVM.ViewModel.PopupWindows
             // if one of the files is invalid
             if (invalidFileName != string.Empty)
             {
-                FullFileNames = new List<string>(){ invalidFileName };
+                FullFileNames = new List<string>() { invalidFileName };
                 ShowFileNameOrCount = true;
                 FileIsValid = false;
                 FileIsInvalid = true;

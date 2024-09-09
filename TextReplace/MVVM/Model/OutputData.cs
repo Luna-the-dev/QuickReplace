@@ -1,16 +1,16 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
+using Config.Net;
+using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
-using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
-using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
 using System.Diagnostics;
 using System.IO;
 using TextReplace.Core.AhoCorasick;
-using TextReplace.Core.Validation;
-using DocumentFormat.OpenXml;
-using TextReplace.Core.Enums;
-using TextReplace.Messages.Output;
 using TextReplace.Core.Config;
-using Config.Net;
+using TextReplace.Core.Enums;
+using TextReplace.Core.Validation;
+using TextReplace.Messages.Output;
+using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
+using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
 
 namespace TextReplace.MVVM.Model
 {
@@ -425,7 +425,7 @@ namespace TextReplace.MVVM.Model
 
                     run.AppendChild(runtext);
                 }
-                
+
 
                 numOfMatches += currNumOfMatches;
             }
@@ -526,7 +526,7 @@ namespace TextReplace.MVVM.Model
                         styling, isWholeWord, isPreserveCase, out currNumOfMatches) :
                     AhoCorasickHelper.GenerateDocxRunsOriginalStyling(paragraph, replacePhrases, matcher,
                         isWholeWord, isPreserveCase, out currNumOfMatches);
-                
+
                 numOfMatches += currNumOfMatches;
 
                 // remove all runs in the paragraph
@@ -721,7 +721,7 @@ namespace TextReplace.MVVM.Model
                 var cloneRun = run.CloneNode(true);
                 sharedStringItem.Append(cloneRun);
             }
-            
+
             return sharedStringItem;
         }
 

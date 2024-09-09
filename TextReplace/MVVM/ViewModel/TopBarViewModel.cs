@@ -1,15 +1,14 @@
-﻿using Microsoft.WindowsAPICodePack.Dialogs;
-using System.Diagnostics;
-using System.Windows;
-using TextReplace.MVVM.Model;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using TextReplace.Messages.Sources;
+using Microsoft.WindowsAPICodePack.Dialogs;
+using System.Diagnostics;
 using TextReplace.Core.Validation;
-using TextReplace.Messages.Replace;
-using TextReplace.Messages.Output;
 using TextReplace.Messages;
+using TextReplace.Messages.Output;
+using TextReplace.Messages.Replace;
+using TextReplace.Messages.Sources;
+using TextReplace.MVVM.Model;
 
 namespace TextReplace.MVVM.ViewModel
 {
@@ -103,7 +102,7 @@ namespace TextReplace.MVVM.ViewModel
             }
 
             SetReplaceButtonClickability();
-        }   
+        }
 
         public static async Task<string> ReplaceAll(bool openFileLocation)
         {

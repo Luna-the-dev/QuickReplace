@@ -167,11 +167,11 @@ namespace TextReplace.MVVM.View
 
             string filter = extension switch
             {
-                ".csv" =>  csv + tsv + xls + txt + all,
-                ".tsv" =>  tsv + csv + xls + txt + all,
+                ".csv" => csv + tsv + xls + txt + all,
+                ".tsv" => tsv + csv + xls + txt + all,
                 ".xlsx" => xls + csv + tsv + txt + all,
-                ".txt" =>  txt + csv + tsv + xls + all,
-                _ =>       all + csv + tsv + xls + txt
+                ".txt" => txt + csv + tsv + xls + all,
+                _ => all + csv + tsv + xls + txt
             };
 
             filter = filter.Remove(filter.Length - 1);

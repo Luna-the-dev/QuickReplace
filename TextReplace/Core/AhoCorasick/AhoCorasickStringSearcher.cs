@@ -45,7 +45,7 @@
             {
                 GotoTransitions.Add(state, new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase));
             }
-            
+
             return state;
         }
 

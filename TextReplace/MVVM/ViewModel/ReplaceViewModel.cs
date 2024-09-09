@@ -325,14 +325,16 @@ namespace TextReplace.MVVM.ViewModel
                 ReplacePhrases = (SortReplacePhrases) ?
                     new ObservableCollection<ReplacePhraseWrapper>(
                         ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase)
-                        .Where(x => {
+                        .Where(x =>
+                        {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
                         })
                         .OrderBy(x => x.Item1)) :
                     new ObservableCollection<ReplacePhraseWrapper>(
                         ReplaceData.ReplacePhrasesList.Select(ReplacePhraseWrapper.WrapReplacePhrase)
-                        .Where(x => {
+                        .Where(x =>
+                        {
                             return x.Item1.Contains(SearchText, StringComparison.OrdinalIgnoreCase) ||
                                    x.Item2.Contains(SearchText, StringComparison.OrdinalIgnoreCase);
                         }));

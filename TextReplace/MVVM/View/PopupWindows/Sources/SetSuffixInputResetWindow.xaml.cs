@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using TextReplace.MVVM.Model;
 using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.MVVM.View.PopupWindows

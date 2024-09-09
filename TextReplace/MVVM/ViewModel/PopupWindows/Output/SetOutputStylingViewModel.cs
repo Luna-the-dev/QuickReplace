@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using System.Diagnostics;
 using System.Windows.Media;
 using TextReplace.MVVM.Model;
 
