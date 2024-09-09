@@ -8,6 +8,8 @@
     <UseWPF>true</UseWPF>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <ApplicationIcon>quickreplace-icon-light.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -41,6 +43,10 @@
     <None Remove="Fonts\Poppins-SemiBoldItalic.ttf" />
     <None Remove="Fonts\Poppins-Thin.ttf" />
     <None Remove="Fonts\Poppins-ThinItalic.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="quickreplace-icon-light.ico" />
   </ItemGroup>
 
   <ItemGroup>
