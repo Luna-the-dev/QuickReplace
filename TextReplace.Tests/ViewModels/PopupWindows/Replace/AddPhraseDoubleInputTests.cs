@@ -14,7 +14,7 @@ namespace TextReplace.Tests.ViewModels.PopupWindows.Replace
             ReplaceViewModel.RemoveAllPhrases();
             ReplaceData.IsSorted = false;
             replaceVm.AddNewPhrase("Item1", "Item2", Core.Enums.InsertReplacePhraseAtEnum.Top);
-    
+
             var vm = new AddPhraseDoubleInputViewModel();
 
             // Act

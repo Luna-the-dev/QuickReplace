@@ -1,9 +1,7 @@
-﻿using System.Diagnostics;
-using System.Windows.Media;
-using TextReplace.MVVM.ViewModel;
-using TextReplace.MVVM.Model;
-using TextReplace.Tests.Common;
+﻿using System.Windows.Media;
 using TextReplace.Core.Enums;
+using TextReplace.MVVM.ViewModel;
+using TextReplace.Tests.Common;
 
 namespace TextReplace.Tests.ViewModels
 {
@@ -555,7 +553,7 @@ namespace TextReplace.Tests.ViewModels
             OutputViewModel.SetSelectedFileCommand.Execute(vm.OutputFiles[0]);
 
             var generatedFileName = vm.OutputFiles[0].FileName;
-            
+
             if (File.Exists(generatedFileName) == false)
             {
                 File.Create(generatedFileName).Dispose();

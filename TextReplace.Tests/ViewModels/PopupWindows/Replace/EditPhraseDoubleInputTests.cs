@@ -1,6 +1,6 @@
 ﻿using TextReplace.MVVM.Model;
-using TextReplace.MVVM.ViewModel.PopupWindows;
 using TextReplace.MVVM.ViewModel;
+using TextReplace.MVVM.ViewModel.PopupWindows;
 
 namespace TextReplace.Tests.ViewModels.PopupWindows.Replace
 {

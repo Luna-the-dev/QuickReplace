@@ -2,6 +2,7 @@
 using MahApps.Metro.Controls;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media.Effects;
 using TextReplace.Messages;
 using TextReplace.MVVM.View.PopupWindows;
@@ -14,6 +15,13 @@ namespace TextReplace.MVVM.View
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
+        private bool isFullscreen = false;
+        public bool IsFullscreen
+        {
+            get { return isFullscreen; }
+            set { isFullscreen = value; }
+        }
+
         private HowToUseWindow? _htuWindow = null;
 
         public MainWindow()
@@ -23,6 +31,9 @@ namespace TextReplace.MVVM.View
             var viewModel = (MainViewModel)DataContext;
             Loaded += (s, e) => viewModel.IsActive = true;
             Unloaded += (s, e) => viewModel.IsActive = false;
+
+            //  listens for an F11 keypress to enter fullscreen mode
+            Window.GetWindow(this).KeyDown += Window_KeyDown;
 
             // close the "How to use" window if it is open
             // and the application is clicked on
@@ -56,6 +67,27 @@ namespace TextReplace.MVVM.View
                 WeakReferenceMessenger.Default.Send(new WindowLocationMsg((leftOffset, topOffset)));
                 WeakReferenceMessenger.Default.Send(new WindowSizeMsg((Width * 0.85, Height * 0.85)));
             };
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.F11)
+            {
+                if (IsFullscreen == false)
+                {
+                    // IgnoreTaskbarOnMaximize is a property of MahApps MetroWindow
+                    IgnoreTaskbarOnMaximize = true;
+                    WindowStyle = WindowStyle.None;
+                    WindowState = WindowState.Maximized;
+                }
+                else
+                {
+                    IgnoreTaskbarOnMaximize = false;
+                    WindowStyle = WindowStyle.SingleBorderWindow;
+                    WindowState = WindowState.Normal;
+                }
+                IsFullscreen = !IsFullscreen;
+            }
         }
 
         private void OpenHowToUseWindow_OnClick(object sender, RoutedEventArgs e)

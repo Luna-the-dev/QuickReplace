@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using TextReplace.MVVM.View.PopupWindows;
 
 namespace TextReplace.Tests.Common
 {
@@ -230,7 +229,7 @@ namespace TextReplace.Tests.Common
             {
                 sb.Append(b + ", ");
             }
-            
+
             return sb.ToString();
         }
     }

@@ -1,5 +1,5 @@
-﻿using TextReplace.MVVM.ViewModel;
-using TextReplace.MVVM.Model;
+﻿using TextReplace.MVVM.Model;
+using TextReplace.MVVM.ViewModel;
 using TextReplace.Tests.Common;
 
 namespace TextReplace.Tests.ViewModels

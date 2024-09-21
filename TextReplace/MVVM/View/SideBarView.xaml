@@ -46,6 +46,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
 
                 <TextBlock
@@ -64,12 +65,21 @@
 
                 <TextBlock
                     Grid.Row="1"
-                    Margin="6,0,0,8"
+                    Margin="6,0,0,6"
                     FontFamily="/Fonts/#Poppins"
                     FontSize="11"
                     Foreground="Gray">
                     © 2024 QuickReplace<LineBreak />
                     All Rights Reserved.</TextBlock>
+
+                <TextBlock
+                    Grid.Row="2"
+                    Margin="6,0,0,8"
+                    FontFamily="/Fonts/#Poppins"
+                    FontSize="10"
+                    Foreground="Gray">
+                    Version 1.0
+                </TextBlock>
             </Grid>
         </DockPanel>
     </Border>

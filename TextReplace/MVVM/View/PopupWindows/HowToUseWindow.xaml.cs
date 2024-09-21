@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Messaging;
 using System.Windows;
 using TextReplace.Messages;
+using System.Diagnostics;
+using System.Windows.Navigation;
 
 namespace TextReplace.MVVM.View.PopupWindows
 {
@@ -32,6 +34,14 @@ namespace TextReplace.MVVM.View.PopupWindows
             {
                 WeakReferenceMessenger.Default.UnregisterAll(this);
             };
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            var startInfo = new ProcessStartInfo(e.Uri.AbsoluteUri);
+            startInfo.UseShellExecute = true;
+            Process.Start(startInfo);
+            e.Handled = true;
         }
 
         void IRecipient<WindowSizeMsg>.Receive(WindowSizeMsg message)
