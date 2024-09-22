@@ -658,6 +658,29 @@ namespace TextReplace.MVVM.Model
                                 cell.StyleIndex = UpdateCellFormatting(cell, OldStyleIndexToReplacedStyleIndexMap, wbPart, styling.HighlightColorString, ref highlightFIllId);
                             }
 
+                            // if the cell happens to be a table column header, update the name property of the table column header
+                            foreach (var tableDefinitionPart in wsPart.TableDefinitionParts)
+                            {
+                                var table = tableDefinitionPart.Table;
+                                if (table.TableColumns == null)
+                                {
+                                    continue;
+                                }
+
+                                // search through the columns in the table for any whose names match the current shared string item
+                                var columns = table.TableColumns.Descendants<Spreadsheet.TableColumn>();
+                                foreach (var column in columns)
+                                {
+                                    if (column.Name == sharedStringItem.InnerText)
+                                    {
+                                        column.Name = newSharedStringItem.InnerText;
+
+                                        // we can break out of this and move on to the next table because each column name should be unique
+                                        break;
+                                    }
+                                }
+                            }
+
                             sharedStringItemToNumOfReplacementsMap[id] = currNumOfMatches;
                             numOfMatches += currNumOfMatches;
                         }
@@ -706,9 +729,10 @@ namespace TextReplace.MVVM.Model
                         numOfMatches += currNumOfMatches;
                     }
                 }
-
-                document.Save();
             }
+
+            document.Save();
+
             return numOfMatches;
         }
 
@@ -738,7 +762,7 @@ namespace TextReplace.MVVM.Model
             // create one and update the map to reflect it
             if (OldStyleIndexToReplacedStyleIndexMap.ContainsKey(styleIndex) == false)
             {
-                var newStyleIndex = AppendSpreadSheetCellFormatHighlighting(wbPart, "FF" + highlightColorString, styleIndex, ref highlightFillId);
+                var newStyleIndex = AppendSpreadSheetCellFormatHighlighting(wbPart, highlightColorString, styleIndex, ref highlightFillId);
                 OldStyleIndexToReplacedStyleIndexMap[styleIndex] = newStyleIndex;
             }
 
