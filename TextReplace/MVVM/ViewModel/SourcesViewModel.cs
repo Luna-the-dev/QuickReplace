@@ -198,6 +198,11 @@ namespace TextReplace.MVVM.ViewModel
 
         public void DragOver(IDropInfo dropInfo)
         {
+            // disable dragging when search isnt empty
+            if (SearchText != string.Empty)
+            {
+                return;
+            }
             dropInfo.DropTargetAdorner = DropTargetAdorners.Insert;
             dropInfo.Effects = System.Windows.DragDropEffects.Copy;
         }
