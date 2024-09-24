@@ -96,7 +96,7 @@
                 Grid.Row="1"
                 Grid.Column="1"
                 Click="OpenRemoveAllWindow_OnClick"
-                IsEnabled="{Binding IsPhraseSelected}"
+                IsEnabled="{Binding DoesReplacePhraseExist}"
                 Style="{StaticResource OptionButtonTheme}">
                 <Button.Content>
                     <TextBlock

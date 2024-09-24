@@ -33,7 +33,7 @@ namespace TextReplace.MVVM.View
             Unloaded += (s, e) => viewModel.IsActive = false;
 
             //  listens for an F11 keypress to enter fullscreen mode
-            Window.GetWindow(this).KeyDown += Window_KeyDown;
+            GetWindow(this).KeyDown += Window_KeyDown;
 
             // close the "How to use" window if it is open
             // and the application is clicked on
@@ -79,12 +79,20 @@ namespace TextReplace.MVVM.View
                     IgnoreTaskbarOnMaximize = true;
                     WindowStyle = WindowStyle.None;
                     WindowState = WindowState.Maximized;
+                    ShowTitleBar = false;
+                    ShowMinButton = false;
+                    ShowMaxRestoreButton = false;
+                    ShowCloseButton = false;
                 }
                 else
                 {
                     IgnoreTaskbarOnMaximize = false;
                     WindowStyle = WindowStyle.SingleBorderWindow;
                     WindowState = WindowState.Normal;
+                    ShowTitleBar = true;
+                    ShowMinButton = true;
+                    ShowMaxRestoreButton = true;
+                    ShowCloseButton = true;
                 }
                 IsFullscreen = !IsFullscreen;
             }

@@ -18,6 +18,7 @@
     Closed="Window_Closed"
     Closing="Window_Closing"
     NonActiveWindowTitleBrush="{StaticResource BackgroundColorDark}"
+    SaveWindowPosition="True"
     TitleCharacterCasing="Normal"
     TitleTemplate="{DynamicResource titleTemplate}"
     WindowButtonCommands="{DynamicResource windowButtonsStyling}"
