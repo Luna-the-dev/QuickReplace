@@ -403,7 +403,16 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(ReplacePhrasesMsg message)
         {
-            UpdateReplacePhrasesView(ReplaceData.SelectedPhrase.Item1);
+            // this calls UpdateReplacePhrasesView with the selected phrase from the message set above
+            if (SearchText != string.Empty)
+            {
+                SelectedPhrase = ReplacePhraseWrapper.WrapReplacePhrase(ReplaceData.SelectedPhrase);
+                SearchText = string.Empty;
+            }
+            else
+            {
+                UpdateReplacePhrasesView(ReplaceData.SelectedPhrase.Item1);
+            }
         }
 
         public void Receive(SelectedReplacePhraseMsg message)

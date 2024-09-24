@@ -280,7 +280,16 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(OutputFilesMsg message)
         {
-            UpdateOutputFilesView(SelectedFile.FileName);
+            // this calls UpdateOutputFilesView with the selected phrase from the message set above
+            if (SearchText != string.Empty)
+            {
+                SelectedFile = OutputFileWrapper.WrapOutputFile(OutputData.SelectedFile);
+                SearchText = string.Empty;
+            }
+            else
+            {
+                UpdateOutputFilesView(OutputData.SelectedFile.FileName);
+            }
         }
 
         public void Receive(SelectedOutputFileMsg message)

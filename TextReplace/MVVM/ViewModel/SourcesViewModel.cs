@@ -214,7 +214,16 @@ namespace TextReplace.MVVM.ViewModel
 
         public void Receive(SourceFilesMsg message)
         {
-            SourceFiles = new ObservableCollection<SourceFileWrapper>(message.Value.Select(SourceFileWrapper.WrapSourceFile));
+            // this calls UpdateSourceFilesView with the selected phrase from the message set above
+            if (SearchText != string.Empty)
+            {
+                SelectedFile = SourceFileWrapper.WrapSourceFile(SourceFilesData.SelectedFile);
+                SearchText = string.Empty;
+            }
+            else
+            {
+                UpdateSourceFilesView(SourceFilesData.SelectedFile.FileName);
+            }
         }
 
         public void Receive(SelectedSourceFileMsg message)
