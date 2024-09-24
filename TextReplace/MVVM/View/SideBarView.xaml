@@ -78,7 +78,7 @@
                     FontFamily="/Fonts/#Poppins"
                     FontSize="10"
                     Foreground="Gray">
-                    Version 1.0.1
+                    Version 1.0.2
                 </TextBlock>
             </Grid>
         </DockPanel>
