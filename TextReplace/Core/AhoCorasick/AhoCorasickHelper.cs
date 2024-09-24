@@ -1,7 +1,4 @@
 ﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Drawing;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 using TextReplace.MVVM.Model;
 using Spreadsheet = DocumentFormat.OpenXml.Spreadsheet;
 using Wordprocessing = DocumentFormat.OpenXml.Wordprocessing;
