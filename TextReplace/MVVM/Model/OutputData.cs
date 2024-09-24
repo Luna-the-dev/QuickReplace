@@ -815,7 +815,6 @@ namespace TextReplace.MVVM.Model
 
         static private Wordprocessing.Run TraverseRunSiblings(Wordprocessing.Run run, int distance)
         {
-            Debug.WriteLine(run.InnerText + " " + distance);
             if (distance <= 0)
             {
                 return run;
@@ -824,7 +823,6 @@ namespace TextReplace.MVVM.Model
             var nextRun = run.NextSibling<Wordprocessing.Run>();
             if (nextRun == null)
             {
-                Debug.WriteLine("peepee");
                 return run;
             }
 
