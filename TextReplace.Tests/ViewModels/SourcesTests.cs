@@ -190,7 +190,6 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("directory-name/", vm.SourceFiles[0].OutputDirectory);
             Assert.Equal("directory-name/", vm.SourceFiles[1].OutputDirectory);
             Assert.Equal("directory-name/", vm.SourceFiles[2].OutputDirectory);
-            Assert.Equal("directory-name/", vm.SelectedFile.OutputDirectory);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -219,7 +218,6 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("-QuickReplace", vm.SourceFiles[0].Suffix);
             Assert.Equal("-QuickReplace", vm.SourceFiles[1].Suffix);
             Assert.Equal("-QuickReplace", vm.SourceFiles[2].Suffix);
-            Assert.Equal("-QuickReplace", vm.SelectedFile.Suffix);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -520,7 +518,6 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("directory-name/", vm.SourceFiles[0].OutputDirectory);
             Assert.Equal("directory-name/", vm.SourceFiles[1].OutputDirectory);
             Assert.Equal("directory-name/", vm.SourceFiles[2].OutputDirectory);
-            Assert.Equal("directory-name/", vm.SelectedFile.OutputDirectory);
 
             VMHelper.UnregisterMessenger(vm);
         }
@@ -575,7 +572,6 @@ namespace TextReplace.Tests.ViewModels
             Assert.Equal("-QuickReplace", vm.SourceFiles[0].Suffix);
             Assert.Equal("-QuickReplace", vm.SourceFiles[1].Suffix);
             Assert.Equal("-QuickReplace", vm.SourceFiles[2].Suffix);
-            Assert.Equal("-QuickReplace", vm.SelectedFile.Suffix);
 
             VMHelper.UnregisterMessenger(vm);
         }

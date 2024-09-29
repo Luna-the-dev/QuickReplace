@@ -186,32 +186,34 @@ namespace TextReplace.MVVM.Model
 
             // do the search on each file
             bool didEverythingSucceed = true;
-            for (int i = 0; i < srcFiles.Count; i++)
+            var files = srcFiles.Zip(destFiles, (srcFile, destFile) => (srcFile, destFile));
+
+            Parallel.ForEach(files, file =>
             {
-                int numOfReplacements = WriteReplacementsToFile(replacePhrases, srcFiles[i], destFiles[i], matcher, wholeWord, preserveCase);
+                int numOfReplacements = WriteReplacementsToFile(replacePhrases, file.srcFile, file.destFile, matcher, wholeWord, preserveCase);
                 if (numOfReplacements == -1)
                 {
                     Debug.WriteLine("Something went wrong in PerformReplacements()");
                     didEverythingSucceed = false;
-                    continue;
+                    return;
                 }
 
                 // updadte the number of replacements made on this file
-                var index = OutputFiles.FindIndex(x => x.FileName == destFiles[i]);
+                var index = OutputFiles.FindIndex(x => x.FileName == file.destFile);
                 if (index != -1)
                 {
                     OutputFiles[index].NumOfReplacements = numOfReplacements;
                 }
 
                 // if this file is the selected file, update the number of replacements done on SelectedFile too
-                if (SelectedFile.FileName == destFiles[i])
+                if (SelectedFile.FileName == file.destFile)
                 {
                     SelectedFile.NumOfReplacements = numOfReplacements;
                     WeakReferenceMessenger.Default.Send(new SelectedOutputFileMsg(SelectedFile));
                 }
 
-                Debug.WriteLine($"replacements for {Path.GetFileName(srcFiles[i])}: {numOfReplacements}");
-            }
+                Debug.WriteLine($"replacements for {Path.GetFileName(file.srcFile)}: {numOfReplacements}");
+            });
 
             WeakReferenceMessenger.Default.Send(new OutputFilesMsg(OutputFiles));
             IsReplacementInProgress = false;
